@@ -4,16 +4,16 @@ class Logger {
 
     private val DEBUG_TAG = "Kartographer::"
 
-    private fun log(actionDesc: String) {
+    internal fun d(actionDesc: String) {
         println(DEBUG_TAG + actionDesc)
     }
 
-    private fun log(actionDesc: String, route: Route<*>): Route<*> {
+    internal fun d(actionDesc: String, route: Route<*>): Route<*> {
         println(DEBUG_TAG + actionDesc + route)
         return route
     }
 
-    private fun log(actionDesc: String, history: ArrayList<Kartographer.ComplexRoute>,
+    internal fun d(actionDesc: String, history: ArrayList<Kartographer.ComplexRoute>,
                     getHistoryLast: () -> Int): ArrayList<Kartographer.ComplexRoute> {
         if (history.size > 0 && history[getHistoryLast()] != null) {
             println(DEBUG_TAG + actionDesc + "size: " + history.size)
@@ -26,7 +26,7 @@ class Logger {
         return history
     }
 
-    private fun log(actionDesc: String, throwable: Throwable) {
+    internal fun d(actionDesc: String, throwable: Throwable) {
         println(DEBUG_TAG + actionDesc)
         throwable.printStackTrace()
     }

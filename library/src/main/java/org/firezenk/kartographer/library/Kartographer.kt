@@ -39,11 +39,33 @@ class Kartographer : IKartographer {
     }
 
     override fun <C> routeToLast(context: C, viewParent: Any?) {
+        if (viewParent != null) {
+            for (route in history[getHistoryLast()].viewHistory) {
+                route.viewParent = viewParent
+            }
+        }
         routeTo(context, history.get(getHistoryLast()).viewHistory.pop());
     }
 
     override fun <C> back(context: C): Boolean {
-        TODO("not implemented")
+        log?.d(" <<--- Back")
+        log?.d(" History: ", history, this::getHistoryLast)
+
+        if (history.isEmpty()) {
+            return false;
+        } else if (!history.get(getHistoryLast()).viewHistory.isEmpty()) {
+            log?.d(" Removing last: ", history.get(getHistoryLast()).viewHistory.pop());
+
+            if (!history.get(getHistoryLast()).viewHistory.isEmpty()) {
+                routeTo(context, history.get(getHistoryLast()).viewHistory.pop());
+                return true;
+            }
+        } else {
+            history.removeAt(getHistoryLast());
+            return false;
+        }
+
+        return back(context);
     }
 
     override fun <C> backTimes(context: C, times: Int): Boolean {
