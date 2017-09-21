@@ -1,12 +1,10 @@
 package org.firezenk.kartographer.library
 
+import org.firezenk.kartographer.library.exceptions.NotEnoughParametersException
+import org.firezenk.kartographer.library.exceptions.ParameterNotFoundException
 import java.util.ArrayDeque
 import java.util.Arrays
 import kotlin.collections.ArrayList
-
-
-
-
 
 /**
  * Project: Kartographer
@@ -39,7 +37,45 @@ class Kartographer : IKartographer {
     }
 
     override fun <C, B> routeTo(context: C, route: Route<B>) {
-        TODO("not implemented")
+        val prev: Route<B>? = if (history.isEmpty()) null else history.get(history.size - 1).viewHistory.peek() as Route<B>?
+        try {
+            if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
+
+                log?.d(" --->> Next")
+                log?.d(" Navigating to: ", route)
+
+                if (route.bundle != null) {
+                    (route.clazz.newInstance() as Routable<C, B>)
+                            .route(context, route.uuid, route.bundle as B, route.viewParent);
+                } else {
+                    (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable<C>)
+                            .route(context, route.uuid, route.params as Array<Any>, route.viewParent);
+                }
+
+                if (history.size == 0) {
+                    createStartRoute();
+                }
+
+                if (route.viewParent == null) {
+                    createIntermediateRoute(route);
+                } else {
+                    createViewRoute(route);
+                }
+            }
+        } catch (e: Exception) {
+            when(e) {
+                is ClassCastException -> log?.d(" Params has to be instance of Object[] or Android's Bundle ", e)
+                is ParameterNotFoundException,
+                is NotEnoughParametersException,
+                is InstantiationException,
+                is IllegalAccessException,
+                is org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException,
+                is org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException -> {
+                    log?.d(" Navigation error; ", e.fillInStackTrace());
+                }
+                else -> throw e
+            }
+        }
     }
 
     override fun <C> routeToLast(context: C, viewParent: Any?) {
