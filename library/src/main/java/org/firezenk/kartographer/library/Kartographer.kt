@@ -16,6 +16,8 @@ class Kartographer : IKartographer {
 
     companion object {
         private var INSTANCE: Kartographer = Kartographer()
+
+        fun get() : Kartographer = INSTANCE
     }
 
     private val history: ArrayList<ComplexRoute> = ArrayList()
@@ -28,8 +30,6 @@ class Kartographer : IKartographer {
             return route.toString() + " viewHistory size: " + viewHistory.size
         }
     }
-
-    fun get() : Kartographer = INSTANCE
 
     override fun debug(): Kartographer {
         log = Logger()

@@ -2,6 +2,8 @@ package org.firezenk.kartographer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
+import org.firezenk.kartographer.library.Kartographer
 
 /**
  * Project: Kartographer
@@ -14,5 +16,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (Kartographer.get().hasHistory()) {
+            Kartographer.get().routeToLast(this, placeholder)
+        } else {
+            //Kartographer.get().routeTo(this, Route<Any>(InfoRoute::class.java, Bundle(), placeholder))
+        }
+    }
+
+    override fun onBackPressed() {
+        if (!Kartographer.get().back(this))
+            super.onBackPressed()
     }
 }
