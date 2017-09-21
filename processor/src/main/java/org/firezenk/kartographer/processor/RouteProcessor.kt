@@ -32,8 +32,8 @@ class RouteProcessor : AbstractProcessor() {
 
     override fun init(env: ProcessingEnvironment?) {
         super.init(env)
-        this.filer = env?.filer;
-        this.messager = env?.messager;
+        this.filer = env?.filer
+        this.messager = env?.messager
     }
 
     override fun getSupportedAnnotationTypes() = setOf<String>(
@@ -87,6 +87,7 @@ class RouteProcessor : AbstractProcessor() {
         return FileSpec
                 .builder(typeElement.qualifiedName.toString().replace("."
                         + typeElement.simpleName, ""), myClass.name!!)
+                .addType(myClass)
                 .build()
     }
 
@@ -109,52 +110,52 @@ class RouteProcessor : AbstractProcessor() {
 
         sb.append("" +
                 "  if (parameters.length < " + params?.size + ") {\n" +
-                "      throw new NotEnoughParametersException(\"Need " + params?.size + " params\");\n" +
+                "      throw NotEnoughParametersException(\"Need ${params?.size} params\")\n" +
                 "  }\n")
 
         for ((i, tm) in params!!.withIndex()) {
             sb.append("" +
-                    "  if (parameters[" + i + "] == null || !(parameters[" + i + "] instanceof " + tm.toString() + ")) {\n" +
-                    "      throw new ParameterNotFoundException(\"Need " + tm.toString() + "\");\n" +
+                    "  if (parameters[" + i + "] == null || !(parameters[" + i + "] is " + tm.toString() + ")) {\n" +
+                    "      throw ParameterNotFoundException(\"Need ${tm}\")\n" +
                     "  }\n")
         }
 
         sb.append("\n")
 
         if (isActivity) {
-            sb.append("  final android.content.Intent intent = new android.content.Intent((android.content.Context) context, " + typeElement.simpleName + ".class);\n")
+            sb.append("  intent android.content.Intent = android.content.Intent((android.content.Context) context, " + typeElement.simpleName + ".class)\n")
 
-            sb.append("  android.os.Bundle bundle = new android.os.Bundle();\n\n")
-            sb.append("  bundle.putString(\"uuid\", uuid.toString());\n")
+            sb.append("  bundle android.os.Bundle = android.os.Bundle()\n\n")
+            sb.append("  bundle.putString(\"uuid\", uuid.toString())\n")
 
             if (params.isNotEmpty()) {
                 sb.append(this.parametersToBundle(params))
             }
 
-            sb.append("  intent.putExtras(bundle);\n")
+            sb.append("  intent.putExtras(bundle)\n")
 
             sb.append("" +
-                    "  if (context instanceof android.app.Activity) {\n" +
-                    "      ((android.app.Activity) context).startActivityForResult(intent, " + requestCode + ");\n" +
-                    "  } else if (context instanceof android.content.Context) {\n" +
-                    "      ((android.content.Context) context).startActivity(intent);\n" +
+                    "  if (context is android.app.Activity) {\n" +
+                    "      ((android.app.Activity) context).startActivityForResult(intent, " + requestCode + ")\n" +
+                    "  } else if (context is android.content.Context) {\n" +
+                    "      ((android.content.Context) context).startActivity(intent)\n" +
                     "  }\n")
         } else {
             sb.append("" +
-                    "  if (viewParent == null || !(viewParent instanceof android.view.ViewGroup)) {\n" +
-                    "      throw new ParameterNotFoundException(\"Need a view parent or is not a ViewGroup\");\n" +
+                    "  if (viewParent == null || !(viewParent is android.view.ViewGroup)) {\n" +
+                    "      throw ParameterNotFoundException(\"Need a view parent or is not a ViewGroup\")\n" +
                     "  }\n")
 
             if (params.isNotEmpty()) {
                 sb.append("" +
-                        "  ((android.view.ViewGroup) viewParent).removeAllViews();\n" +
+                        "  ((android.view.ViewGroup) viewParent).removeAllViews()\n" +
                         "  ((android.view.ViewGroup) viewParent).addView(" + typeElement.simpleName
-                        + ".newInstance((android.content.Context) context, uuid" + this.parametersToString(params) + "));\n")
+                        + ".newInstance((android.content.Context) context, uuid" + this.parametersToString(params) + "))\n")
             } else {
                 sb.append("" +
-                        "  ((android.view.ViewGroup) viewParent).removeAllViews();\n" +
+                        "  ((android.view.ViewGroup) viewParent).removeAllViews()\n" +
                         "  ((android.view.ViewGroup) viewParent).addView(" + typeElement.simpleName
-                        + ".newInstance((android.content.Context) context, uuid));\n")
+                        + ".newInstance((android.content.Context) context, uuid))\n")
             }
         }
 
@@ -162,7 +163,7 @@ class RouteProcessor : AbstractProcessor() {
 
         return FunSpec.builder("route")
                 .addModifiers(KModifier.PUBLIC)
-                .addAnnotation(Override::class.java)
+                .addModifiers(KModifier.OVERRIDE)
                 //.addException(ParameterNotFoundException::class.java)
                 //.addException(NotEnoughParametersException::class.java)
                 .returns(Void.TYPE)
@@ -189,7 +190,7 @@ class RouteProcessor : AbstractProcessor() {
 
         for ((i, tm) in params.withIndex()) {
 
-            val extra = "parameters[$i]);\n"
+            val extra = "parameters[$i])\n"
             val casting = "(" + tm.toString() + ") "
 
             when (tm.toString()) {
@@ -234,9 +235,10 @@ class RouteProcessor : AbstractProcessor() {
 
     private fun createRoute(typeElement: TypeElement, methods: ArrayList<FunSpec>): TypeSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Saving route file...")
+
         return TypeSpec.classBuilder("${typeElement.simpleName}Route")
-                .addAnnotation(AnnotationSpec.builder(Generated::class.java)
-                        .addMember("value", "\$S", this.javaClass.name)
+                .addAnnotation(AnnotationSpec.builder(Generated::class)
+                        .addMember("value", "%S", this.javaClass.simpleName)
                         .build())
                 .addModifiers(KModifier.PUBLIC)
                 .addSuperinterface(org.firezenk.kartographer.processor.interfaces.Routable::class.java)

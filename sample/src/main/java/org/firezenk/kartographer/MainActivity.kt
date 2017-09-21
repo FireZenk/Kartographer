@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         if (Kartographer.get().hasHistory()) {
             Kartographer.get().routeToLast(this, placeholder)
         } else {
-            //Kartographer.get().routeTo(this, Route<Any>(InfoRoute::class.java, Bundle(), placeholder))
+            //Kartographer.get().routeTo(this, Route<Any>(InfoViewRoute::class.java, Bundle(), placeholder))
         }
     }
 
