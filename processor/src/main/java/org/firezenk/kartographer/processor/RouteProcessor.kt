@@ -87,7 +87,7 @@ class RouteProcessor : AbstractProcessor() {
 
         val isActivity = typeElement.getAnnotation(RoutableActivity::class.java) != null
         val requestCode: Int
-        var params: List<TypeMirror>?
+        val params: List<TypeMirror>?
 
         if (isActivity) {
             requestCode = this.getForResult(typeElement.getAnnotation(RoutableActivity::class.java))

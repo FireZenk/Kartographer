@@ -36,6 +36,7 @@ class Kartographer : IKartographer {
         return INSTANCE;
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <C, B> routeTo(context: C, route: Route<B>) {
         val prev: Route<B>? = if (history.isEmpty()) null else history.get(history.size - 1).viewHistory.peek() as Route<B>?
         try {

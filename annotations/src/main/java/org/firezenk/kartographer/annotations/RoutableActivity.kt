@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
  * Copyright © Jorge Garrido Oval 2017
  */
 @Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.TYPE)
+@Target(AnnotationTarget.CLASS)
 annotation class RoutableActivity(
         /**
          * Possible "bundle" extras
