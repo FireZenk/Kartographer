@@ -3,7 +3,8 @@ package org.firezenk.kartographer.library
 import java.util.ArrayDeque
 import java.util.Arrays
 import kotlin.collections.ArrayList
-import javax.management.Query.times
+
+
 
 
 
@@ -81,22 +82,50 @@ class Kartographer : IKartographer {
             return true
         } catch (e: Exception) {
             System.out.println("Is not possible to go back " + times +
-                    " times, the history length is " + history.size())
+                    " times, the history length is " + history.size)
             log?.d(e.message!!)
             return false
         }
     }
 
     override fun <C, B> backTo(context: C, route: Route<B>): Boolean {
-        TODO("not implemented")
+        if (history.isEmpty()) {
+            log?.d("Is not possible to go back, history is empty")
+            return false
+        } else if (history[getHistoryLast()].viewHistory.isEmpty()) {
+            history.removeAt(getHistoryLast())
+            return backTo(context, route)
+        } else {
+            val complexRoute = history[getHistoryLast()]
+
+            if (!complexRoute.viewHistory.isEmpty()) {
+                val size = complexRoute.viewHistory.size
+                for (i in size downTo 1) {
+                    val prevRoute = complexRoute.viewHistory.pop()
+                    if (route.clazz.equals(prevRoute.clazz)) {
+                        this.routeTo(context, prevRoute)
+                        return true
+                    }
+                }
+            } else if (complexRoute.route!!.clazz == route.clazz) {
+                history.removeAt(getHistoryLast())
+                this.routeTo(context, complexRoute.route)
+                return true
+            } else {
+                log?.d("Is not possible to go back, there is no route like: " + route.clazz.name)
+                return false
+            }
+            history.removeAt(getHistoryLast())
+            return backTo(context, route)
+        }
     }
 
     override fun clearHistory() {
-        TODO("not implemented")
+        history.clear()
     }
 
     override fun hasHistory(): Boolean {
-        TODO("not implemented")
+        return !history.isEmpty()
     }
 
     private fun createStartRoute() {
