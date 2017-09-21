@@ -3,6 +3,9 @@ package org.firezenk.kartographer.library
 import java.util.ArrayDeque
 import java.util.Arrays
 import kotlin.collections.ArrayList
+import javax.management.Query.times
+
+
 
 /**
  * Project: Kartographer
@@ -69,7 +72,19 @@ class Kartographer : IKartographer {
     }
 
     override fun <C> backTimes(context: C, times: Int): Boolean {
-        TODO("not implemented")
+        try {
+            for (i in 0..times - 1) {
+                if (!back(context)) {
+                    return false
+                }
+            }
+            return true
+        } catch (e: Exception) {
+            System.out.println("Is not possible to go back " + times +
+                    " times, the history length is " + history.size())
+            log?.d(e.message!!)
+            return false
+        }
     }
 
     override fun <C, B> backTo(context: C, route: Route<B>): Boolean {
