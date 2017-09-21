@@ -26,6 +26,10 @@ class RouteProcessor : AbstractProcessor() {
     private var filer: Filer? = null
     private var messager: Messager? = null
 
+    companion object {
+        val KAPT_KOTLIN_GENERATED_OPTION = "kapt.kotlin.generated"
+    }
+
     override fun init(env: ProcessingEnvironment?) {
         super.init(env)
         this.filer = env?.filer;
@@ -40,11 +44,15 @@ class RouteProcessor : AbstractProcessor() {
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
     override fun process(annotations: MutableSet<out TypeElement>?, env: RoundEnvironment): Boolean {
+
+        val options = processingEnv.options
+        val kotlinGenerated = options[KAPT_KOTLIN_GENERATED_OPTION]
+
         env.getElementsAnnotatedWith(RoutableActivity::class.java)
                 .map { generateRoute(it as TypeElement) }
                 .forEach {
                     try {
-                        it.writeTo(File(it.packageName))
+                        it.writeTo(File(kotlinGenerated))
                     } catch (e: Exception) {
                         messager?.printMessage(Diagnostic.Kind.ERROR, e.message)
                         e.printStackTrace()
@@ -55,7 +63,7 @@ class RouteProcessor : AbstractProcessor() {
                 .map { generateRoute(it as TypeElement) }
                 .forEach {
                     try {
-                        it.writeTo(File(it.packageName))
+                        it.writeTo(File(kotlinGenerated))
                     } catch (e: Exception) {
                         messager?.printMessage(Diagnostic.Kind.ERROR, e.message)
                         e.printStackTrace()
