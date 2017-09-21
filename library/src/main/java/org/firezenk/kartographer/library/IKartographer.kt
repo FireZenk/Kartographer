@@ -8,4 +8,66 @@ package org.firezenk.kartographer.library
  */
 interface IKartographer {
 
+    /**
+     * Enables debug mode for all the navigation session
+     * @param debugMode true or false for all the session
+     * *
+     * @return the instance
+     */
+    fun debug(): Kartographer
+
+    /**
+     * Navigate to the next route
+     * @param context The Android's context (required for Android)
+     * *
+     * @param route The target route
+     */
+    fun <C, B> routeTo(context: C, route: Route<B>)
+
+    /**
+     * Navigate to the last route available on history
+     * @param context The Android's context (required for Android)
+     * *
+     * @param viewParent New view parent (for view recreations)
+     */
+    fun <C> routeToLast(context: C, viewParent: Any? = null)
+
+    /**
+     * Go back to the directly previous route
+     * @param context The Android's context (required for Android)
+     * *
+     * @return true if go back is possible, false if is the end of navigation history
+     */
+    fun <C> back(context: C): Boolean
+
+    /**
+     * Navigate back n times
+     * @param context The Android's context (required for Android)
+     * *
+     * @param times The n times that we need to navigate backwards
+     * *
+     * @return true if go back n times is possible, false if is the end of navigation history
+     */
+    fun <C> backTimes(context: C, times: Int): Boolean
+
+    /**
+     * Navigate through the navigation history until find the route
+     * @param context The Android's context (required for Android)
+     * *
+     * @param route The route (params not needed) that we want to navigate back to
+     * *
+     * @return true if go back to this route is possible, false if it is not
+     */
+    fun <C, B> backTo(context: C, route: Route<B>): Boolean
+
+    /**
+     * Clear navigation history
+     */
+    fun clearHistory()
+
+    /**
+     * Has history or not helper
+     * @return true if the history is not empty
+     */
+    fun hasHistory(): Boolean
 }
