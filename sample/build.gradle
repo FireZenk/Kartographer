@@ -48,17 +48,17 @@ dependencies {
     provided 'javax.annotation:javax.annotation-api:1.2'
     provided 'com.squareup:kotlinpoet:0.5.0'
 
-    def NVersion = '0.2.0'
-    implementation "org.firezenk.kartographer:annotations:$NVersion"
-    implementation "org.firezenk.kartographer:library:$NVersion"
-    implementation "org.firezenk.kartographer:processor:$NVersion"
-    kapt "org.firezenk.kartographer:processor:$NVersion"
+    //def NVersion = '0.2.0'
+    //implementation "org.firezenk.kartographer:annotations:$NVersion"
+    //implementation "org.firezenk.kartographer:library:$NVersion"
+    //implementation "org.firezenk.kartographer:processor:$NVersion"
+    //kapt "org.firezenk.kartographer:processor:$NVersion"
     /* End */
 
-    //implementation project(':annotations')
-    //implementation project(':library')
-    //compileOnly project(':processor')
-    //kapt project(':processor')
+    implementation project(':annotations')
+    implementation project(':library')
+    implementation project(':processor')
+    kapt project(':processor')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {

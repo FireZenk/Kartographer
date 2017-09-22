@@ -113,7 +113,7 @@ class RouteProcessor : AbstractProcessor() {
 
         for ((i, tm) in params!!.withIndex()) {
             sb.append("" +
-                    "  if (parameters[" + i + "] == null || !(parameters[" + i + "] is " + tm.toString() + ")) {\n" +
+                    "  if (!(parameters[$i] is ${typeMirrorToString(tm)})) {\n" +
                     "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need ${tm}\")\n" +
                     "  }\n")
         }
@@ -171,11 +171,23 @@ class RouteProcessor : AbstractProcessor() {
                 .build()
     }
 
+    private fun typeMirrorToString(typeMirror: TypeMirror): String {
+        return when (typeMirror.toString()) {
+            "java.lang.Boolean" -> "kotlin.Boolean"
+            "java.lang.Integer" -> "kotlin.Int"
+            "java.lang.Character" -> "kotlin.Char"
+            "java.lang.Float" -> "kotlin.Float"
+            "java.lang.Double" -> "kotlin.Double"
+            "java.lang.String" -> "kotlin.String"
+            else -> typeMirror.asTypeName().toString()
+        }
+    }
+
     private fun parametersToString(params: List<TypeMirror>): String {
         val sb = StringBuilder()
 
         for ((i, tm) in params.withIndex()) {
-            sb.append(", (" + tm.toString() + ") parameters[" + i + "]")
+            sb.append(", parameters[$i] as ${typeMirrorToString(tm)}")
         }
 
         return sb.toString()
@@ -186,41 +198,41 @@ class RouteProcessor : AbstractProcessor() {
 
         for ((i, tm) in params.withIndex()) {
 
-            val extra = "parameters[$i])\n"
-            val casting = "(" + tm.toString() + ") "
+            val extra = "parameters[$i] as"
+            val casting = "$tm)\n"
 
             when (tm.toString()) {
                 "java.lang.Boolean" -> {
                     sb.append("  bundle.putBoolean(\"bool$i\", ")
-                    sb.append(casting)
                     sb.append(extra)
+                    sb.append(casting)
                 }
                 "java.lang.Integer" -> {
                     sb.append("  bundle.putInt(\"int$i\", ")
-                    sb.append(casting)
                     sb.append(extra)
+                    sb.append(casting)
                 }
                 "java.lang.Character" -> {
                     sb.append("  bundle.putChar(\"char$i\", ")
-                    sb.append(casting)
                     sb.append(extra)
+                    sb.append(casting)
                 }
                 "java.lang.Float" -> {
                     sb.append("  bundle.putFloat(\"float$i\", ")
-                    sb.append(casting)
                     sb.append(extra)
+                    sb.append(casting)
                 }
                 "java.lang.Double" -> {
                     sb.append("  bundle.putDouble(\"double$i\", ")
-                    sb.append(casting)
                     sb.append(extra)
+                    sb.append(casting)
                 }
                 "java.lang.String" -> {
                     sb.append("  bundle.putString(\"string$i\", ")
-                    sb.append(casting)
                     sb.append(extra)
+                    sb.append(casting)
                 }
-                else -> sb.append("  bundle.putParcelable(\"parcelable$i\", (android.os.Parcelable) $extra")
+                else -> sb.append("  bundle.putParcelable(\"parcelable$i\", $extra as android.os.Parcelable")
             }
 
             sb.append("\n")
