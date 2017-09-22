@@ -2,6 +2,7 @@ package org.firezenk.kartographer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
 import org.firezenk.kartographer.info.InfoViewRoute
 import org.firezenk.kartographer.library.Kartographer
@@ -29,5 +30,9 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (!Kartographer.get().back(this))
             super.onBackPressed()
+    }
+
+    fun getPlaceHolder(): ViewGroup {
+        return placeholder
     }
 }
