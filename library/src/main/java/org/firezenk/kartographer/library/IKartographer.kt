@@ -22,7 +22,7 @@ interface IKartographer {
      * *
      * @param route The target route
      */
-    fun <C, B> routeTo(context: C, route: Route<B>)
+    fun <B> routeTo(context: Any, route: Route<B>)
 
     /**
      * Navigate to the last route available on history
@@ -30,7 +30,7 @@ interface IKartographer {
      * *
      * @param viewParent New view parent (for view recreations)
      */
-    fun <C> routeToLast(context: C, viewParent: Any? = null)
+    fun routeToLast(context: Any, viewParent: Any? = null)
 
     /**
      * Go back to the directly previous route
@@ -38,7 +38,7 @@ interface IKartographer {
      * *
      * @return true if go back is possible, false if is the end of navigation history
      */
-    fun <C> back(context: C): Boolean
+    fun back(context: Any): Boolean
 
     /**
      * Navigate back n times
@@ -48,7 +48,7 @@ interface IKartographer {
      * *
      * @return true if go back n times is possible, false if is the end of navigation history
      */
-    fun <C> backTimes(context: C, times: Int): Boolean
+    fun backTimes(context: Any, times: Int): Boolean
 
     /**
      * Navigate through the navigation history until find the route
@@ -58,7 +58,7 @@ interface IKartographer {
      * *
      * @return true if go back to this route is possible, false if it is not
      */
-    fun <C, B> backTo(context: C, route: Route<B>): Boolean
+    fun <B> backTo(context: Any, route: Route<B>): Boolean
 
     /**
      * Clear navigation history

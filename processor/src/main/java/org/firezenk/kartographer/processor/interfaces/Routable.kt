@@ -10,8 +10,8 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-interface Routable<C> {
+interface Routable {
 
     @Throws(ParameterNotFoundException::class, NotEnoughParametersException::class)
-    fun route(context: C, uuid: UUID, parameters: Array<Any>, viewParent: Any?)
+    fun route(context: Any, uuid: UUID, parameters: Array<Any>, viewParent: Any?)
 }

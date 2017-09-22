@@ -6,6 +6,7 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.feature_info.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.annotations.RoutableView
+import java.util.*
 
 /**
  * Project: Kartographer
@@ -15,6 +16,12 @@ import org.firezenk.kartographer.annotations.RoutableView
  */
 @RoutableView(params = arrayOf(), requestCode = -1)
 class InfoView(context: Context?) : FrameLayout(context) {
+
+    companion object {
+        fun newInstance(context: Context, uuid: UUID): InfoView {
+            return InfoView(context)
+        }
+    }
 
     init {
         View.inflate(getContext(), R.layout.feature_info, this)

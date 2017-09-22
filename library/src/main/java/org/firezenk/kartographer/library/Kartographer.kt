@@ -37,7 +37,7 @@ class Kartographer : IKartographer {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <C, B> routeTo(context: C, route: Route<B>) {
+    override fun <B> routeTo(context: Any, route: Route<B>) {
         val prev: Route<B>? = if (history.isEmpty()) null else history.get(history.size - 1).viewHistory.peek() as Route<B>?
         try {
             if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
@@ -46,10 +46,10 @@ class Kartographer : IKartographer {
                 log?.d(" Navigating to: ", route)
 
                 if (route.bundle != null) {
-                    (route.clazz.newInstance() as Routable<C, B>)
+                    (route.clazz.newInstance() as Routable<B>)
                             .route(context, route.uuid, route.bundle as B, route.viewParent);
                 } else {
-                    (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable<C>)
+                    (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
                             .route(context, route.uuid, route.params as Array<Any>, route.viewParent);
                 }
 
@@ -79,7 +79,7 @@ class Kartographer : IKartographer {
         }
     }
 
-    override fun <C> routeToLast(context: C, viewParent: Any?) {
+    override fun routeToLast(context: Any, viewParent: Any?) {
         if (viewParent != null) {
             for (route in history[getHistoryLast()].viewHistory) {
                 route.viewParent = viewParent
@@ -88,7 +88,7 @@ class Kartographer : IKartographer {
         routeTo(context, history.get(getHistoryLast()).viewHistory.pop());
     }
 
-    override fun <C> back(context: C): Boolean {
+    override fun back(context: Any): Boolean {
         log?.d(" <<--- Back")
         log?.d(" History: ", history, this::getHistoryLast)
 
@@ -109,7 +109,7 @@ class Kartographer : IKartographer {
         return back(context);
     }
 
-    override fun <C> backTimes(context: C, times: Int): Boolean {
+    override fun backTimes(context: Any, times: Int): Boolean {
         try {
             for (i in 0..times - 1) {
                 if (!back(context)) {
@@ -125,7 +125,7 @@ class Kartographer : IKartographer {
         }
     }
 
-    override fun <C, B> backTo(context: C, route: Route<B>): Boolean {
+    override fun <B> backTo(context: Any, route: Route<B>): Boolean {
         if (history.isEmpty()) {
             log?.d("Is not possible to go back, history is empty")
             return false

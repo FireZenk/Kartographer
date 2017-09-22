@@ -41,6 +41,8 @@ dependencies {
     //implementation "org.firezenk.kartographer:processor:$NVersion"
     //implementation "org.firezenk.kartographer:library:$NVersion"
 
+    compileOnly 'javax.annotation:javax.annotation-api:1.2'
+
     implementation project(':annotations')
     implementation project(':library')
     kapt project(':processor')

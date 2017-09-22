@@ -109,14 +109,14 @@ class RouteProcessor : AbstractProcessor() {
         val sb = StringBuilder()
 
         sb.append("" +
-                "  if (parameters.length < " + params?.size + ") {\n" +
-                "      throw NotEnoughParametersException(\"Need ${params?.size} params\")\n" +
+                "  if (parameters.size < " + params?.size + ") {\n" +
+                "      throw org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException(\"Need ${params?.size} params\")\n" +
                 "  }\n")
 
         for ((i, tm) in params!!.withIndex()) {
             sb.append("" +
                     "  if (parameters[" + i + "] == null || !(parameters[" + i + "] is " + tm.toString() + ")) {\n" +
-                    "      throw ParameterNotFoundException(\"Need ${tm}\")\n" +
+                    "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need ${tm}\")\n" +
                     "  }\n")
         }
 
@@ -142,20 +142,20 @@ class RouteProcessor : AbstractProcessor() {
                     "  }\n")
         } else {
             sb.append("" +
-                    "  if (viewParent == null || !(viewParent is android.view.ViewGroup)) {\n" +
-                    "      throw ParameterNotFoundException(\"Need a view parent or is not a ViewGroup\")\n" +
+                    "  if (!(viewParent is android.view.ViewGroup)) {\n" +
+                    "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need a view parent or is not a ViewGroup\")\n" +
                     "  }\n")
 
             if (params.isNotEmpty()) {
                 sb.append("" +
-                        "  ((android.view.ViewGroup) viewParent).removeAllViews()\n" +
-                        "  ((android.view.ViewGroup) viewParent).addView(" + typeElement.simpleName
-                        + ".newInstance((android.content.Context) context, uuid" + this.parametersToString(params) + "))\n")
+                        "  viewParent.removeAllViews()\n" +
+                        "  viewParent.addView(" + typeElement.simpleName
+                        + ".newInstance(context as android.content.Context, uuid" + this.parametersToString(params) + "))\n")
             } else {
                 sb.append("" +
-                        "  ((android.view.ViewGroup) viewParent).removeAllViews()\n" +
-                        "  ((android.view.ViewGroup) viewParent).addView(" + typeElement.simpleName
-                        + ".newInstance((android.content.Context) context, uuid))\n")
+                        "  viewParent.removeAllViews()\n" +
+                        "  viewParent.addView(" + typeElement.simpleName
+                        + ".newInstance(context as android.content.Context, uuid))\n")
             }
         }
 
@@ -164,14 +164,12 @@ class RouteProcessor : AbstractProcessor() {
         return FunSpec.builder("route")
                 .addModifiers(KModifier.PUBLIC)
                 .addModifiers(KModifier.OVERRIDE)
-                //.addException(ParameterNotFoundException::class.java)
-                //.addException(NotEnoughParametersException::class.java)
-                .returns(Void.TYPE)
                 .addParameter("context", Any::class)
                 .addParameter("uuid", UUID::class)
-                .addParameter("parameters", Array<Any>::class)
-                .addParameter("viewParent", Any::class)
+                .addParameter(ParameterSpec.builder("parameters", ParameterizedTypeName.get(ARRAY, ANY)).build())
+                .addParameter(ParameterSpec.builder("viewParent", ANY.asNullable()).build())
                 .addCode(sb.toString())
+                .returns(Void.TYPE)
                 .build()
     }
 
