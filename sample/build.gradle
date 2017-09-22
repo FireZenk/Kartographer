@@ -35,22 +35,30 @@ android {
     }
 }
 
+repositories {
+    /* Kartographer maven */
+    maven { url 'https://github.com/FireZenk/maven-repo/raw/master/'}
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    //def NVersion = '0.1.0'
-    //implementation "org.firezenk.kartographer:annotations:$NVersion"
-    //implementation "org.firezenk.kartographer:processor:$NVersion"
-    //implementation "org.firezenk.kartographer:library:$NVersion"
+    /* Kartographer dependencies */
+    provided 'javax.annotation:javax.annotation-api:1.2'
+    provided 'com.squareup:kotlinpoet:0.5.0'
 
-    compileOnly 'javax.annotation:javax.annotation-api:1.2'
+    def NVersion = '0.2.0'
+    implementation "org.firezenk.kartographer:annotations:$NVersion"
+    implementation "org.firezenk.kartographer:library:$NVersion"
+    implementation "org.firezenk.kartographer:processor:$NVersion"
+    kapt "org.firezenk.kartographer:processor:$NVersion"
+    /* End */
 
-    implementation project(':annotations')
-    implementation project(':library')
-    kapt project(':processor')
-    compileOnly project(':processor')
+    //implementation project(':annotations')
+    //implementation project(':library')
+    //compileOnly project(':processor')
+    //kapt project(':processor')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
