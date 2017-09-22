@@ -36,7 +36,7 @@ class RouteProcessor : AbstractProcessor() {
         this.messager = env?.messager
     }
 
-    override fun getSupportedAnnotationTypes() = setOf<String>(
+    override fun getSupportedAnnotationTypes() = setOf(
             RoutableActivity::class.java.canonicalName,
             RoutableView::class.java.canonicalName
     )
@@ -44,9 +44,7 @@ class RouteProcessor : AbstractProcessor() {
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
     override fun process(annotations: MutableSet<out TypeElement>?, env: RoundEnvironment): Boolean {
-
-        val options = processingEnv.options
-        val kotlinGenerated = options[KAPT_KOTLIN_GENERATED_OPTION]
+        val kotlinGenerated = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION]
 
         env.getElementsAnnotatedWith(RoutableActivity::class.java)
                 .map { generateRoute(it as TypeElement) }

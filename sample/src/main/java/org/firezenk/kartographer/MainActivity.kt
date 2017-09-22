@@ -3,7 +3,9 @@ package org.firezenk.kartographer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import org.firezenk.kartographer.info.InfoViewRoute
 import org.firezenk.kartographer.library.Kartographer
+import org.firezenk.kartographer.library.Route
 
 /**
  * Project: Kartographer
@@ -20,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         if (Kartographer.get().hasHistory()) {
             Kartographer.get().routeToLast(this, placeholder)
         } else {
-            //Kartographer.get().routeTo(this, Route<Any>(InfoViewRoute::class.java, Bundle(), placeholder))
+            Kartographer.get().routeTo(this, Route<Any>(InfoViewRoute::class.java, Bundle(), placeholder))
         }
     }
 
