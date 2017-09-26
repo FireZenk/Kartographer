@@ -1,0 +1,56 @@
+# Kartographer
+
+An Android routing library for Kotlin based on Naviganto
+
+### GRADLE:
+
+```groovy
+...
+apply plugin: 'kotlin-kapt'
+
+repositories {
+  ...
+  maven { url 'https://github.com/FireZenk/maven-repo/raw/master/'}
+}
+
+dependencies {
+  ...
+  compileOnly 'javax.annotation:javax.annotation-api:1.2'
+  compileOnly 'com.squareup:kotlinpoet:0.5.0'
+
+  def NVersion = '0.3.1'
+  implementation "org.firezenk.kartographer:annotations:$NVersion"
+  implementation "org.firezenk.kartographer:library:$NVersion"
+  annotationProcessor "org.firezenk.kartographer:processor:$NVersion"
+  implementation "org.firezenk.kartographer:processor:$NVersion"
+  kapt "org.firezenk.kartographer:processor:$NVersion"
+}
+```
+
+### DESCRIPTION:
+
+_Kartographer_ consists of 5 main classes:
+- `Kartographer` which is in charge of navigate between views (`Activity` or `View`).
+- `Route` that contains the desired route.
+- `@RoutableActivity` and `@RoutableView` to use auto-routes.
+- `Routable` the interface that is implemented for each of our _custom_ `Route`s.
+
+Additionally, two custom exceptions are provided for make the debugging easier:
+- `ParameterNotFoundException` launched when not found a path parameter that we need.
+- `NotEnoughParametersException` which is launched if the route has not received all the necessary parameters.
+
+### USAGE
+
+-- TODO
+
+### ADDITIONAL NOTES
+
+- No, it is not contemplated the use of fragments, although it is possible (using `View` sample)
+- I recommend to use auto-routes because you can avoid to use `Parcelables`
+- User `.clearHistory()` if you need to clear all the navigation history
+- There is some more self documented [functions here](https://github.com/FireZenk/Kartographer/blob/develop/library/src/main/java/org/firezenk/kartographer/library/IKartographer.kt)
+- For more info an samples, see `sample` module
+
+### CHANGES
+
+[See CHANGES.md](https://github.com/FireZenk/Kartographer/blob/develop/CHANGES.md)
