@@ -29,7 +29,7 @@ object Kartographer : IKartographer {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <B> routeTo(context: Any, route: Route<B>) {
+    private fun <B> routeTo(context: Any, route: Route<B>) {
         val prev: Route<B>? = if (history.isEmpty()) null else history[history.size - 1].viewHistory.peek() as Route<B>?
         try {
             if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
@@ -72,21 +72,23 @@ object Kartographer : IKartographer {
         }
     }
 
-    override fun routeToLast(context: Any, viewParent: Any?) {
-        if (viewParent != null) {
-            for (route in history[getHistoryLast()].viewHistory) {
-                route.viewParent = viewParent
+    override fun last(context: Any, viewParent: Any?): Boolean {
+        return if (hasHistory()) {
+            if (viewParent != null) {
+                for (route in history[getHistoryLast()].viewHistory) {
+                    route.viewParent = viewParent
+                }
             }
+            routeTo(context, history[getHistoryLast()].viewHistory.pop());
+            true
+        } else {
+            false
         }
-        routeTo(context, history[getHistoryLast()].viewHistory.pop());
     }
 
-    override fun <B> routeToLastOr(context: Any, route: Route<B>) {
-        if (hasHistory()) {
-            routeToLast(context, route.viewParent)
-        } else {
-            routeTo(context, route)
-        }
+    override fun <B> next(context: Any, route: Route<B>): Boolean {
+        routeTo(context, route)
+        return true
     }
 
     override fun back(context: Any): Boolean {

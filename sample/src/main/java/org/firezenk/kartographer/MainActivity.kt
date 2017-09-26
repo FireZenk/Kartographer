@@ -22,9 +22,8 @@ class MainActivity : AppCompatActivity() {
 
         with(Kartographer) {
             debug()
-            routeToLastOr(
-                    this@MainActivity,
-                    Route<Any>(InfoViewRoute::class.java, arrayOf("hi!"), placeholder))
+            val route = Route<Any>(InfoViewRoute::class.java, arrayOf("hi!"), placeholder)
+            last(this@MainActivity, placeholder) or next(this@MainActivity, route)
         }
     }
 
