@@ -12,13 +12,7 @@ import kotlin.collections.ArrayList
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Kartographer : IKartographer {
-
-    companion object {
-        private var INSTANCE: Kartographer = Kartographer()
-
-        fun get() : Kartographer = INSTANCE
-    }
+object Kartographer : IKartographer {
 
     private val history: ArrayList<ComplexRoute> = ArrayList()
     private var log: Logger? = null
@@ -31,7 +25,7 @@ class Kartographer : IKartographer {
 
     override fun debug(): Kartographer {
         log = Logger()
-        return INSTANCE;
+        return this;
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -114,8 +108,6 @@ class Kartographer : IKartographer {
                 return false;
             }
         }
-
-        return back(context);
     }
 
     override fun backTimes(context: Any, times: Int): Boolean {
