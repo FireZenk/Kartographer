@@ -20,15 +20,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Kartographer.get().debug().hasHistory()) {
-            Kartographer.get().routeToLast(this, placeholder)
-        } else {
-            Kartographer.get().routeTo(this, Route<Any>(InfoViewRoute::class.java, arrayOf("hi!"), placeholder))
+        with(Kartographer) {
+            debug()
+            val route = Route<Any>(InfoViewRoute::class.java, arrayOf("hi!"), placeholder)
+            last(this@MainActivity, placeholder) or next(this@MainActivity, route)
         }
     }
 
     override fun onBackPressed() {
-        if (!Kartographer.get().back(this))
+        if (!Kartographer.back(this))
             super.onBackPressed()
     }
 

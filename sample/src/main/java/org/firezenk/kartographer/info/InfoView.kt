@@ -36,11 +36,9 @@ class InfoView(context: Context?) : FrameLayout(context) {
         textView.text = text
 
         openDetail.setOnClickListener {
-            Kartographer.get().routeTo(getContext(), Route<Any>(
-                    InfoViewRoute::class.java,
-                    arrayOf("${Random().nextInt()}"),
-                    (getContext() as MainActivity).getPlaceHolder())
-            )
+            val route = Route<Any>(InfoViewRoute::class.java,
+                    arrayOf("${Random().nextInt()}"), (getContext() as MainActivity).getPlaceHolder())
+            Kartographer.next(getContext(), route)
         }
     }
 }

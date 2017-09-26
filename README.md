@@ -41,7 +41,28 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 
 ### USAGE
 
--- TODO
+###### 1. Route between targets
+
+- Move to a new route:
+`Kartographer.next(context, Route(...))`
+- Back to the prev route:
+`Kartographer.back(context)`
+- Return to last known route:
+`Kartographer.last(context, placeholder)`
+
+###### 2. Mark the target view as Route
+
+```
+@RoutableActivity(params = {...}, requestCode = ...)
+class SampleActivity : AppCompatActivity{...}
+
+// or
+
+@RoutableView(params = {...}, requestCode = ...)
+class SomeView extends FrameLayout{...}
+```
+
+optionally you can create custom routes inheriting from `Routable.class`
 
 ### ADDITIONAL NOTES
 

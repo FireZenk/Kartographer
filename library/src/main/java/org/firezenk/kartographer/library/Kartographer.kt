@@ -12,13 +12,7 @@ import kotlin.collections.ArrayList
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Kartographer : IKartographer {
-
-    companion object {
-        private var INSTANCE: Kartographer = Kartographer()
-
-        fun get() : Kartographer = INSTANCE
-    }
+object Kartographer : IKartographer {
 
     private val history: ArrayList<ComplexRoute> = ArrayList()
     private var log: Logger? = null
@@ -31,11 +25,11 @@ class Kartographer : IKartographer {
 
     override fun debug(): Kartographer {
         log = Logger()
-        return INSTANCE;
+        return this;
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <B> routeTo(context: Any, route: Route<B>) {
+    private fun <B> routeTo(context: Any, route: Route<B>) {
         val prev: Route<B>? = if (history.isEmpty()) null else history[history.size - 1].viewHistory.peek() as Route<B>?
         try {
             if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
@@ -78,13 +72,23 @@ class Kartographer : IKartographer {
         }
     }
 
-    override fun routeToLast(context: Any, viewParent: Any?) {
-        if (viewParent != null) {
-            for (route in history[getHistoryLast()].viewHistory) {
-                route.viewParent = viewParent
+    override fun last(context: Any, viewParent: Any?): Boolean {
+        return if (hasHistory()) {
+            if (viewParent != null) {
+                for (route in history[getHistoryLast()].viewHistory) {
+                    route.viewParent = viewParent
+                }
             }
+            routeTo(context, history[getHistoryLast()].viewHistory.pop());
+            true
+        } else {
+            false
         }
-        routeTo(context, history[getHistoryLast()].viewHistory.pop());
+    }
+
+    override fun <B> next(context: Any, route: Route<B>): Boolean {
+        routeTo(context, route)
+        return true
     }
 
     override fun back(context: Any): Boolean {
@@ -114,11 +118,9 @@ class Kartographer : IKartographer {
                 return false;
             }
         }
-
-        return back(context);
     }
 
-    override fun backTimes(context: Any, times: Int): Boolean {
+    override fun back(context: Any, times: Int): Boolean {
         try {
             for (i in 0 until times) {
                 if (!back(context)) {
@@ -134,7 +136,7 @@ class Kartographer : IKartographer {
         }
     }
 
-    override fun <B> backTo(context: Any, route: Route<B>): Boolean {
+    override fun <B> back(context: Any, route: Route<B>): Boolean {
         when {
             history.isEmpty() -> {
                 log?.d("Is not possible to go back, history is empty")
@@ -142,7 +144,7 @@ class Kartographer : IKartographer {
             }
             history[getHistoryLast()].viewHistory.isEmpty() -> {
                 history.removeAt(getHistoryLast())
-                return backTo(context, route)
+                return back(context, route)
             }
             else -> {
                 val complexRoute = history[getHistoryLast()]
@@ -165,7 +167,7 @@ class Kartographer : IKartographer {
                     return false
                 }
                 history.removeAt(getHistoryLast())
-                return backTo(context, route)
+                return back(context, route)
             }
         }
     }

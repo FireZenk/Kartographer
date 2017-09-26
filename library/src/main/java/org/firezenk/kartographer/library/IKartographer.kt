@@ -17,20 +17,20 @@ interface IKartographer {
     fun debug(): Kartographer
 
     /**
+     * Navigate to the last known route
+     * @param context The Android's context (required for Android)
+     * *
+     * @param route The target route
+     */
+    fun last(context: Any, viewParent: Any?): Boolean
+
+    /**
      * Navigate to the next route
      * @param context The Android's context (required for Android)
      * *
      * @param route The target route
      */
-    fun <B> routeTo(context: Any, route: Route<B>)
-
-    /**
-     * Navigate to the last route available on history
-     * @param context The Android's context (required for Android)
-     * *
-     * @param viewParent New view parent (for view recreations)
-     */
-    fun routeToLast(context: Any, viewParent: Any? = null)
+    fun <B> next(context: Any, route: Route<B>): Boolean
 
     /**
      * Go back to the directly previous route
@@ -48,7 +48,7 @@ interface IKartographer {
      * *
      * @return true if go back n times is possible, false if is the end of navigation history
      */
-    fun backTimes(context: Any, times: Int): Boolean
+    fun back(context: Any, times: Int): Boolean
 
     /**
      * Navigate through the navigation history until find the route
@@ -58,7 +58,7 @@ interface IKartographer {
      * *
      * @return true if go back to this route is possible, false if it is not
      */
-    fun <B> backTo(context: Any, route: Route<B>): Boolean
+    fun <B> back(context: Any, route: Route<B>): Boolean
 
     /**
      * Clear navigation history
