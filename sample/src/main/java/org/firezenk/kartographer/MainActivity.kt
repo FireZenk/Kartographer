@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
-import org.firezenk.kartographer.info.InfoViewRoute
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Route
+import org.firezenk.kartographer.tabs.TabsViewRoute
 
 /**
  * Project: Kartographer
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         with(Kartographer) {
             debug()
-            val route = Route<Any>(InfoViewRoute::class.java, arrayOf("hi!"), placeholder)
+            val route = Route<Any>(TabsViewRoute::class.java, arrayOf<Any>(), placeholder)
             last(this@MainActivity, placeholder) or next(this@MainActivity, route)
         }
     }
