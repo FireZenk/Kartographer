@@ -33,6 +33,14 @@ interface IKartographer {
     fun routeToLast(context: Any, viewParent: Any? = null)
 
     /**
+     * Navigate to the last route on history, if available, or the new provided one
+     * @param context The Android's context (required for Android)
+     * *
+     * @param route The new target route
+     */
+    fun <B> routeToLastOr(context: Any, route: Route<B>)
+
+    /**
      * Go back to the directly previous route
      * @param context The Android's context (required for Android)
      * *

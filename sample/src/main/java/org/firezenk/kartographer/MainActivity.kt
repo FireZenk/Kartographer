@@ -20,10 +20,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Kartographer.debug().hasHistory()) {
-            Kartographer.routeToLast(this, placeholder)
-        } else {
-            Kartographer.routeTo(this, Route<Any>(InfoViewRoute::class.java, arrayOf("hi!"), placeholder))
+        with(Kartographer) {
+            debug()
+            routeToLastOr(
+                    this@MainActivity,
+                    Route<Any>(InfoViewRoute::class.java, arrayOf("hi!"), placeholder))
         }
     }
 

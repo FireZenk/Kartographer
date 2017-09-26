@@ -81,6 +81,14 @@ object Kartographer : IKartographer {
         routeTo(context, history[getHistoryLast()].viewHistory.pop());
     }
 
+    override fun <B> routeToLastOr(context: Any, route: Route<B>) {
+        if (hasHistory()) {
+            routeToLast(context, route.viewParent)
+        } else {
+            routeTo(context, route)
+        }
+    }
+
     override fun back(context: Any): Boolean {
         log?.let {
             it.d(" <<--- Back")
