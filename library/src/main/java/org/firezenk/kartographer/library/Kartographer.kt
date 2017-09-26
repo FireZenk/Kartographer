@@ -26,9 +26,7 @@ class Kartographer : IKartographer {
     internal class ComplexRoute internal
     constructor(internal val route: Route<*>?, internal val viewHistory: ArrayDeque<Route<*>>) {
 
-        override fun toString(): String {
-            return route.toString() + " viewHistory size: " + viewHistory.size
-        }
+        override fun toString() = route.toString() + " viewHistory size: " + viewHistory.size
     }
 
     override fun debug(): Kartographer {
@@ -41,9 +39,10 @@ class Kartographer : IKartographer {
         val prev: Route<B>? = if (history.isEmpty()) null else history[history.size - 1].viewHistory.peek() as Route<B>?
         try {
             if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
-
-                log?.d(" --->> Next")
-                log?.d(" Navigating to: ", route)
+                log?.let {
+                    it.d(" --->> Next")
+                    it.d(" Navigating to: ", route)
+                }
 
                 if (route.bundle != null) {
                     (route.clazz.newInstance() as Routable<B>)
@@ -85,23 +84,29 @@ class Kartographer : IKartographer {
                 route.viewParent = viewParent
             }
         }
-        routeTo(context, history.get(getHistoryLast()).viewHistory.pop());
+        routeTo(context, history[getHistoryLast()].viewHistory.pop());
     }
 
     override fun back(context: Any): Boolean {
-        log?.d(" <<--- Back")
-        log?.d(" History: ", history, this::getHistoryLast)
+        log?.let {
+            it.d(" <<--- Back")
+            it.d(" History: ", history, this::getHistoryLast)
+        }
 
         when {
             history.isEmpty() -> {
                 return false;
             }
-            !history.get(getHistoryLast()).viewHistory.isEmpty() -> {
-                log?.d(" Removing last: ", history[getHistoryLast()].viewHistory.pop());
+            !history[getHistoryLast()].viewHistory.isEmpty() -> {
+                val prevRoute = history[getHistoryLast()].viewHistory.pop()
+                log?.d(" Removing last: ", prevRoute);
 
-                if (!history.get(getHistoryLast()).viewHistory.isEmpty()) {
+                if (!history[getHistoryLast()].viewHistory.isEmpty()) {
                     routeTo(context, history[getHistoryLast()].viewHistory.pop());
                     return true;
+                } else {
+                    routeTo(context, prevRoute);
+                    return false;
                 }
             }
             else -> {
@@ -122,7 +127,7 @@ class Kartographer : IKartographer {
             }
             return true
         } catch (e: Exception) {
-            System.out.println("Is not possible to go back " + times +
+            log?.d("Is not possible to go back " + times +
                     " times, the history length is " + history.size)
             log?.d(e.message!!)
             return false
@@ -146,7 +151,7 @@ class Kartographer : IKartographer {
                     val size = complexRoute.viewHistory.size
                     for (i in size downTo 1) {
                         val prevRoute = complexRoute.viewHistory.pop()
-                        if (route.clazz.equals(prevRoute.clazz)) {
+                        if (route.clazz == prevRoute.clazz) {
                             this.routeTo(context, prevRoute)
                             return true
                         }
@@ -165,32 +170,19 @@ class Kartographer : IKartographer {
         }
     }
 
-    override fun clearHistory() {
-        history.clear()
-    }
+    override fun clearHistory() = history.clear()
 
-    override fun hasHistory(): Boolean {
-        return !history.isEmpty()
-    }
+    override fun hasHistory() = !history.isEmpty()
 
-    private fun createStartRoute() {
-        history.add(ComplexRoute(null, ArrayDeque<Route<*>>()))
-    }
+    private fun createStartRoute() = history.add(ComplexRoute(null, ArrayDeque<Route<*>>()))
 
-    private fun createIntermediateRoute(route: Route<*>) {
-        history.add(ComplexRoute(route, ArrayDeque<Route<*>>()))
-    }
+    private fun createIntermediateRoute(route: Route<*>) = history.add(ComplexRoute(route, ArrayDeque<Route<*>>()))
 
-    private fun createViewRoute(route: Route<*>) {
-        history[getHistoryLast()].viewHistory.addFirst(route)
-    }
+    private fun createViewRoute(route: Route<*>) = history[getHistoryLast()].viewHistory.addFirst(route)
 
-    private fun getHistoryLast(): Int {
-        return history.size - 1
-    }
+    private fun getHistoryLast() = history.size - 1
 
-    private fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>): Boolean {
-        return prev == next && (prev.bundle != null && (prev.bundle as B?)!!.equals(next.bundle)
+    private fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>) =
+            prev == next && (prev.bundle != null && (prev.bundle as B?)!!.equals(next.bundle)
                 || prev.internalParams != null && Arrays.equals(prev.internalParams, next.internalParams))
-    }
 }

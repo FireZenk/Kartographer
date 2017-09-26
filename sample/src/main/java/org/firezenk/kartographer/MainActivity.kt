@@ -32,7 +32,5 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
     }
 
-    fun getPlaceHolder(): ViewGroup {
-        return placeholder
-    }
+    fun getPlaceHolder(): ViewGroup = placeholder
 }
