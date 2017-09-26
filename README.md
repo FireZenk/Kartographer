@@ -59,7 +59,7 @@ class SampleActivity : AppCompatActivity{...}
 // or
 
 @RoutableView(params = {...}, requestCode = ...)
-class SomeView extends FrameLayout{...}
+class SomeView : FrameLayout{...}
 ```
 
 optionally you can create custom routes inheriting from `Routable.class`
