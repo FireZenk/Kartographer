@@ -8,26 +8,26 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val forResult: Int = -1) {
+class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val forResult: Int = -1, val path: Path? = null) {
 
     val uuid: UUID = UUID.randomUUID()
     var bundle: B? = null
     var internalParams: Array<Any>? = null
 
     init {
-        this.getExtras(params)
+        getExtras(params)
     }
-
-    override fun equals(other: Any?) = other is Route<*> && this.clazz == other.clazz
 
     @Suppress("UNCHECKED_CAST")
     private fun getExtras(params: Any) {
         try {
-            this.internalParams = params as Array<Any>
+            internalParams = params as Array<Any>
         } catch (ex: ClassCastException) {
-            this.bundle = params as B
+            bundle = params as B
         }
     }
+
+    override fun equals(other: Any?) = other is Route<*> && clazz == other.clazz
 
     override fun toString() = "Route class name: ${clazz.simpleName} Has bundle? ${(bundle != null)} Has params? ${(internalParams != null)}"
 

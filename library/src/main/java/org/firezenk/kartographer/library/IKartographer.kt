@@ -61,6 +61,17 @@ interface IKartographer {
     fun <B> back(context: Any, route: Route<B>): Boolean
 
     /**
+     * Navigate back to the last known route of the indicated Path
+     *
+     * @param context The Android's context (required for Android)
+     * *
+     * @param path The target path
+     * *
+     * @return true if go back to this route is possible, false if it is not
+     */
+    fun back(context: Any, path: Path): Boolean
+
+    /**
      * Clear navigation history
      */
     fun clearHistory()
