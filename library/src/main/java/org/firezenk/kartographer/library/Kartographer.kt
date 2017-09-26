@@ -38,7 +38,7 @@ class Kartographer : IKartographer {
 
     @Suppress("UNCHECKED_CAST")
     override fun <B> routeTo(context: Any, route: Route<B>) {
-        val prev: Route<B>? = if (history.isEmpty()) null else history.get(history.size - 1).viewHistory.peek() as Route<B>?
+        val prev: Route<B>? = if (history.isEmpty()) null else history[history.size - 1].viewHistory.peek() as Route<B>?
         try {
             if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
 
@@ -92,18 +92,22 @@ class Kartographer : IKartographer {
         log?.d(" <<--- Back")
         log?.d(" History: ", history, this::getHistoryLast)
 
-        if (history.isEmpty()) {
-            return false;
-        } else if (!history.get(getHistoryLast()).viewHistory.isEmpty()) {
-            log?.d(" Removing last: ", history.get(getHistoryLast()).viewHistory.pop());
-
-            if (!history.get(getHistoryLast()).viewHistory.isEmpty()) {
-                routeTo(context, history.get(getHistoryLast()).viewHistory.pop());
-                return true;
+        when {
+            history.isEmpty() -> {
+                return false;
             }
-        } else {
-            history.removeAt(getHistoryLast());
-            return false;
+            !history.get(getHistoryLast()).viewHistory.isEmpty() -> {
+                log?.d(" Removing last: ", history[getHistoryLast()].viewHistory.pop());
+
+                if (!history.get(getHistoryLast()).viewHistory.isEmpty()) {
+                    routeTo(context, history[getHistoryLast()].viewHistory.pop());
+                    return true;
+                }
+            }
+            else -> {
+                history.removeAt(getHistoryLast());
+                return false;
+            }
         }
 
         return back(context);
@@ -111,7 +115,7 @@ class Kartographer : IKartographer {
 
     override fun backTimes(context: Any, times: Int): Boolean {
         try {
-            for (i in 0..times - 1) {
+            for (i in 0 until times) {
                 if (!back(context)) {
                     return false
                 }
@@ -126,34 +130,38 @@ class Kartographer : IKartographer {
     }
 
     override fun <B> backTo(context: Any, route: Route<B>): Boolean {
-        if (history.isEmpty()) {
-            log?.d("Is not possible to go back, history is empty")
-            return false
-        } else if (history[getHistoryLast()].viewHistory.isEmpty()) {
-            history.removeAt(getHistoryLast())
-            return backTo(context, route)
-        } else {
-            val complexRoute = history[getHistoryLast()]
-
-            if (!complexRoute.viewHistory.isEmpty()) {
-                val size = complexRoute.viewHistory.size
-                for (i in size downTo 1) {
-                    val prevRoute = complexRoute.viewHistory.pop()
-                    if (route.clazz.equals(prevRoute.clazz)) {
-                        this.routeTo(context, prevRoute)
-                        return true
-                    }
-                }
-            } else if (complexRoute.route!!.clazz == route.clazz) {
-                history.removeAt(getHistoryLast())
-                this.routeTo(context, complexRoute.route)
-                return true
-            } else {
-                log?.d("Is not possible to go back, there is no route like: " + route.clazz.name)
+        when {
+            history.isEmpty() -> {
+                log?.d("Is not possible to go back, history is empty")
                 return false
             }
-            history.removeAt(getHistoryLast())
-            return backTo(context, route)
+            history[getHistoryLast()].viewHistory.isEmpty() -> {
+                history.removeAt(getHistoryLast())
+                return backTo(context, route)
+            }
+            else -> {
+                val complexRoute = history[getHistoryLast()]
+
+                if (!complexRoute.viewHistory.isEmpty()) {
+                    val size = complexRoute.viewHistory.size
+                    for (i in size downTo 1) {
+                        val prevRoute = complexRoute.viewHistory.pop()
+                        if (route.clazz.equals(prevRoute.clazz)) {
+                            this.routeTo(context, prevRoute)
+                            return true
+                        }
+                    }
+                } else if (complexRoute.route!!.clazz == route.clazz) {
+                    history.removeAt(getHistoryLast())
+                    this.routeTo(context, complexRoute.route)
+                    return true
+                } else {
+                    log?.d("Is not possible to go back, there is no route like: " + route.clazz.name)
+                    return false
+                }
+                history.removeAt(getHistoryLast())
+                return backTo(context, route)
+            }
         }
     }
 
