@@ -38,7 +38,7 @@ interface IKartographer {
      * *
      * @return true if go back is possible, false if is the end of navigation history
      */
-    infix fun back(context: Any): Boolean
+    fun back(context: Any): Boolean
 
     /**
      * Navigate back n times
@@ -48,7 +48,7 @@ interface IKartographer {
      * *
      * @return true if go back n times is possible, false if is the end of navigation history
      */
-    fun backTimes(context: Any, times: Int): Boolean
+    fun back(context: Any, times: Int): Boolean
 
     /**
      * Navigate through the navigation history until find the route
@@ -58,7 +58,7 @@ interface IKartographer {
      * *
      * @return true if go back to this route is possible, false if it is not
      */
-    fun <B> backTo(context: Any, route: Route<B>): Boolean
+    fun <B> back(context: Any, route: Route<B>): Boolean
 
     /**
      * Clear navigation history

@@ -120,7 +120,7 @@ object Kartographer : IKartographer {
         }
     }
 
-    override fun backTimes(context: Any, times: Int): Boolean {
+    override fun back(context: Any, times: Int): Boolean {
         try {
             for (i in 0 until times) {
                 if (!back(context)) {
@@ -136,7 +136,7 @@ object Kartographer : IKartographer {
         }
     }
 
-    override fun <B> backTo(context: Any, route: Route<B>): Boolean {
+    override fun <B> back(context: Any, route: Route<B>): Boolean {
         when {
             history.isEmpty() -> {
                 log?.d("Is not possible to go back, history is empty")
@@ -144,7 +144,7 @@ object Kartographer : IKartographer {
             }
             history[getHistoryLast()].viewHistory.isEmpty() -> {
                 history.removeAt(getHistoryLast())
-                return backTo(context, route)
+                return back(context, route)
             }
             else -> {
                 val complexRoute = history[getHistoryLast()]
@@ -167,7 +167,7 @@ object Kartographer : IKartographer {
                     return false
                 }
                 history.removeAt(getHistoryLast())
-                return backTo(context, route)
+                return back(context, route)
             }
         }
     }
