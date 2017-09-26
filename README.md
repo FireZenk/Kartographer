@@ -18,7 +18,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.3.1'
+  def NVersion = '0.3.2'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:library:$NVersion"
   annotationProcessor "org.firezenk.kartographer:processor:$NVersion"
@@ -52,7 +52,7 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 
 ###### 2. Mark the target view as Route
 
-```
+```kotlin
 @RoutableActivity(params = {...}, requestCode = ...)
 class SampleActivity : AppCompatActivity{...}
 
