@@ -9,9 +9,7 @@ import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Path
 import org.firezenk.kartographer.library.Route
-import org.firezenk.kartographer.tabs.left.LeftView
 import org.firezenk.kartographer.tabs.left.LeftViewRoute
-import org.firezenk.kartographer.tabs.right.RightView
 import org.firezenk.kartographer.tabs.right.RightViewRoute
 import java.util.*
 
@@ -21,7 +19,7 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 21/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(params = arrayOf(), requestCode = -1)
+@RoutableView(path = "", params = arrayOf(), requestCode = -1)
 class TabsView(context: Context?) : FrameLayout(context) {
 
     companion object {
@@ -39,11 +37,11 @@ class TabsView(context: Context?) : FrameLayout(context) {
         super.onAttachedToWindow()
 
         with(Kartographer) {
-            next(context, Route<Any>(LeftViewRoute::class.java, arrayOf(100), leftPlaceholder, Path(LeftView.PATH)))
-            next(context, Route<Any>(RightViewRoute::class.java, arrayOf(200), rightPlaceholder, Path(RightView.PATH)))
+            next(context, Route<Any>(LeftViewRoute::class.java, arrayOf(100), leftPlaceholder, Path(LeftViewRoute.PATH)))
+            next(context, Route<Any>(RightViewRoute::class.java, arrayOf(200), rightPlaceholder, Path(RightViewRoute.PATH)))
         }
 
-        backLeft.setOnClickListener { Kartographer.back(context, Path(LeftView.PATH)) }
-        backRight.setOnClickListener { Kartographer.back(context, Path(RightView.PATH)) }
+        backLeft.setOnClickListener { Kartographer.back(context, Path(LeftViewRoute.PATH)) }
+        backRight.setOnClickListener { Kartographer.back(context, Path(RightViewRoute.PATH)) }
     }
 }

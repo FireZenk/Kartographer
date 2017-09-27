@@ -18,12 +18,11 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 26/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(params = arrayOf(Int::class), requestCode = -1)
+@RoutableView(path = "RIGHT", params = arrayOf(Int::class), requestCode = -1)
 class RightView(context: Context?) : FrameLayout(context) {
 
     companion object {
 
-        val PATH = "RIGHT"
         var counter : Int = 0
 
         fun newInstance(context: Context, uuid: UUID, counter: Int): RightView {
@@ -35,11 +34,11 @@ class RightView(context: Context?) : FrameLayout(context) {
     init {
         View.inflate(getContext(), R.layout.righttab_view, this)
 
-        text2.text = "$PATH: $counter"
+        text2.text = "${RightViewRoute.PATH}: $counter"
 
         setOnClickListener {
             val route = Route<Any>(RightViewRoute::class.java,
-                    arrayOf(++counter), parent as ViewGroup, Path(PATH))
+                    arrayOf(++counter), parent as ViewGroup, Path(RightViewRoute.PATH))
             Kartographer.next(getContext(), route)
         }
     }

@@ -12,6 +12,11 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.CLASS)
 annotation class RoutableActivity(
         /**
+         * The path that holds the target route
+         * @return the path string
+         */
+        val path: String,
+        /**
          * Possible "bundle" extras
          * @return array class types for the params
          */
