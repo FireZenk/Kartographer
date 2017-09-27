@@ -42,5 +42,8 @@ class TabsView(context: Context?) : FrameLayout(context) {
             next(context, Route<Any>(LeftViewRoute::class.java, arrayOf(100), leftPlaceholder, Path(LeftView.PATH)))
             next(context, Route<Any>(RightViewRoute::class.java, arrayOf(200), rightPlaceholder, Path(RightView.PATH)))
         }
+
+        backLeft.setOnClickListener { Kartographer.back(context, Path(LeftView.PATH)) }
+        backRight.setOnClickListener { Kartographer.back(context, Path(RightView.PATH)) }
     }
 }

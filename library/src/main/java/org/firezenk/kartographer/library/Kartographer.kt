@@ -53,7 +53,14 @@ object Kartographer : IKartographer {
                 if (route.viewParent == null) {
                     createIntermediateRoute(route);
                 } else {
-                    createViewRoute(route);
+                    if (pathIsValid(route, prev) && !pathExists(route.path)) {
+                        createStartRoute(route.path);
+                        createViewRoute(route);
+                    } else if (pathExists(route.path)) {
+                        createViewRouteOnPath(route);
+                    } else {
+                        createViewRoute(route);
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -76,13 +83,33 @@ object Kartographer : IKartographer {
         val prevRoute = complexRoute.viewHistory.pop()
         log?.d(" Removing last: ", prevRoute);
 
-        if (!complexRoute.viewHistory.isEmpty()) {
+        return if (complexRoute.viewHistory.isNotEmpty()) {
             routeTo(context, complexRoute.viewHistory.pop());
-            return true;
+            true;
         } else {
             routeTo(context, prevRoute);
-            return false;
+            false;
         }
+    }
+
+    private fun pathIsValid(route: Route<*>, prev: Route<*>?): Boolean {
+        return route.path != null && route.path != prev?.path
+    }
+
+    private fun pathExists(path: Path?): Boolean {
+        for (i in 0..getHistoryLast()) {
+            val it = history[i]
+            if (it.path == path) {
+                return true
+            }
+            val viewHistory: List<Route<*>> = history[i].viewHistory.toList()
+            for (j in 0 until viewHistory.size) {
+                if (viewHistory[j].path == path) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     override fun last(context: Any, viewParent: Any?): Boolean {
@@ -180,10 +207,14 @@ object Kartographer : IKartographer {
 
         return when {
             history.isEmpty() -> false;
-            else -> (getHistoryLast()..0)
-                    .firstOrNull { history[it].path == path }
-                    ?.let { internalBack(context, history[it]) }
-                    ?: false
+            else -> {
+                for (i in 0 until history.size) {
+                    if (history[i].path == path) {
+                        return internalBack(context, history[i])
+                    }
+                }
+                return false
+            }
         }
     }
 
@@ -191,11 +222,19 @@ object Kartographer : IKartographer {
 
     override fun hasHistory() = !history.isEmpty()
 
-    private fun createStartRoute() = history.add(ComplexRoute(null, null, ArrayDeque<Route<*>>()))
+    private fun createStartRoute(path: Path? = null) = history.add(ComplexRoute(path, null, ArrayDeque<Route<*>>()))
 
     private fun createIntermediateRoute(route: Route<*>) = history.add(ComplexRoute(route.path, route, ArrayDeque<Route<*>>()))
 
     private fun createViewRoute(route: Route<*>) = history[getHistoryLast()].viewHistory.addFirst(route)
+
+    private fun createViewRouteOnPath(route: Route<*>) {
+        for (i in 0 until history.size) {
+            if (history[i].path == route.path) {
+                history[i].viewHistory.addFirst(route)
+            }
+        }
+    }
 
     private fun getHistoryLast() = history.size - 1
 
