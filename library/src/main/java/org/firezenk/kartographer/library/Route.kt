@@ -13,21 +13,34 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
     val uuid: UUID = UUID.randomUUID()
     var bundle: B? = null
     var internalParams: Array<Any>? = null
+    var path: Path?
 
     init {
-        this.getExtras(params)
+        path = getPath(clazz)
+        getExtras(params)
     }
 
-    override fun equals(other: Any?) = other is Route<*> && this.clazz == other.clazz
+    private fun getPath(clazz: Class<*>): Path? {
+        val instance = clazz.newInstance()
+        return if (instance is Routable<*>) {
+            Path(instance.path())
+        } else if (instance is org.firezenk.kartographer.processor.interfaces.Routable) {
+            Path(instance.path())
+        } else {
+            null
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     private fun getExtras(params: Any) {
         try {
-            this.internalParams = params as Array<Any>
+            internalParams = params as Array<Any>
         } catch (ex: ClassCastException) {
-            this.bundle = params as B
+            bundle = params as B
         }
     }
+
+    override fun equals(other: Any?) = other is Route<*> && clazz == other.clazz
 
     override fun toString() = "Route class name: ${clazz.simpleName} Has bundle? ${(bundle != null)} Has params? ${(internalParams != null)}"
 

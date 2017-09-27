@@ -74,7 +74,7 @@ class RouteProcessor : AbstractProcessor() {
     private fun generateRoute(typeElement: TypeElement): FileSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Creating route...")
 
-        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement))
+        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement), addPathGetter(typeElement))
 
         val myClass = createRoute(typeElement, methods)
 
@@ -92,29 +92,29 @@ class RouteProcessor : AbstractProcessor() {
     private fun addRouteMethod(typeElement: TypeElement): FunSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Generating route method")
 
-        val isActivity = typeElement.getAnnotation(RoutableActivity::class.java) != null
+        val isActivity = isActivity(typeElement)
         val requestCode: Int
         val params: List<TypeMirror>?
 
         if (isActivity) {
-            requestCode = this.getForResult(typeElement.getAnnotation(RoutableActivity::class.java))
-            params = this.getParameters(typeElement.getAnnotation(RoutableActivity::class.java))
+            requestCode = getForResult(typeElement.getAnnotation(RoutableActivity::class.java))
+            params = getParameters(typeElement.getAnnotation(RoutableActivity::class.java))
         } else {
-            requestCode = this.getForResult(typeElement.getAnnotation(RoutableView::class.java))
-            params = this.getParameters(typeElement.getAnnotation(RoutableView::class.java))
+            requestCode = getForResult(typeElement.getAnnotation(RoutableView::class.java))
+            params = getParameters(typeElement.getAnnotation(RoutableView::class.java))
         }
 
         val sb = StringBuilder()
 
         sb.append("" +
-                "  if (parameters.size < " + params?.size + ") {\n" +
+                "  if (parameters.size < ${params?.size}) {\n" +
                 "      throw org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException(\"Need ${params?.size} params\")\n" +
                 "  }\n")
 
         for ((i, tm) in params!!.withIndex()) {
             sb.append("" +
                     "  if (!(parameters[$i] is ${typeMirrorToString(tm)})) {\n" +
-                    "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need ${tm}\")\n" +
+                    "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need $tm\")\n" +
                     "  }\n")
         }
 
@@ -168,6 +168,15 @@ class RouteProcessor : AbstractProcessor() {
                 .addParameter(ParameterSpec.builder("viewParent", ANY.asNullable()).build())
                 .addCode(sb.toString())
                 .returns(Void.TYPE)
+                .build()
+    }
+
+    private fun addPathGetter(typeElement: TypeElement): FunSpec {
+        return FunSpec.builder("path")
+                .addModifiers(KModifier.PUBLIC)
+                .addModifiers(KModifier.OVERRIDE)
+                .addCode("return ${typeElement.simpleName}Route.PATH\n\n")
+                .returns(String::class)
                 .build()
     }
 
@@ -244,6 +253,12 @@ class RouteProcessor : AbstractProcessor() {
     private fun createRoute(typeElement: TypeElement, methods: ArrayList<FunSpec>): TypeSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Saving route file...")
 
+        val path = if (isActivity(typeElement)) {
+            getRoutePath(typeElement.getAnnotation(RoutableActivity::class.java))
+        } else {
+            getRoutePath(typeElement.getAnnotation(RoutableView::class.java))
+        }
+
         return TypeSpec.classBuilder("${typeElement.simpleName}Route")
                 .addAnnotation(AnnotationSpec.builder(Generated::class)
                         .addMember("value", "%S", this.javaClass.simpleName)
@@ -251,6 +266,13 @@ class RouteProcessor : AbstractProcessor() {
                 .addModifiers(KModifier.PUBLIC)
                 .addSuperinterface(org.firezenk.kartographer.processor.interfaces.Routable::class.java)
                 .addFunctions(methods)
+                .companionObject(TypeSpec
+                        .companionObjectBuilder()
+                        .addProperty(
+                                PropertySpec.builder("PATH", String::class, KModifier.CONST)
+                                        .initializer("\"$path\"")
+                                        .build())
+                        .build())
                 .build()
     }
 
@@ -274,11 +296,13 @@ class RouteProcessor : AbstractProcessor() {
         return null
     }
 
-    private fun getForResult(annotation: RoutableActivity): Int {
-        return annotation.requestCode
-    }
+    private fun getForResult(annotation: RoutableActivity) = annotation.requestCode
 
-    private fun getForResult(annotation: RoutableView): Int {
-        return annotation.requestCode
-    }
+    private fun getForResult(annotation: RoutableView) = annotation.requestCode
+
+    private fun getRoutePath(annotation: RoutableActivity) = annotation.path
+
+    private fun getRoutePath(annotation: RoutableView) = annotation.path
+
+    private fun isActivity(typeElement: TypeElement) = typeElement.getAnnotation(RoutableActivity::class.java) != null
 }

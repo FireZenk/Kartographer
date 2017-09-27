@@ -18,7 +18,7 @@ object Kartographer : IKartographer {
     private var log: Logger? = null
 
     internal class ComplexRoute internal
-    constructor(internal val route: Route<*>?, internal val viewHistory: ArrayDeque<Route<*>>) {
+    constructor(internal val path: Path?, internal val route: Route<*>?, internal val viewHistory: ArrayDeque<Route<*>>) {
 
         override fun toString() = route.toString() + " viewHistory size: " + viewHistory.size
     }
@@ -53,7 +53,14 @@ object Kartographer : IKartographer {
                 if (route.viewParent == null) {
                     createIntermediateRoute(route);
                 } else {
-                    createViewRoute(route);
+                    if (pathIsValid(route, prev) && !pathExists(route.path)) {
+                        createStartRoute(route.path);
+                        createViewRoute(route);
+                    } else if (pathExists(route.path)) {
+                        createViewRouteOnPath(route);
+                    } else {
+                        createViewRoute(route);
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -70,6 +77,39 @@ object Kartographer : IKartographer {
                 else -> throw e
             }
         }
+    }
+
+    private fun internalBack(context: Any, complexRoute: ComplexRoute): Boolean {
+        val prevRoute = complexRoute.viewHistory.pop()
+        log?.d(" Removing last: ", prevRoute);
+
+        return if (complexRoute.viewHistory.isNotEmpty()) {
+            routeTo(context, complexRoute.viewHistory.pop());
+            true;
+        } else {
+            routeTo(context, prevRoute);
+            false;
+        }
+    }
+
+    private fun pathIsValid(route: Route<*>, prev: Route<*>?): Boolean {
+        return route.path != null && route.path != prev?.path
+    }
+
+    private fun pathExists(path: Path?): Boolean {
+        for (i in 0..getHistoryLast()) {
+            val it = history[i]
+            if (it.path == path) {
+                return true
+            }
+            val viewHistory: List<Route<*>> = history[i].viewHistory.toList()
+            for (j in 0 until viewHistory.size) {
+                if (viewHistory[j].path == path) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     override fun last(context: Any, viewParent: Any?): Boolean {
@@ -97,25 +137,12 @@ object Kartographer : IKartographer {
             it.d(" History: ", history, this::getHistoryLast)
         }
 
-        when {
-            history.isEmpty() -> {
-                return false;
-            }
-            !history[getHistoryLast()].viewHistory.isEmpty() -> {
-                val prevRoute = history[getHistoryLast()].viewHistory.pop()
-                log?.d(" Removing last: ", prevRoute);
-
-                if (!history[getHistoryLast()].viewHistory.isEmpty()) {
-                    routeTo(context, history[getHistoryLast()].viewHistory.pop());
-                    return true;
-                } else {
-                    routeTo(context, prevRoute);
-                    return false;
-                }
-            }
+        return when {
+            history.isEmpty() -> false
+            history[getHistoryLast()].viewHistory.isNotEmpty() -> internalBack(context, history[getHistoryLast()])
             else -> {
                 history.removeAt(getHistoryLast());
-                return false;
+                false;
             }
         }
     }
@@ -172,19 +199,46 @@ object Kartographer : IKartographer {
         }
     }
 
+    override fun back(context: Any, path: Path): Boolean {
+        log?.let {
+            it.d(" <<--- Back")
+            it.d(" History: ", history, this::getHistoryLast)
+        }
+
+        return when {
+            history.isEmpty() -> false;
+            else -> {
+                for (i in 0 until history.size) {
+                    if (history[i].path == path) {
+                        return internalBack(context, history[i])
+                    }
+                }
+                return false
+            }
+        }
+    }
+
     override fun clearHistory() = history.clear()
 
     override fun hasHistory() = !history.isEmpty()
 
-    private fun createStartRoute() = history.add(ComplexRoute(null, ArrayDeque<Route<*>>()))
+    private fun createStartRoute(path: Path? = null) = history.add(ComplexRoute(path, null, ArrayDeque<Route<*>>()))
 
-    private fun createIntermediateRoute(route: Route<*>) = history.add(ComplexRoute(route, ArrayDeque<Route<*>>()))
+    private fun createIntermediateRoute(route: Route<*>) = history.add(ComplexRoute(route.path, route, ArrayDeque<Route<*>>()))
 
     private fun createViewRoute(route: Route<*>) = history[getHistoryLast()].viewHistory.addFirst(route)
+
+    private fun createViewRouteOnPath(route: Route<*>) {
+        for (i in 0 until history.size) {
+            if (history[i].path == route.path) {
+                history[i].viewHistory.addFirst(route)
+            }
+        }
+    }
 
     private fun getHistoryLast() = history.size - 1
 
     private fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>) =
-            prev == next && (prev.bundle != null && (prev.bundle as B?)!!.equals(next.bundle)
+            prev == next && (prev.bundle != null && (prev.bundle as B?)!! == next.bundle
                 || prev.internalParams != null && Arrays.equals(prev.internalParams, next.internalParams))
 }
