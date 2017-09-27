@@ -53,16 +53,20 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 ###### 2. Mark the target view as Route
 
 ```
-@RoutableActivity(params = {...}, requestCode = ...)
+@RoutableActivity(path = ..., params = {...}, requestCode = ...)
 class SampleActivity : AppCompatActivity{...}
 
 // or
 
-@RoutableView(params = {...}, requestCode = ...)
+@RoutableView(path = ..., params = {...}, requestCode = ...)
 class SomeView extends FrameLayout{...}
 ```
 
-optionally you can create custom routes inheriting from `Routable.class`
+all parameters are totally optional, another way to create routes is create your own custom routes inheriting from `Routable.class`
+
+- `path` defines the context of the navigation flow (but if you've a lineal navigation then, yagni).
+- `params` an `arrayOf` parameters you need to pass to the next screen (like Android's Bundle type), ex: `arrayOf(Int::class, Float:class)`.
+- `requestCode` in case you need to receive a response into `onActivityResult` this will be your request code number.
 
 ### ADDITIONAL NOTES
 
