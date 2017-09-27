@@ -1,6 +1,6 @@
 # Kartographer
 
-An Android routing library for Kotlin based on Naviganto
+An Android routing library for Kotlin based on Naviganto and heavily inspired in HTTP protocol url schema; also, do you remember the name of that _Forerunner facility_? yeah
 
 ### GRADLE:
 
@@ -18,7 +18,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.3.2'
+  def NVersion = '0.4.1'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:library:$NVersion"
   annotationProcessor "org.firezenk.kartographer:processor:$NVersion"
