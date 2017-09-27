@@ -21,8 +21,6 @@ dependencies {
   def NVersion = '0.4.1'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:library:$NVersion"
-  annotationProcessor "org.firezenk.kartographer:processor:$NVersion"
-  implementation "org.firezenk.kartographer:processor:$NVersion"
   kapt "org.firezenk.kartographer:processor:$NVersion"
 }
 ```
