@@ -50,7 +50,7 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 
 ###### 2. Mark the target view as Route
 
-```
+```kotlin
 @RoutableActivity(path = ..., params = {...}, requestCode = ...)
 class SampleActivity : AppCompatActivity{...}
 
