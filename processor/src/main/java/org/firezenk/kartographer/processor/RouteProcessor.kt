@@ -74,7 +74,7 @@ class RouteProcessor : AbstractProcessor() {
     private fun generateRoute(typeElement: TypeElement): FileSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Creating route...")
 
-        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement))
+        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement), addPathGetter(typeElement))
 
         val myClass = createRoute(typeElement, methods)
 
@@ -168,6 +168,15 @@ class RouteProcessor : AbstractProcessor() {
                 .addParameter(ParameterSpec.builder("viewParent", ANY.asNullable()).build())
                 .addCode(sb.toString())
                 .returns(Void.TYPE)
+                .build()
+    }
+
+    private fun addPathGetter(typeElement: TypeElement): FunSpec {
+        return FunSpec.builder("path")
+                .addModifiers(KModifier.PUBLIC)
+                .addModifiers(KModifier.OVERRIDE)
+                .addCode("return ${typeElement.simpleName}Route.PATH\n\n")
+                .returns(String::class)
                 .build()
     }
 

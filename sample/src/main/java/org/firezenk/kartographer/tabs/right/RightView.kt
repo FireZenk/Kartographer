@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.righttab_view.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
-import org.firezenk.kartographer.library.Path
 import org.firezenk.kartographer.library.Route
 import java.util.*
 
@@ -18,7 +17,7 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 26/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(path = "RIGHT", params = arrayOf(Int::class), requestCode = -1)
+@RoutableView(path = "RIGHT", params = arrayOf(Int::class))
 class RightView(context: Context?) : FrameLayout(context) {
 
     companion object {
@@ -38,7 +37,7 @@ class RightView(context: Context?) : FrameLayout(context) {
 
         setOnClickListener {
             val route = Route<Any>(RightViewRoute::class.java,
-                    arrayOf(++counter), parent as ViewGroup, Path(RightViewRoute.PATH))
+                    arrayOf(++counter), parent as ViewGroup)
             Kartographer.next(getContext(), route)
         }
     }

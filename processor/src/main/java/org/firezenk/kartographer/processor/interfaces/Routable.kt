@@ -14,4 +14,6 @@ interface Routable {
 
     @Throws(ParameterNotFoundException::class, NotEnoughParametersException::class)
     fun route(context: Any, uuid: UUID, parameters: Array<Any>, viewParent: Any?)
+
+    fun path(): String
 }

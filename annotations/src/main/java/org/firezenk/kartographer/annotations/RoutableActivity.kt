@@ -15,14 +15,14 @@ annotation class RoutableActivity(
          * The path that holds the target route
          * @return the path string
          */
-        val path: String,
+        val path: String = "",
         /**
          * Possible "bundle" extras
          * @return array class types for the params
          */
-        val params: Array<KClass<*>>,
+        val params: Array<KClass<*>> = arrayOf(),
         /**
          * Define the request code for the activity
          * @return the request code, -1 if not needed
          */
-        val requestCode: Int)
+        val requestCode: Int = -1)

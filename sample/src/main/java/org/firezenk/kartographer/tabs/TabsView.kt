@@ -19,7 +19,7 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 21/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(path = "", params = arrayOf(), requestCode = -1)
+@RoutableView()
 class TabsView(context: Context?) : FrameLayout(context) {
 
     companion object {
@@ -37,8 +37,8 @@ class TabsView(context: Context?) : FrameLayout(context) {
         super.onAttachedToWindow()
 
         with(Kartographer) {
-            next(context, Route<Any>(LeftViewRoute::class.java, arrayOf(100), leftPlaceholder, Path(LeftViewRoute.PATH)))
-            next(context, Route<Any>(RightViewRoute::class.java, arrayOf(200), rightPlaceholder, Path(RightViewRoute.PATH)))
+            next(context, Route<Any>(LeftViewRoute::class.java, arrayOf(100), leftPlaceholder))
+            next(context, Route<Any>(RightViewRoute::class.java, arrayOf(200), rightPlaceholder))
         }
 
         backLeft.setOnClickListener { Kartographer.back(context, Path(LeftViewRoute.PATH)) }

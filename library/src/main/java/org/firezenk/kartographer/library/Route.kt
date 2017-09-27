@@ -8,14 +8,27 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val path: Path? = null, val forResult: Int = -1) {
+class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val forResult: Int = -1) {
 
     val uuid: UUID = UUID.randomUUID()
     var bundle: B? = null
     var internalParams: Array<Any>? = null
+    var path: Path?
 
     init {
+        path = getPath(clazz)
         getExtras(params)
+    }
+
+    private fun getPath(clazz: Class<*>): Path? {
+        val instance = clazz.newInstance()
+        return if (instance is Routable<*>) {
+            Path(instance.path())
+        } else if (instance is org.firezenk.kartographer.processor.interfaces.Routable) {
+            Path(instance.path())
+        } else {
+            null
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
