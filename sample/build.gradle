@@ -54,7 +54,7 @@ dependencies {
     //implementation "org.firezenk.kartographer:library:$NVersion"
     //implementation "org.firezenk.kartographer:processor:$NVersion"
     //kapt "org.firezenk.kartographer:processor:$NVersion"
-    //endregion
+    // endregion
 
     implementation project(':annotations')
     implementation project(':library')
