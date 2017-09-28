@@ -3,6 +3,7 @@ package org.firezenk.kartographer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Route
 import org.firezenk.kartographer.tabs.TabsViewRoute
@@ -13,6 +14,7 @@ import org.firezenk.kartographer.tabs.TabsViewRoute
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
+@RoutableActivity()
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

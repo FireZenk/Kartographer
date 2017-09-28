@@ -50,12 +50,12 @@ dependencies {
     provided 'com.squareup:kotlinpoet:0.5.0'
 
     //def NVersion = '0.4.2'
-    //implementation "org.firezenk.kartographer:annotations:$NVersion"
+    //compileOnly "org.firezenk.kartographer:annotations:$NVersion"
     //implementation "org.firezenk.kartographer:library:$NVersion"
     //kapt "org.firezenk.kartographer:processor:$NVersion"
     // endregion
 
-    implementation project(':annotations')
+    compileOnly project(':annotations')
     implementation project(':library')
     kapt project(':processor')
 

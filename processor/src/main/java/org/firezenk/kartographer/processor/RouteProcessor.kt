@@ -121,9 +121,9 @@ class RouteProcessor : AbstractProcessor() {
         sb.append("\n")
 
         if (isActivity) {
-            sb.append("  intent android.content.Intent = android.content.Intent((android.content.Context) context, " + typeElement.simpleName + ".class)\n")
+            sb.append("  val intent: android.content.Intent = android.content.Intent(context as android.content.Context, " + typeElement.simpleName + ".class)\n")
 
-            sb.append("  bundle android.os.Bundle = android.os.Bundle()\n\n")
+            sb.append("  val bundle: android.os.Bundle = android.os.Bundle()\n\n")
             sb.append("  bundle.putString(\"uuid\", uuid.toString())\n")
 
             if (params.isNotEmpty()) {
@@ -134,9 +134,9 @@ class RouteProcessor : AbstractProcessor() {
 
             sb.append("" +
                     "  if (context is android.app.Activity) {\n" +
-                    "      ((android.app.Activity) context).startActivityForResult(intent, " + requestCode + ")\n" +
+                    "      (context as android.app.Activity).startActivityForResult(intent, " + requestCode + ")\n" +
                     "  } else if (context is android.content.Context) {\n" +
-                    "      ((android.content.Context) context).startActivity(intent)\n" +
+                    "      (context as android.content.Context).startActivity(intent)\n" +
                     "  }\n")
         } else {
             sb.append("" +
