@@ -18,7 +18,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.4.1'
+  def NVersion = '0.4.2'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:library:$NVersion"
   kapt "org.firezenk.kartographer:processor:$NVersion"
@@ -47,6 +47,8 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 `Kartographer.back(context)`
 - Return to last known route:
 `Kartographer.last(context, placeholder)`
+- Replay the last route on a path:
+`Kartographer.replay(context, path)`
 
 ###### 2. Mark the target view as Route
 
@@ -57,7 +59,7 @@ class SampleActivity : AppCompatActivity{...}
 // or
 
 @RoutableView(path = ..., params = {...}, requestCode = ...)
-class SomeView extends FrameLayout{...}
+class SomeView : FrameLayout{...}
 ```
 
 all parameters are totally optional, another way to create routes is create your own custom routes inheriting from `Routable.class`

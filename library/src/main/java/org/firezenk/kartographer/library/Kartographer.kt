@@ -131,6 +131,20 @@ object Kartographer : IKartographer {
         return true
     }
 
+    override fun replay(context: Any, path: Path): Boolean {
+        return if (hasHistory()) {
+            for (i in 0 until history.size) {
+                if (history[i].path == path) {
+                    routeTo(context, history[i].viewHistory.removeFirst())
+                    return true
+                }
+            }
+            false
+        } else {
+            false
+        }
+    }
+
     override fun back(context: Any): Boolean {
         log?.let {
             it.d(" <<--- Back")

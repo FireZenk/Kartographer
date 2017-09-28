@@ -2,7 +2,6 @@ package org.firezenk.kartographer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Route
@@ -31,6 +30,4 @@ class MainActivity : AppCompatActivity() {
         if (!Kartographer.back(this))
             super.onBackPressed()
     }
-
-    fun getPlaceHolder(): ViewGroup = placeholder
 }
