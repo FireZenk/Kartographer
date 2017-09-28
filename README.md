@@ -1,6 +1,6 @@
 # Kartographer
 
-An Android routing library for Kotlin based on Naviganto
+An Android routing library for Kotlin based on Naviganto and heavily inspired in HTTP protocol url schema; also, do you remember the name of that _Forerunner facility_? yeah
 
 ### GRADLE:
 
