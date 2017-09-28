@@ -33,6 +33,14 @@ interface IKartographer {
     fun <B> next(context: Any, route: Route<B>): Boolean
 
     /**
+     * Navigate to the last known route on the specified path
+     * @param context The Android's context (required for Android)
+     * *
+     * @param path The path to search on
+     */
+    fun replay(context: Any, path: Path): Boolean
+
+    /**
      * Go back to the directly previous route
      * @param context The Android's context (required for Android)
      * *
