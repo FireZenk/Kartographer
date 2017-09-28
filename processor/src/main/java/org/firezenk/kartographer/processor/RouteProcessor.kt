@@ -121,7 +121,7 @@ class RouteProcessor : AbstractProcessor() {
         sb.append("\n")
 
         if (isActivity) {
-            sb.append("  val intent: android.content.Intent = android.content.Intent(context as android.content.Context, " + typeElement.simpleName + ".class)\n")
+            sb.append("  val intent: android.content.Intent = android.content.Intent(context as android.content.Context, " + typeElement.simpleName + "::class.java)\n")
 
             sb.append("  val bundle: android.os.Bundle = android.os.Bundle()\n\n")
             sb.append("  bundle.putString(\"uuid\", uuid.toString())\n")
