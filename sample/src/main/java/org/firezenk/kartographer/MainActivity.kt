@@ -6,6 +6,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Route
 import org.firezenk.kartographer.tabs.TabsViewRoute
+import javax.inject.Inject
 
 /**
  * Project: Kartographer
@@ -15,11 +16,15 @@ import org.firezenk.kartographer.tabs.TabsViewRoute
  */
 class MainActivity : AppCompatActivity() {
 
+    @Inject lateinit var router: Kartographer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        with(Kartographer) {
+        SampleApplication.component.injectTo(this)
+
+        with(router) {
             debug()
             val route = Route<Any>(TabsViewRoute::class.java, arrayOf<Any>(), placeholder)
             last(this@MainActivity, placeholder) or next(this@MainActivity, route)
@@ -27,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (!Kartographer.back(this))
+        if (!router.back(this))
             super.onBackPressed()
     }
 }
