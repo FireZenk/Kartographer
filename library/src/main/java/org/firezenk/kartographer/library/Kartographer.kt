@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-object Kartographer : IKartographer {
+class Kartographer(val context: Any) : IKartographer {
 
     private val history: ArrayList<ComplexRoute> = ArrayList()
     private var log: Logger? = null
@@ -29,7 +29,7 @@ object Kartographer : IKartographer {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <B> routeTo(context: Any, route: Route<B>) {
+    private fun <B> routeTo(route: Route<B>) {
         val prev: Route<B>? = if (history.isEmpty()) null else history[history.size - 1].viewHistory.peek() as Route<B>?
         try {
             if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
@@ -79,15 +79,15 @@ object Kartographer : IKartographer {
         }
     }
 
-    private fun internalBack(context: Any, complexRoute: ComplexRoute): Boolean {
+    private fun internalBack(complexRoute: ComplexRoute): Boolean {
         val prevRoute = complexRoute.viewHistory.pop()
         log?.d(" Removing last: ", prevRoute);
 
         return if (complexRoute.viewHistory.isNotEmpty()) {
-            routeTo(context, complexRoute.viewHistory.pop());
+            routeTo(complexRoute.viewHistory.pop());
             true;
         } else {
-            routeTo(context, prevRoute);
+            routeTo(prevRoute);
             false;
         }
     }
@@ -112,30 +112,30 @@ object Kartographer : IKartographer {
         return false
     }
 
-    override fun last(context: Any, viewParent: Any?): Boolean {
+    override fun last(viewParent: Any?): Boolean {
         return if (hasHistory()) {
             if (viewParent != null) {
                 for (route in history[getHistoryLast()].viewHistory) {
                     route.viewParent = viewParent
                 }
             }
-            routeTo(context, history[getHistoryLast()].viewHistory.pop());
+            routeTo(history[getHistoryLast()].viewHistory.pop());
             true
         } else {
             false
         }
     }
 
-    override fun <B> next(context: Any, route: Route<B>): Boolean {
-        routeTo(context, route)
+    override fun <B> next(route: Route<B>): Boolean {
+        routeTo(route)
         return true
     }
 
-    override fun replay(context: Any, path: Path): Boolean {
+    override fun replay(path: Path): Boolean {
         return if (hasHistory()) {
             for (i in 0 until history.size) {
                 if (history[i].path == path) {
-                    routeTo(context, history[i].viewHistory.removeFirst())
+                    routeTo(history[i].viewHistory.removeFirst())
                     return true
                 }
             }
@@ -145,7 +145,7 @@ object Kartographer : IKartographer {
         }
     }
 
-    override fun back(context: Any): Boolean {
+    override fun back(): Boolean {
         log?.let {
             it.d(" <<--- Back")
             it.d(" History: ", history, this::getHistoryLast)
@@ -153,7 +153,7 @@ object Kartographer : IKartographer {
 
         return when {
             history.isEmpty() -> false
-            history[getHistoryLast()].viewHistory.isNotEmpty() -> internalBack(context, history[getHistoryLast()])
+            history[getHistoryLast()].viewHistory.isNotEmpty() -> internalBack(history[getHistoryLast()])
             else -> {
                 history.removeAt(getHistoryLast());
                 false;
@@ -161,10 +161,10 @@ object Kartographer : IKartographer {
         }
     }
 
-    override fun back(context: Any, times: Int): Boolean {
+    override fun back(times: Int): Boolean {
         try {
             for (i in 0 until times) {
-                if (!back(context)) {
+                if (!back()) {
                     return false
                 }
             }
@@ -177,7 +177,7 @@ object Kartographer : IKartographer {
         }
     }
 
-    override fun <B> back(context: Any, route: Route<B>): Boolean {
+    override fun <B> back(route: Route<B>): Boolean {
         when {
             history.isEmpty() -> {
                 log?.d("Is not possible to go back, history is empty")
@@ -185,7 +185,7 @@ object Kartographer : IKartographer {
             }
             history[getHistoryLast()].viewHistory.isEmpty() -> {
                 history.removeAt(getHistoryLast())
-                return back(context, route)
+                return back(route)
             }
             else -> {
                 val complexRoute = history[getHistoryLast()]
@@ -195,25 +195,25 @@ object Kartographer : IKartographer {
                     for (i in size downTo 1) {
                         val prevRoute = complexRoute.viewHistory.pop()
                         if (route.clazz == prevRoute.clazz) {
-                            this.routeTo(context, prevRoute)
+                            this.routeTo(prevRoute)
                             return true
                         }
                     }
                 } else if (complexRoute.route!!.clazz == route.clazz) {
                     history.removeAt(getHistoryLast())
-                    this.routeTo(context, complexRoute.route)
+                    this.routeTo(complexRoute.route)
                     return true
                 } else {
                     log?.d("Is not possible to go back, there is no route like: " + route.clazz.name)
                     return false
                 }
                 history.removeAt(getHistoryLast())
-                return back(context, route)
+                return back(route)
             }
         }
     }
 
-    override fun back(context: Any, path: Path): Boolean {
+    override fun back(path: Path): Boolean {
         log?.let {
             it.d(" <<--- Back")
             it.d(" History: ", history, this::getHistoryLast)
@@ -224,7 +224,7 @@ object Kartographer : IKartographer {
             else -> {
                 for (i in 0 until history.size) {
                     if (history[i].path == path) {
-                        return internalBack(context, history[i])
+                        return internalBack(history[i])
                     }
                 }
                 return false
