@@ -8,11 +8,11 @@ class RouteDsl<B> {
 
     class RouteBuilder<B> {
 
-        var clazz: KClass<*>? = null
+        var target: KClass<*>? = null
         var params: Any = Any()
-        var viewParent: Any? = null
+        var anchor: Any? = null
         var forResult: Int = -1
 
-        fun build(): Route<B> = Route(clazz!!.java, params, viewParent, forResult)
+        fun build(): Route<B> = Route(target!!.java, params, anchor, forResult)
     }
 }

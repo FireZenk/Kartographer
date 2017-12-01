@@ -9,7 +9,7 @@ import org.firezenk.kartographer.SampleApplication
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Path
-import org.firezenk.kartographer.library.Route
+import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.tabs.left.LeftViewRoute
 import org.firezenk.kartographer.tabs.right.RightViewRoute
 import java.util.*
@@ -38,9 +38,18 @@ class TabsView(context: Context?) : FrameLayout(context) {
 
         SampleApplication.component.injectTo(this)
 
-        with(router) {
-            next(Route<Any>(LeftViewRoute::class.java, arrayOf(100), leftPlaceholder))
-            next(Route<Any>(RightViewRoute::class.java, arrayOf(200), rightPlaceholder))
+        router.run {
+            this next route<Any> {
+                target = LeftViewRoute::class
+                params = arrayOf(100)
+                anchor = leftPlaceholder
+            }
+
+            this next route<Any> {
+                target = RightViewRoute::class
+                params = arrayOf(200)
+                anchor = rightPlaceholder
+            }
         }
 
         backLeft.setOnClickListener { router.back(Path(LeftViewRoute.PATH)) }

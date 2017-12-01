@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
         with(router) {
             debug()
             last(placeholder) or next(route<Any> {
-                clazz = TabsViewRoute::class
+                target = TabsViewRoute::class
                 params = arrayOf<Any>()
-                viewParent = placeholder
+                anchor = placeholder
             })
         }
     }

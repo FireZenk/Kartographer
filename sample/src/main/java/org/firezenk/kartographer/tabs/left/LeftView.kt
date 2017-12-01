@@ -9,7 +9,7 @@ import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
-import org.firezenk.kartographer.library.Route
+import org.firezenk.kartographer.library.dsl.route
 import java.util.*
 import javax.inject.Inject
 
@@ -42,9 +42,11 @@ class LeftView(context: Context?) : FrameLayout(context) {
         text1.text = "${LeftViewRoute.PATH}: $counter"
 
         setOnClickListener {
-            val route = Route<Any>(LeftViewRoute::class.java,
-                    arrayOf(++counter), parent as ViewGroup)
-            router.next(route)
+            router next route<Any> {
+                target = LeftViewRoute::class
+                params = arrayOf(++counter)
+                anchor = parent as ViewGroup
+            }
         }
     }
 }

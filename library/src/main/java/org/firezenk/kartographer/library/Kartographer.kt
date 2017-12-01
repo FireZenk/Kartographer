@@ -112,7 +112,7 @@ class Kartographer(val context: Any) : IKartographer {
         return false
     }
 
-    override fun last(viewParent: Any?): Boolean {
+    override infix fun last(viewParent: Any?): Boolean {
         return if (hasHistory()) {
             if (viewParent != null) {
                 for (route in history[getHistoryLast()].viewHistory) {
@@ -126,7 +126,7 @@ class Kartographer(val context: Any) : IKartographer {
         }
     }
 
-    override fun <B> next(route: Route<B>): Boolean {
+    override infix fun <B> next(route: Route<B>): Boolean {
         routeTo(route)
         return true
     }

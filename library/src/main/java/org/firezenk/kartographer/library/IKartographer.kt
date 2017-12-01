@@ -22,14 +22,14 @@ interface IKartographer {
      *
      * @param route The target route
      */
-    fun last(viewParent: Any?): Boolean
+    infix fun last(viewParent: Any?): Boolean
 
     /**
      * Navigate to the next route
      *
      * @param route The target route
      */
-    fun <B> next(route: Route<B>): Boolean
+    infix fun <B> next(route: Route<B>): Boolean
 
     /**
      * Navigate to the last known route on the specified path
