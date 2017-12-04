@@ -1,0 +1,26 @@
+language: android
+jdk: oraclejdk8
+
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-25.0.0
+    - android-25
+    - sys-img-x86-android-25
+    - extra-google-m2repository
+    - extra-android-m2repository
+
+licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+
+cache:
+  directories:
+    - $HOME/.gradle
+
+before_script:
+    - GRADLE_OPTS="-Xms40m -Xmx3g -XX:MaxPermSize=3g"
+
+script: "./gradlew clean build test -Dpre-dex=false"
