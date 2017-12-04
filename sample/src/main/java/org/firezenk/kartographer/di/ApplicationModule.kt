@@ -17,7 +17,7 @@ class ApplicationModule(private val application: SampleApplication) {
 
     @Provides
     @Singleton
-    fun getApp() = application
+    fun provideApplication() = application
 
     @Provides
     @Singleton

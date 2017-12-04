@@ -1,8 +1,10 @@
 package org.firezenk.kartographer.di
 
-import android.widget.FrameLayout
 import dagger.Component
 import org.firezenk.kartographer.MainActivity
+import org.firezenk.kartographer.tabs.TabsView
+import org.firezenk.kartographer.tabs.left.LeftView
+import org.firezenk.kartographer.tabs.right.RightView
 import javax.inject.Singleton
 
 /**
@@ -15,7 +17,11 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(ApplicationModule::class))
 interface ApplicationComponent {
 
-    fun injectTo(screen: FrameLayout)
+    fun injectTo(screen: TabsView)
+
+    fun injectTo(screen: LeftView)
+
+    fun injectTo(screen: RightView)
 
     fun injectTo(screen: MainActivity)
 }
