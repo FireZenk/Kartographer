@@ -145,26 +145,32 @@ class Kartographer(val context: Any) : IKartographer {
         }
     }
 
-    override fun back(): Boolean {
+    override infix fun back(block: () -> Unit): Boolean {
         log?.let {
             it.d(" <<--- Back")
             it.d(" History: ", history, this::getHistoryLast)
         }
 
-        return when {
-            history.isEmpty() -> false
-            history[getHistoryLast()].viewHistory.isNotEmpty() -> internalBack(history[getHistoryLast()])
+        val result = when {
+            history.isEmpty() -> {
+                false
+            }
+            history[getHistoryLastWithoutPath()].viewHistory.isNotEmpty() ->
+                internalBack(history[getHistoryLastWithoutPath()])
             else -> {
                 history.removeAt(getHistoryLast());
                 false;
             }
         }
+
+        if (!result) block()
+        return result
     }
 
     override fun back(times: Int): Boolean {
         try {
             for (i in 0 until times) {
-                if (!back()) {
+                if (!back({})) {
                     return false
                 }
             }
@@ -213,7 +219,7 @@ class Kartographer(val context: Any) : IKartographer {
         }
     }
 
-    override fun back(path: Path): Boolean {
+    override infix fun back(path: Path): Boolean {
         log?.let {
             it.d(" <<--- Back")
             it.d(" History: ", history, this::getHistoryLast)
@@ -251,6 +257,8 @@ class Kartographer(val context: Any) : IKartographer {
     }
 
     private fun getHistoryLast() = history.size - 1
+
+    private fun getHistoryLastWithoutPath() = history.indexOfLast { it.path == null }
 
     private fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>) =
             prev == next && (prev.bundle != null && (prev.bundle as B?)!! == next.bundle

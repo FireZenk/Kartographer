@@ -52,7 +52,7 @@ class TabsView(context: Context?) : FrameLayout(context) {
             }
         }
 
-        backLeft.setOnClickListener { router.back(Path(LeftViewRoute.PATH)) }
-        backRight.setOnClickListener { router.back(Path(RightViewRoute.PATH)) }
+        backLeft.setOnClickListener { router back Path(LeftViewRoute.PATH) }
+        backRight.setOnClickListener { router back Path(RightViewRoute.PATH) }
     }
 }
