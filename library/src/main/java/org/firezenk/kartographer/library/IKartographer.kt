@@ -10,6 +10,7 @@ interface IKartographer {
 
     /**
      * Enables debug mode for all the navigation session
+     *
      * @param debugMode true or false for all the session
      * *
      * @return the instance
@@ -18,66 +19,58 @@ interface IKartographer {
 
     /**
      * Navigate to the last known route
-     * @param context The Android's context (required for Android)
-     * *
+     *
      * @param route The target route
      */
-    fun last(context: Any, viewParent: Any?): Boolean
+    infix fun last(viewParent: Any?): Boolean
 
     /**
      * Navigate to the next route
-     * @param context The Android's context (required for Android)
-     * *
+     *
      * @param route The target route
      */
-    fun <B> next(context: Any, route: Route<B>): Boolean
+    infix fun <B> next(route: Route<B>): Boolean
 
     /**
      * Navigate to the last known route on the specified path
-     * @param context The Android's context (required for Android)
-     * *
+     *
      * @param path The path to search on
      */
-    fun replay(context: Any, path: Path): Boolean
+    fun replay(path: Path): Boolean
 
     /**
      * Go back to the directly previous route
-     * @param context The Android's context (required for Android)
-     * *
+     *
      * @return true if go back is possible, false if is the end of navigation history
      */
-    fun back(context: Any): Boolean
+    fun back(): Boolean
 
     /**
      * Navigate back n times
-     * @param context The Android's context (required for Android)
-     * *
+     *
      * @param times The n times that we need to navigate backwards
      * *
      * @return true if go back n times is possible, false if is the end of navigation history
      */
-    fun back(context: Any, times: Int): Boolean
+    fun back(times: Int): Boolean
 
     /**
      * Navigate through the navigation history until find the route
-     * @param context The Android's context (required for Android)
-     * *
+     *
      * @param route The route (params not needed) that we want to navigate back to
      * *
      * @return true if go back to this route is possible, false if it is not
      */
-    fun <B> back(context: Any, route: Route<B>): Boolean
+    fun <B> back(route: Route<B>): Boolean
 
     /**
      * Navigate back to the last known route of the indicated Path
      *
-     * @param context The Android's context (required for Android)
-     * *
      * @param path The target path
      * *
      * @return true if go back to this route is possible, false if it is not
      */
-    fun back(context: Any, path: Path): Boolean
+    fun back(path: Path): Boolean
 
     /**
      * Clear navigation history
