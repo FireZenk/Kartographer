@@ -25,7 +25,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
         return if (instance is Routable<*>) {
             Path(instance.path())
         } else if (instance is org.firezenk.kartographer.processor.interfaces.Routable) {
-            Path(instance.path())
+            if (instance.path().isEmpty()) null else Path(instance.path())
         } else {
             null
         }
