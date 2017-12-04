@@ -155,7 +155,8 @@ class Kartographer(val context: Any) : IKartographer {
             history.isEmpty() -> {
                 false
             }
-            history[getHistoryLast()].viewHistory.isNotEmpty() -> internalBack(history[getHistoryLast()])
+            history[getHistoryLastWithoutPath()].viewHistory.isNotEmpty() ->
+                internalBack(history[getHistoryLastWithoutPath()])
             else -> {
                 history.removeAt(getHistoryLast());
                 false;
@@ -256,6 +257,8 @@ class Kartographer(val context: Any) : IKartographer {
     }
 
     private fun getHistoryLast() = history.size - 1
+
+    private fun getHistoryLastWithoutPath() = history.indexOfLast { it.path == null }
 
     private fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>) =
             prev == next && (prev.bundle != null && (prev.bundle as B?)!! == next.bundle
