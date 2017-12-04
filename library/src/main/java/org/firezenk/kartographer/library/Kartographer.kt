@@ -131,7 +131,7 @@ class Kartographer(val context: Any) : IKartographer {
         return true
     }
 
-    override fun replay(path: Path): Boolean {
+    override infix fun replay(path: Path): Boolean {
         return if (hasHistory()) {
             for (i in 0 until history.size) {
                 if (history[i].path == path) {

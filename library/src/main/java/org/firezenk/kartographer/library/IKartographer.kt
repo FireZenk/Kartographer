@@ -36,7 +36,7 @@ interface IKartographer {
      *
      * @param path The path to search on
      */
-    fun replay(path: Path): Boolean
+    infix fun replay(path: Path): Boolean
 
     /**
      * Go back to the directly previous route
