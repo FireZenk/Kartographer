@@ -2,6 +2,9 @@
 
 An Android routing library for Kotlin based on Naviganto and heavily inspired in HTTP protocol url schema; also, do you remember the name of that _Forerunner facility_? yeah
 
+[![Build Status](https://travis-ci.org/FireZenk/Kartographer.svg?branch=master)](https://travis-ci.org/FireZenk/Kartographer)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+
 ### GRADLE:
 
 ```groovy
