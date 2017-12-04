@@ -43,7 +43,7 @@ interface IKartographer {
      *
      * @return true if go back is possible, false if is the end of navigation history
      */
-    fun back(): Boolean
+    infix fun back(block: () -> Unit): Boolean
 
     /**
      * Navigate back n times
@@ -70,7 +70,7 @@ interface IKartographer {
      * *
      * @return true if go back to this route is possible, false if it is not
      */
-    fun back(path: Path): Boolean
+    infix fun back(path: Path): Boolean
 
     /**
      * Clear navigation history
