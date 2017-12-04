@@ -18,7 +18,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.4.2'
+  def NVersion = '0.5.0'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:library:$NVersion"
   kapt "org.firezenk.kartographer:processor:$NVersion"
@@ -39,16 +39,32 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 
 ### USAGE
 
+###### 0. Inject
+
+*Kartographer* needs a `Context`, so make sure to inject it with the initilization Context.
+
 ###### 1. Route between targets
 
 - Move to a new route:
-`Kartographer.next(context, Route(...))`
+```kotlin
+kartographer next route<Any> {
+    target = ViewRoute::class
+    params = arrayOf()
+    anchor = viewGroup
+}
+```
 - Back to the prev route:
-`Kartographer.back(context)`
+```kotlin
+kartographer back {}
+```
 - Return to last known route:
-`Kartographer.last(context, placeholder)`
+```kotlin
+kartographer last(placeholder)
+```
 - Replay the last route on a path:
-`Kartographer.replay(context, path)`
+```kotlin
+kartographer replay(path)
+```
 
 ###### 2. Mark the target view as Route
 
