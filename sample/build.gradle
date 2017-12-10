@@ -4,12 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "26.0.3"
     defaultConfig {
         applicationId "org.firezenk.kartographer"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 9
         versionName "0.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -43,7 +43,7 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
 
     implementation 'com.google.dagger:dagger:2.13'
     kapt 'com.google.dagger:dagger-compiler:2.13'
