@@ -75,7 +75,7 @@ class RouteProcessor : AbstractProcessor() {
     private fun generateRoute(typeElement: TypeElement): FileSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Creating route...")
 
-        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement), addPathGetter(typeElement))
+        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement), addPathGetter(typeElement), addReplaceFun())
 
         val myClass = createRoute(typeElement, methods)
 
@@ -163,7 +163,7 @@ class RouteProcessor : AbstractProcessor() {
         return FunSpec.builder("route")
                 .addModifiers(KModifier.PUBLIC)
                 .addModifiers(KModifier.OVERRIDE)
-                .addParameter("context", Any::class)
+                .addParameter("context", ANY)
                 .addParameter("uuid", UUID::class)
                 .addParameter(ParameterSpec.builder("parameters", ParameterizedTypeName.get(ARRAY, ANY)).build())
                 .addParameter(ParameterSpec.builder("viewParent", ANY.asNullable()).build())
@@ -177,8 +177,19 @@ class RouteProcessor : AbstractProcessor() {
         return FunSpec.builder("path")
                 .addModifiers(KModifier.PUBLIC)
                 .addModifiers(KModifier.OVERRIDE)
-                .addCode("return ${typeElement.simpleName}Route.PATH\n\n")
+                .addCode("return ${typeElement.simpleName}Route.PATH\n")
                 .returns(String::class)
+                .build()
+    }
+
+    private fun addReplaceFun(): FunSpec {
+        return FunSpec.builder("replace")
+                .addModifiers(KModifier.PRIVATE)
+                .addParameter("viewParent", ANY)
+                .addParameter("next", ANY)
+                .addCode("" +
+                        "  (viewParent as android.view.ViewGroup).removeAllViews()\n" +
+                        "  viewParent.addView(next as android.view.View)\n")
                 .build()
     }
 
