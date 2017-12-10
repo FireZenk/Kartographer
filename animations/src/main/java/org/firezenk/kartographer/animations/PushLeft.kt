@@ -4,17 +4,20 @@ import android.animation.Animator
 import android.view.View
 import org.firezenk.kartographer.annotations.RouteAnimation
 
-class CrossFade : RouteAnimation {
+class PushLeft : RouteAnimation {
 
-    private val animTime = 200L
+    private val animTime = 500L
 
     override fun prepare(prev: Any, next: Any) {
-        (next as View).alpha = 0f
+        val width = (prev as View).width.toFloat()
+        (next as View).x = width
     }
 
     override fun animate(prev: Any, next: Any, block: () -> Unit) {
-        (prev as View).animate().alpha(0f).setDuration(animTime).start()
-        (next as View).animate().alpha(1f).setDuration(animTime).setListener(object : Animator.AnimatorListener {
+        val width = (prev as View).width.toFloat()
+
+        prev.animate().x(-width).setDuration(animTime).start()
+        (next as View).animate().x(0f).setDuration(animTime).setListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(p0: Animator?) {}
 
             override fun onAnimationEnd(p0: Animator?) {

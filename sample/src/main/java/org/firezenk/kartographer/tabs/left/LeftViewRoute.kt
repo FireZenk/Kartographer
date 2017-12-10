@@ -35,9 +35,9 @@ class LeftViewRoute<T> : Routable {
 
                 viewParent.addView(next)
 
-                animation.animate(prev, next)
-
-                viewParent.removeView(prev)
+                animation.animate(prev, next, {
+                    viewParent.removeView(prev)
+                })
             } ?: replace(viewParent, next)
         } ?: replace(viewParent, next)
     }

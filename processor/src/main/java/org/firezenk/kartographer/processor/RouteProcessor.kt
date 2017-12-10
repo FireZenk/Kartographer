@@ -157,8 +157,7 @@ class RouteProcessor : AbstractProcessor() {
                     "    prev?.let {\n" +
                     "      animation.prepare(prev, next)\n" +
                     "      viewParent.addView(next)\n" +
-                    "      animation.animate(prev, next)\n" +
-                    "      viewParent.removeView(prev)\n" +
+                    "      animation.animate(prev, next, {viewParent.removeView(prev)})\n" +
                     "    } ?: replace(viewParent, next)\n" +
                     "  } ?: replace(viewParent, next)")
         }
