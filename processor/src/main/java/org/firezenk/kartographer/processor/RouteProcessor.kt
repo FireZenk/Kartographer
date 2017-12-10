@@ -146,16 +146,21 @@ class RouteProcessor : AbstractProcessor() {
                     "  }\n")
 
             if (params.isNotEmpty()) {
-                sb.append("" +
-                        "  viewParent.removeAllViews()\n" +
-                        "  viewParent.addView(" + typeElement.simpleName
-                        + ".newInstance(context as android.content.Context, uuid" + this.parametersToString(params) + "))\n")
+                sb.append("  val next: android.view.View = ${typeElement.simpleName}.newInstance(context as android.content.Context, uuid${this.parametersToString(params)})\n")
             } else {
-                sb.append("" +
-                        "  viewParent.removeAllViews()\n" +
-                        "  viewParent.addView(" + typeElement.simpleName
-                        + ".newInstance(context as android.content.Context, uuid))\n")
+                sb.append("  val next: android.view.View = ${typeElement.simpleName}.newInstance(context as android.content.Context, uuid)\n")
             }
+
+            sb.append("" +
+                    "  val prev: android.view.View? = viewParent.getChildAt(viewParent.childCount - 1)\n\n" +
+                    "  animation?.let {\n" +
+                    "    prev?.let {\n" +
+                    "      animation.prepare(prev, next)\n" +
+                    "      viewParent.addView(next)\n" +
+                    "      animation.animate(prev, next)\n" +
+                    "      viewParent.removeView(prev)\n" +
+                    "    } ?: replace(viewParent, next)\n" +
+                    "  } ?: replace(viewParent, next)")
         }
 
         messager?.printMessage(Diagnostic.Kind.NOTE, sb.toString())

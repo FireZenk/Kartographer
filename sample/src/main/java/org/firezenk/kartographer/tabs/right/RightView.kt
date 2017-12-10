@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.righttab_view.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
+import org.firezenk.kartographer.animations.CrossFade
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
@@ -46,6 +47,7 @@ class RightView(context: Context?) : FrameLayout(context) {
                 target = RightViewRoute::class
                 params = arrayOf(++counter)
                 anchor = parent as ViewGroup
+                animation = CrossFade()
             }
         }
     }

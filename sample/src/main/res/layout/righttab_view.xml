@@ -7,4 +7,5 @@
     android:layout_height="match_parent"
     android:textStyle="bold"
     android:gravity="center"
+    android:background="@android:color/holo_blue_bright"
     tools:text="RIGHT" />
