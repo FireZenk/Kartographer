@@ -6,6 +6,7 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.tabbed_view.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
+import org.firezenk.kartographer.animations.CrossFade
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Path
@@ -43,6 +44,7 @@ class TabsView(context: Context?) : FrameLayout(context) {
                 target = LeftViewRoute::class
                 params = arrayOf(100)
                 anchor = leftPlaceholder
+                animation = CrossFade()
             }
 
             this next route<Any> {

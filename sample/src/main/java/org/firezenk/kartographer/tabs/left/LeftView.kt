@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.lefttab_view.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
+import org.firezenk.kartographer.animations.CrossFade
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
 import java.util.*
@@ -44,6 +45,7 @@ class LeftView(context: Context?) : FrameLayout(context) {
                 target = LeftViewRoute::class
                 params = arrayOf(++counter)
                 anchor = parent as ViewGroup
+                animation = CrossFade()
             }
         }
     }

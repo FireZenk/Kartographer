@@ -4,6 +4,7 @@ import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
 import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.annotations.RoutableView
+import org.firezenk.kartographer.annotations.RouteAnimation
 import java.io.File
 import java.util.*
 import javax.annotation.Generated
@@ -166,6 +167,7 @@ class RouteProcessor : AbstractProcessor() {
                 .addParameter("uuid", UUID::class)
                 .addParameter(ParameterSpec.builder("parameters", ParameterizedTypeName.get(ARRAY, ANY)).build())
                 .addParameter(ParameterSpec.builder("viewParent", ANY.asNullable()).build())
+                .addParameter("animation", RouteAnimation::class.asClassName().asNullable())
                 .addCode(sb.toString())
                 .returns(Void.TYPE)
                 .build()

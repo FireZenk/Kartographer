@@ -43,7 +43,7 @@ class Kartographer(val context: Any) : IKartographer {
                             .route(context, route.uuid, route.bundle as B, route.viewParent);
                 } else {
                     (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
-                            .route(context, route.uuid, route.params as Array<Any>, route.viewParent);
+                            .route(context, route.uuid, route.params as Array<Any>, route.viewParent, route.animation);
                 }
 
                 if (history.size == 0) {
