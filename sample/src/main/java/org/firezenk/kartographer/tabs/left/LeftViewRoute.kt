@@ -31,7 +31,8 @@ class LeftViewRoute<T> : Routable {
 
         animation?.let {
             prev?.let {
-                next.alpha = 0f
+                animation.prepare(prev, next)
+
                 viewParent.addView(next)
 
                 animation.animate(prev, next)
