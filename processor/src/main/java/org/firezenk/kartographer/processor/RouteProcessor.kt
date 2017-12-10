@@ -4,6 +4,7 @@ import com.google.auto.service.AutoService
 import com.squareup.kotlinpoet.*
 import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.annotations.RoutableView
+import org.firezenk.kartographer.annotations.RouteAnimation
 import java.io.File
 import java.util.*
 import javax.annotation.Generated
@@ -74,7 +75,7 @@ class RouteProcessor : AbstractProcessor() {
     private fun generateRoute(typeElement: TypeElement): FileSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Creating route...")
 
-        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement), addPathGetter(typeElement))
+        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement), addPathGetter(typeElement), addReplaceFun())
 
         val myClass = createRoute(typeElement, methods)
 
@@ -145,16 +146,20 @@ class RouteProcessor : AbstractProcessor() {
                     "  }\n")
 
             if (params.isNotEmpty()) {
-                sb.append("" +
-                        "  viewParent.removeAllViews()\n" +
-                        "  viewParent.addView(" + typeElement.simpleName
-                        + ".newInstance(context as android.content.Context, uuid" + this.parametersToString(params) + "))\n")
+                sb.append("  val next: android.view.View = ${typeElement.simpleName}.newInstance(context as android.content.Context, uuid${this.parametersToString(params)})\n")
             } else {
-                sb.append("" +
-                        "  viewParent.removeAllViews()\n" +
-                        "  viewParent.addView(" + typeElement.simpleName
-                        + ".newInstance(context as android.content.Context, uuid))\n")
+                sb.append("  val next: android.view.View = ${typeElement.simpleName}.newInstance(context as android.content.Context, uuid)\n")
             }
+
+            sb.append("" +
+                    "  val prev: android.view.View? = viewParent.getChildAt(viewParent.childCount - 1)\n\n" +
+                    "  animation?.let {\n" +
+                    "    prev?.let {\n" +
+                    "      animation.prepare(prev, next)\n" +
+                    "      viewParent.addView(next)\n" +
+                    "      animation.animate(prev, next, {viewParent.removeView(prev)})\n" +
+                    "    } ?: replace(viewParent, next)\n" +
+                    "  } ?: replace(viewParent, next)")
         }
 
         messager?.printMessage(Diagnostic.Kind.NOTE, sb.toString())
@@ -162,10 +167,11 @@ class RouteProcessor : AbstractProcessor() {
         return FunSpec.builder("route")
                 .addModifiers(KModifier.PUBLIC)
                 .addModifiers(KModifier.OVERRIDE)
-                .addParameter("context", Any::class)
+                .addParameter("context", ANY)
                 .addParameter("uuid", UUID::class)
                 .addParameter(ParameterSpec.builder("parameters", ParameterizedTypeName.get(ARRAY, ANY)).build())
                 .addParameter(ParameterSpec.builder("viewParent", ANY.asNullable()).build())
+                .addParameter("animation", RouteAnimation::class.asClassName().asNullable())
                 .addCode(sb.toString())
                 .returns(Void.TYPE)
                 .build()
@@ -175,8 +181,19 @@ class RouteProcessor : AbstractProcessor() {
         return FunSpec.builder("path")
                 .addModifiers(KModifier.PUBLIC)
                 .addModifiers(KModifier.OVERRIDE)
-                .addCode("return ${typeElement.simpleName}Route.PATH\n\n")
+                .addCode("return ${typeElement.simpleName}Route.PATH\n")
                 .returns(String::class)
+                .build()
+    }
+
+    private fun addReplaceFun(): FunSpec {
+        return FunSpec.builder("replace")
+                .addModifiers(KModifier.PRIVATE)
+                .addParameter("viewParent", ANY)
+                .addParameter("next", ANY)
+                .addCode("" +
+                        "  (viewParent as android.view.ViewGroup).removeAllViews()\n" +
+                        "  viewParent.addView(next as android.view.View)\n")
                 .build()
     }
 

@@ -2,7 +2,8 @@
 
 An Android routing library for Kotlin based on Naviganto and heavily inspired in HTTP protocol url schema; also, do you remember the name of that _Forerunner facility_? yeah
 
-[![Build Status](https://travis-ci.org/FireZenk/Kartographer.svg?branch=master)](https://travis-ci.org/FireZenk/Kartographer)
+[![Build Status](https://travis-ci.org/FireZenk/Kartographer.svg?branch=develop)](https://travis-ci.org/FireZenk/Kartographer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 
 ### GRADLE:
@@ -21,8 +22,9 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.5.0'
-  implementation "org.firezenk.kartographer:annotations:$NVersion"
+  def NVersion = '0.6.0'
+  compileOnly "org.firezenk.kartographer:annotations:$NVersion"
+  implementation "org.firezenk.kartographer:animations:$NVersion" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
   kapt "org.firezenk.kartographer:processor:$NVersion"
 }
@@ -54,6 +56,7 @@ kartographer next route<Any> {
     target = ViewRoute::class
     params = arrayOf()
     anchor = viewGroup
+    animation = CrossFade() //optional
 }
 ```
 - Back to the prev route:
@@ -90,7 +93,7 @@ all parameters are totally optional, another way to create routes is create your
 ### ADDITIONAL NOTES
 
 - No, it is not contemplated the use of fragments, although it is possible (using `View` sample)
-- I recommend to use auto-routes because you can avoid to use `Parcelables`
+- I recommend to use auto-routes because is safe, saves coding time and you can avoid to use `Parcelables`
 - User `.clearHistory()` if you need to clear all the navigation history
 - There is some more self documented [functions here](https://github.com/FireZenk/Kartographer/blob/develop/library/src/main/java/org/firezenk/kartographer/library/IKartographer.kt)
 - For more info an samples, see `sample` module

@@ -1,5 +1,6 @@
 package org.firezenk.kartographer.processor.interfaces
 
+import org.firezenk.kartographer.annotations.RouteAnimation
 import org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException
 import org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException
 import java.util.*
@@ -13,7 +14,7 @@ import java.util.*
 interface Routable {
 
     @Throws(ParameterNotFoundException::class, NotEnoughParametersException::class)
-    fun route(context: Any, uuid: UUID, parameters: Array<Any>, viewParent: Any?)
+    fun route(context: Any, uuid: UUID, parameters: Array<Any>, viewParent: Any?, animation: RouteAnimation?)
 
     fun path(): String
 }

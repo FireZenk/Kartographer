@@ -1,1 +1,1 @@
-include ':sample', ':processor', ':annotations', ':library'
+include ':sample', ':processor', ':annotations', ':library', ':animations'
