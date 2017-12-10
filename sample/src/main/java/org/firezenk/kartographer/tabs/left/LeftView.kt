@@ -7,7 +7,6 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.lefttab_view.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
-import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
 import java.util.*
@@ -19,7 +18,6 @@ import javax.inject.Inject
  * Created by Jorge Garrido Oval, aka firezenk on 26/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(path = "LEFT", params = arrayOf(Int::class))
 class LeftView(context: Context?) : FrameLayout(context) {
 
     @Inject lateinit var router: Kartographer

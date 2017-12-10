@@ -59,6 +59,7 @@ dependencies {
     // endregion
 
     compileOnly project(':annotations')
+    implementation project(path: ':animations')
     implementation project(':library')
     kapt project(':processor')
 
