@@ -90,6 +90,10 @@ all parameters are totally optional, another way to create routes is create your
 - `params` an `arrayOf` parameters you need to pass to the next screen (like Android's Bundle type), ex: `arrayOf(Int::class, Float:class)`.
 - `requestCode` in case you need to receive a response into `onActivityResult` this will be your request code number.
 
+### CUSTOMISATION
+
+Kartographer has 3 predefined transitions between screens (also the transition is totally optional), but you can easily create your own by inheriting from `RouteAnimation.class`
+
 ### ADDITIONAL NOTES
 
 - No, it is not contemplated the use of fragments, although it is possible (using `View` sample)
