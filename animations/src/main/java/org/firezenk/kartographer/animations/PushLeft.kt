@@ -4,9 +4,7 @@ import android.animation.Animator
 import android.view.View
 import org.firezenk.kartographer.annotations.RouteAnimation
 
-class PushLeft : RouteAnimation {
-
-    private val animTime = 500L
+class PushLeft(animTime: Long = 500) : RouteAnimation(animTime) {
 
     override fun prepare(prev: Any, next: Any) {
         val width = (prev as View).width.toFloat()

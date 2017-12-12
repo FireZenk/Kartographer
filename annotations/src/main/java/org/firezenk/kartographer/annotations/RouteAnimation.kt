@@ -1,8 +1,8 @@
 package org.firezenk.kartographer.annotations
 
-interface RouteAnimation {
+abstract class RouteAnimation(val animTime: Long = 200) {
 
-    fun prepare(prev: Any, next: Any)
+    abstract fun prepare(prev: Any, next: Any)
 
-    fun animate(prev: Any, next: Any, block: () -> Unit)
+    abstract fun animate(prev: Any, next: Any, block: () -> Unit)
 }

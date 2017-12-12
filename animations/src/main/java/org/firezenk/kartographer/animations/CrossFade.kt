@@ -4,9 +4,7 @@ import android.animation.Animator
 import android.view.View
 import org.firezenk.kartographer.annotations.RouteAnimation
 
-class CrossFade : RouteAnimation {
-
-    private val animTime = 200L
+class CrossFade(animTime: Long = 200) : RouteAnimation(animTime) {
 
     override fun prepare(prev: Any, next: Any) {
         (next as View).alpha = 0f
