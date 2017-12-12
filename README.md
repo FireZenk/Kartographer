@@ -24,7 +24,7 @@ dependencies {
 
   def NVersion = '0.6.0'
   compileOnly "org.firezenk.kartographer:annotations:$NVersion"
-  implementation "org.firezenk.kartographer:animations:$NVersion" //android only
+  implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
   kapt "org.firezenk.kartographer:processor:$NVersion"
 }
