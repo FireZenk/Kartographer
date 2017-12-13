@@ -20,7 +20,7 @@ import javax.inject.Inject
  * Created by Jorge Garrido Oval, aka firezenk on 26/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(path = "RIGHT", params = arrayOf(Int::class))
+@RoutableView(path = "RIGHT", params = [(Int::class)])
 class RightView(context: Context?) : FrameLayout(context) {
 
     @Inject lateinit var router: Kartographer

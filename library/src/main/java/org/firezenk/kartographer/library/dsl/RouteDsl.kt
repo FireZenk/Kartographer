@@ -10,11 +10,11 @@ class RouteDsl<B> {
     class RouteBuilder<B> {
 
         var target: KClass<*>? = null
-        var params: Any = Any()
+        var params: Array<Any>? = arrayOf()
         var anchor: Any? = null
         var animation: RouteAnimation? = null
         var forResult: Int = -1
 
-        fun build(): Route<B> = Route(target!!.java, params, anchor, animation, forResult)
+        fun build(): Route<B> = Route(target!!.java, params!!, anchor, animation, forResult)
     }
 }
