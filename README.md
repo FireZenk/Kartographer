@@ -95,6 +95,18 @@ all parameters are totally optional, another way to create routes is create your
 - `params` an `arrayOf` parameters you need to pass to the next screen (like Android's Bundle type), ex: `arrayOf(Int::class, Float::class)`.
 - `requestCode` in case you need to receive a response into `onActivityResult` this will be your request code number.
 
+###### 3. View instance creation
+
+Once the route is generated (at compile time), you'll be requested to create a new static function on your routable view:
+
+```kotlin
+companion object {
+        fun newInstance(context: Context, uuid: UUID): MyCustomView {
+            return MyCustomView(context)
+        }
+    }
+```
+
 ### CUSTOMISATION
 
 Kartographer has 3 predefined transitions between screens (also the transition is totally optional), but you can easily create your own by inheriting from `RouteAnimation.class`
