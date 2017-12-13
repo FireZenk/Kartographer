@@ -23,10 +23,10 @@ dependencies {
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
   def NVersion = '0.6.0'
-  compileOnly "org.firezenk.kartographer:annotations:$NVersion"
+  implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
-  kapt "org.firezenk.kartographer:processor:$NVersion"
+  implementation "org.firezenk.kartographer:processor:$NVersion"
 }
 ```
 
@@ -47,6 +47,9 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 ###### 0. Inject
 
 *Kartographer* needs a `Context`, so make sure to inject it with the initilization Context.
+```kotlin
+Kartographer(context)
+```
 
 ###### 1. Route between targets
 
@@ -55,13 +58,15 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 kartographer next route<Any> {
     target = ViewRoute::class
     params = arrayOf()
-    anchor = viewGroup
+    anchor = parentViewGroup
     animation = CrossFade() //optional
 }
 ```
-- Back to the prev route:
+- Back to the prev route, by overriding your Activity's onBackPressed method:
 ```kotlin
-kartographer back {}
+kartographer back {
+    super.onBackPressed()
+}
 ```
 - Return to last known route:
 ```kotlin
@@ -86,8 +91,8 @@ class SomeView : FrameLayout{...}
 
 all parameters are totally optional, another way to create routes is create your own custom routes inheriting from `Routable.class`
 
-- `path` defines the context of the navigation flow (but if you've a lineal navigation then, yagni).
-- `params` an `arrayOf` parameters you need to pass to the next screen (like Android's Bundle type), ex: `arrayOf(Int::class, Float:class)`.
+- `path` defines the context of the navigation flow (but if you've a lineal navigation then, you don't need it).
+- `params` an `arrayOf` parameters you need to pass to the next screen (like Android's Bundle type), ex: `arrayOf(Int::class, Float::class)`.
 - `requestCode` in case you need to receive a response into `onActivityResult` this will be your request code number.
 
 ### CUSTOMISATION
