@@ -3,7 +3,7 @@ package org.firezenk.kartographer.di
 import dagger.Component
 import org.firezenk.kartographer.MainActivity
 import org.firezenk.kartographer.pages.Page1
-import org.firezenk.kartographer.pages.Page2
+import org.firezenk.kartographer.pages.page2.Page2
 import org.firezenk.kartographer.pages.Page3
 import javax.inject.Singleton
 

@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.page_view.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
-import org.firezenk.kartographer.animations.PushScale
+import org.firezenk.kartographer.animations.PushLeft
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
@@ -46,7 +46,7 @@ class Page3(context: Context?) : FrameLayout(context) {
             val route = route<Any> {
                 target = Page3Route::class
                 anchor = parent
-                animation = PushScale()
+                animation = PushLeft()
             }
             router.next<Any>(route, arrayOf(counter+100))
         }

@@ -10,8 +10,8 @@ import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Path
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.pages.Page1Route
-import org.firezenk.kartographer.pages.Page2Route
 import org.firezenk.kartographer.pages.Page3Route
+import org.firezenk.kartographer.pages.page2.Page2Route
 import javax.inject.Inject
 
 /**
