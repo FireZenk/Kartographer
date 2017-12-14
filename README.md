@@ -22,7 +22,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.6.1'
+  def NVersion = '0.6.2'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
