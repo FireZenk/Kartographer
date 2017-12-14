@@ -1,4 +1,4 @@
-package org.firezenk.kartographer.pages
+package org.firezenk.kartographer.pages.page3
 
 import android.content.Context
 import android.view.View
@@ -6,10 +6,11 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.page_view.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
-import org.firezenk.kartographer.animations.CrossFade
+import org.firezenk.kartographer.animations.PushLeft
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
+import org.firezenk.kartographer.pages.Page3Route
 import java.util.*
 import javax.inject.Inject
 
@@ -19,18 +20,16 @@ import javax.inject.Inject
  * Created by Jorge Garrido Oval, aka firezenk on 14/12/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(path = "PAGE1", params = [(String::class), (Int::class)])
-class Page1(context: Context?) : FrameLayout(context) {
+@RoutableView(path = "PAGE3", params = [(Int::class)])
+class Page3(context: Context?) : FrameLayout(context) {
 
     @Inject lateinit var router: Kartographer
 
-    private var part : String = ""
     private var counter : Int = 0
 
     companion object {
-        fun newInstance(context: Context, uuid: UUID, part: String, counter: Int): Page1 {
-            val view = Page1(context)
-            view.part = part
+        fun newInstance(context: Context, uuid: UUID, counter: Int): Page3 {
+            val view = Page3(context)
             view.counter = counter
             return view
         }
@@ -42,16 +41,15 @@ class Page1(context: Context?) : FrameLayout(context) {
 
         SampleApplication.component.injectTo(this)
 
-        part += " -> " + ++counter
-        text2.text = context.getString(R.string.route, Page1Route.PATH, part)
+        text2.text = "${Page3Route.PATH}: $counter"
 
         setOnClickListener {
             val route = route<Any> {
-                target = Page1Route::class
+                target = Page3Route::class
                 anchor = parent
-                animation = CrossFade()
+                animation = PushLeft()
             }
-            router.next<Any>(route, arrayOf(part, counter))
+            router.next<Any>(route, arrayOf(counter+100))
         }
     }
 }
