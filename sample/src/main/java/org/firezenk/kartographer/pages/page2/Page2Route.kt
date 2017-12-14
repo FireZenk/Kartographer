@@ -6,6 +6,12 @@ import org.firezenk.kartographer.annotations.RouteAnimation
 import org.firezenk.kartographer.processor.interfaces.Routable
 import java.util.*
 
+/**
+ * Project: Kartographer
+ *
+ * Created by Jorge Garrido Oval, aka firezenk on 14/12/17.
+ * Copyright © Jorge Garrido Oval 2017
+ */
 class Page2Route : Routable {
 
     override fun route(context: Any, uuid: UUID, parameters: Array<Any>, viewParent: Any?, animation: RouteAnimation?) {
