@@ -2,9 +2,9 @@ package org.firezenk.kartographer.di
 
 import dagger.Component
 import org.firezenk.kartographer.MainActivity
-import org.firezenk.kartographer.tabs.TabsView
-import org.firezenk.kartographer.tabs.left.LeftView
-import org.firezenk.kartographer.tabs.right.RightView
+import org.firezenk.kartographer.pages.Page1
+import org.firezenk.kartographer.pages.Page2
+import org.firezenk.kartographer.pages.Page3
 import javax.inject.Singleton
 
 /**
@@ -17,11 +17,11 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(ApplicationModule::class))
 interface ApplicationComponent {
 
-    fun injectTo(screen: TabsView)
+    fun injectTo(screen: Page1)
 
-    fun injectTo(screen: LeftView)
+    fun injectTo(screen: Page2)
 
-    fun injectTo(screen: RightView)
+    fun injectTo(screen: Page3)
 
     fun injectTo(screen: MainActivity)
 }

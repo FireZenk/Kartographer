@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kartographer</string>
+    <string name="route">%1$s %2$s</string>
 </resources>
