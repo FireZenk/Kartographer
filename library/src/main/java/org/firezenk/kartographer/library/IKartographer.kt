@@ -32,6 +32,14 @@ interface IKartographer {
     infix fun <B> next(route: Route<B>): Boolean
 
     /**
+     * Navigate to the next route
+     *
+     * @param route The target route
+     * @param params The parameters to replace the original ones
+     */
+    fun <B> next(route: Route<B>, replacementParams: Array<B>): Boolean
+
+    /**
      * Navigate to the last known route on the specified path
      *
      * @param path The path to search on

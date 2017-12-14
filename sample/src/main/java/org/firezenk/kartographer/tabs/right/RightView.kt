@@ -43,12 +43,12 @@ class RightView(context: Context?) : FrameLayout(context) {
         text2.text = "${RightViewRoute.PATH}: $counter"
 
         setOnClickListener {
-            router next route<Any> {
+            val route = route<Any> {
                 target = RightViewRoute::class
-                params = arrayOf(++counter)
                 anchor = parent as ViewGroup
                 animation = PushScale()
             }
+            router.next<Any>(route, arrayOf(++counter))
         }
     }
 }

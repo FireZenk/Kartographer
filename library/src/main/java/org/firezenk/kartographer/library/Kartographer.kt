@@ -131,6 +131,11 @@ class Kartographer(val context: Any) : IKartographer {
         return true
     }
 
+    override fun <B> next(route: Route<B>, replacementParams: Array<B>): Boolean {
+        routeTo(route.copy(replacementParams))
+        return true
+    }
+
     override infix fun replay(path: Path): Boolean {
         return if (hasHistory()) {
             for (i in 0 until history.size) {
