@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 with(router) {
                     replay(Path(Page2Route.PATH)) or next(route<Any> {
                         target = Page2Route::class
-                        params = arrayOf("", 0)
+                        params = arrayOf(10)
                         anchor = viewHolder
                     })
                 }
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 with(router) {
                     replay(Path(Page3Route.PATH)) or next(route<Any> {
                         target = Page3Route::class
-                        params = arrayOf("", 0)
+                        params = arrayOf(100)
                         anchor = viewHolder
                     })
                 }

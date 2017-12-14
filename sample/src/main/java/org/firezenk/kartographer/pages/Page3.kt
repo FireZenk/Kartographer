@@ -36,7 +36,7 @@ class Page3(context: Context?) : FrameLayout(context) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        View.inflate(getContext(), R.layout.page_view, this)
+        View.inflate(context, R.layout.page_view, this)
 
         SampleApplication.component.injectTo(this)
 
