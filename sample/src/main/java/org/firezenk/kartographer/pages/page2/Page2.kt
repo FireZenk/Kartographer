@@ -22,8 +22,6 @@ class Page2 : Fragment() {
 
     @Inject lateinit var router: Kartographer
 
-    private var counter : Int = 0
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return View.inflate(context, R.layout.page_view, null)
     }
@@ -31,7 +29,7 @@ class Page2 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        counter = arguments!!.getInt("counter")
+        val counter = arguments!!.getInt("counter")
 
         SampleApplication.component.injectTo(this)
 
