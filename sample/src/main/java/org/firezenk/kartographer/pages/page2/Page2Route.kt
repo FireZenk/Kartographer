@@ -1,6 +1,6 @@
 package org.firezenk.kartographer.pages.page2
 
-import android.content.Context
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import org.firezenk.kartographer.annotations.RouteAnimation
 import org.firezenk.kartographer.processor.interfaces.Routable
@@ -29,9 +29,15 @@ class Page2Route : Routable {
 
         viewParent.removeAllViews()
 
+        val fragment = Page2()
+        val bundle = Bundle()
+
+        bundle.putInt("counter", parameters[0] as Int)
+        fragment.arguments = bundle
+
         val fm = (viewParent.context as AppCompatActivity).supportFragmentManager
         val ft = fm.beginTransaction()
-        ft.add(viewParent.id, Page2.newInstance(context as Context, UUID.randomUUID(), parameters[0] as Int), PATH)
+        ft.add(viewParent.id, fragment, PATH)
         ft.commit()
     }
 

@@ -1,6 +1,5 @@
 package org.firezenk.kartographer.pages.page3
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
@@ -11,7 +10,6 @@ import org.firezenk.kartographer.animations.PushLeft
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -20,16 +18,11 @@ import javax.inject.Inject
  * Created by Jorge Garrido Oval, aka firezenk on 14/12/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(path = "PAGE3", params = [(Int::class)])
+@RoutableView(path = "PAGE3")
 class Page3(context: Context?) : FrameLayout(context) {
 
     @Inject lateinit var router: Kartographer
 
-    companion object {
-        fun newInstance(context: Context, uuid: UUID, counter: Int) = Page3(context)
-    }
-
-    @SuppressLint("SetTextI18n")
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         View.inflate(context, R.layout.page_view, this)

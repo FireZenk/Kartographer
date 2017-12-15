@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private fun defineRoutes() {
         page1Route = route<Any> {
             target = Page1Route::class
-            params = mapOf("counter" to 0)
+            params = mapOf("part" to "", "counter" to 0)
             anchor = viewHolder
         }
 

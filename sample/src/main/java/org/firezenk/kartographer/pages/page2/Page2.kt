@@ -1,6 +1,5 @@
 package org.firezenk.kartographer.pages.page2
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -25,16 +23,6 @@ class Page2 : Fragment() {
     @Inject lateinit var router: Kartographer
 
     private var counter : Int = 0
-
-    companion object {
-        fun newInstance(context: Context, uuid: UUID, counter: Int): Page2 {
-            val fragment = Page2()
-            val bundle = Bundle()
-            bundle.putInt("counter", counter)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return View.inflate(context, R.layout.page_view, null)
