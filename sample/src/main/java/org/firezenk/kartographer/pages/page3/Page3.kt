@@ -1,5 +1,6 @@
 package org.firezenk.kartographer.pages.page3
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
@@ -25,31 +26,28 @@ class Page3(context: Context?) : FrameLayout(context) {
 
     @Inject lateinit var router: Kartographer
 
-    private var counter : Int = 0
-
     companion object {
-        fun newInstance(context: Context, uuid: UUID, counter: Int): Page3 {
-            val view = Page3(context)
-            view.counter = counter
-            return view
-        }
+        fun newInstance(context: Context, uuid: UUID, counter: Int) = Page3(context)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         View.inflate(context, R.layout.page_view, this)
 
         SampleApplication.component.injectTo(this)
 
+        val counter = router.payload<Array<Any>>()!![0] as Int
+
         text2.text = "${Page3Route.PATH}: $counter"
 
         setOnClickListener {
-            val route = route<Any> {
+            router next route<Any> {
                 target = Page3Route::class
+                params = arrayOf(counter + 100)
                 anchor = parent
                 animation = PushLeft(100)
             }
-            router.next<Any>(route, arrayOf(counter+100))
         }
     }
 }
