@@ -13,7 +13,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
 
     val uuid: UUID = UUID.randomUUID()
     var bundle: B? = null
-    var internalParams: Array<Any>? = null
+    var internalParams: Map<String, Any>? = null
     var path: Path?
 
     init {
@@ -35,7 +35,8 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
     @Suppress("UNCHECKED_CAST")
     private fun saveParams(params: Any) {
         try {
-            internalParams = params as Array<Any>
+            internalParams = params as Map<String, Any>
+            internalParams?.plus("uuid" to uuid)
         } catch (ex: ClassCastException) {
             bundle = params as B
         }
@@ -52,9 +53,11 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
         result = 31 * result + forResult
         result = 31 * result + uuid.hashCode()
         result = 31 * result + (bundle?.hashCode() ?: 0)
-        result = 31 * result + (internalParams?.let { Arrays.hashCode(it) } ?: 0)
+        result = 31 * result + (internalParams?.let { Arrays.hashCode(it.values.toTypedArray()) } ?: 0)
         return result
     }
 
-    fun <B> copy(replacementParams: Array<B>) = Route<B>(clazz, replacementParams, viewParent, animation, forResult)
+    fun <B> copy(replacementParams: B) = Route<B>(clazz, replacementParams as Any, viewParent, animation, forResult)
+
+    fun copy(replacementParams: Map<String, Any>) = Route<Any>(clazz, replacementParams, viewParent, animation, forResult)
 }

@@ -10,7 +10,7 @@ class RouteDsl<B> {
     class RouteBuilder<B> {
 
         var target: KClass<*>? = null
-        var params: Array<Any>? = arrayOf()
+        var params: Map<String, Any>? = mapOf<String, Any>()
         var anchor: Any? = null
         var animation: RouteAnimation? = null
         var forResult: Int = -1
