@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Kartographer(val context: Any) : IKartographer {
+class Kartographer(private val context: Any) : IKartographer {
 
     private val history: ArrayList<ComplexRoute> = ArrayList()
     private var log: Logger? = null
@@ -80,7 +80,7 @@ class Kartographer(val context: Any) : IKartographer {
                     .route(context, route.uuid, route.bundle as B, route.viewParent);
         } else {
             (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
-                    .route(context, route.uuid, route.params as Array<Any>, route.viewParent, route.animation);
+                    .route(context, route.uuid, (route.params as Map<String, Any>).values.toTypedArray(), route.viewParent, route.animation);
         }
     }
 
@@ -136,7 +136,12 @@ class Kartographer(val context: Any) : IKartographer {
         return true
     }
 
-    override fun <B> next(route: Route<B>, replacementParams: Array<B>): Boolean {
+    override fun <B> next(route: Route<B>, replacementParams: B): Boolean {
+        routeTo(route.copy(replacementParams))
+        return true
+    }
+
+    override fun next(route: Route<Any>, replacementParams: Map<String, Any>): Boolean {
         routeTo(route.copy(replacementParams))
         return true
     }
@@ -258,7 +263,7 @@ class Kartographer(val context: Any) : IKartographer {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <B> current(): Route<B>? = history.last().run {
+    override fun <B> current(): Route<B>? = history.first().run {
         return if (this.path != null) {
             this.viewHistory.first as Route<B>?
         } else {
@@ -267,13 +272,7 @@ class Kartographer(val context: Any) : IKartographer {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <B> payload(): B? = current<B>()?.let {
-        return if (it.internalParams != null) {
-            it.internalParams as B?
-        } else {
-            it.bundle
-        }
-    }
+    override fun <T> payload(key: String): T? = current<Any>()?.internalParams?.get(key) as T?
 
     override fun clearHistory() = history.clear()
 
@@ -283,14 +282,25 @@ class Kartographer(val context: Any) : IKartographer {
 
     private fun createIntermediateRoute(route: Route<*>) = history.add(ComplexRoute(route.path, route, ArrayDeque<Route<*>>()))
 
-    private fun createViewRoute(route: Route<*>) = history[getHistoryLast()].viewHistory.addFirst(route)
+    private fun createViewRoute(route: Route<*>) {
+        val complexRoute = history[getHistoryLast()]
+        complexRoute.viewHistory.addFirst(route)
+        moveToFront(complexRoute)
+    }
 
     private fun createViewRouteOnPath(route: Route<*>) {
         for (i in 0 until history.size) {
             if (history[i].path == route.path) {
                 history[i].viewHistory.addFirst(route)
+                moveToFront(history[i])
             }
         }
+    }
+
+    private fun moveToFront(complexRoute: ComplexRoute) {
+        val index = history.indexOf(complexRoute)
+        history.removeAt(index)
+        history.add(0, complexRoute)
     }
 
     private fun getHistoryLast() = history.size - 1
@@ -299,5 +309,6 @@ class Kartographer(val context: Any) : IKartographer {
 
     private fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>) =
             prev == next && (prev.bundle != null && (prev.bundle as B?)!! == next.bundle
-                || prev.internalParams != null && Arrays.equals(prev.internalParams, next.internalParams))
+                || prev.internalParams != null && Arrays.equals(
+                    prev.internalParams!!.values.toTypedArray(), next.internalParams!!.values.toTypedArray()))
 }

@@ -37,7 +37,15 @@ interface IKartographer {
      * @param route The target route
      * @param params The parameters to replace the original ones
      */
-    fun <B> next(route: Route<B>, replacementParams: Array<B>): Boolean
+    fun <B> next(route: Route<B>, replacementParams: B): Boolean
+
+    /**
+     * Navigate to the next route
+     *
+     * @param route The target route
+     * @param params The parameters to replace the original ones
+     */
+    fun next(route: Route<Any>, replacementParams: Map<String, Any>): Boolean
 
     /**
      * Navigate to the last known route on the specified path
@@ -95,11 +103,11 @@ interface IKartographer {
     fun <B> current(): Route<B>?
 
     /**
-     * Obtains the payload of the current route
+     * Obtains the value of the key inside payloads current route
      *
      * @return The payload with specified type
      */
-    fun <B> payload(): B?
+    fun <T> payload(key: String): T?
 
     /**
      * Clear navigation history
