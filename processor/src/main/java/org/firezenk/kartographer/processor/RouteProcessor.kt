@@ -102,24 +102,26 @@ class RouteProcessor : AbstractProcessor() {
             params = getParameters(typeElement.getAnnotation(RoutableActivity::class.java))
         } else {
             requestCode = getForResult(typeElement.getAnnotation(RoutableView::class.java))
-            params = getParameters(typeElement.getAnnotation(RoutableView::class.java))
+            params = null
         }
 
         val sb = StringBuilder()
 
-        sb.append("" +
-                "  if (parameters.size < ${params?.size}) {\n" +
-                "      throw org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException(\"Need ${params?.size} params\")\n" +
-                "  }\n")
-
-        for ((i, tm) in params!!.withIndex()) {
+        params?.let {
             sb.append("" +
-                    "  if (!(parameters[$i] is ${typeMirrorToString(tm)})) {\n" +
-                    "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need $tm\")\n" +
+                    "  if (parameters.size < ${params.size}) {\n" +
+                    "      throw org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException(\"Need ${params.size} params\")\n" +
                     "  }\n")
-        }
 
-        sb.append("\n")
+            for ((i, tm) in params.withIndex()) {
+                sb.append("" +
+                        "  if (!(parameters[$i] is ${typeMirrorToString(tm)})) {\n" +
+                        "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need $tm\")\n" +
+                        "  }\n")
+            }
+
+            sb.append("\n")
+        }
 
         if (isActivity) {
             sb.append("  val intent: android.content.Intent = android.content.Intent(context as android.content.Context, " + typeElement.simpleName + "::class.java)\n")
@@ -127,8 +129,10 @@ class RouteProcessor : AbstractProcessor() {
             sb.append("  val bundle: android.os.Bundle = android.os.Bundle()\n\n")
             sb.append("  bundle.putString(\"uuid\", uuid.toString())\n")
 
-            if (params.isNotEmpty()) {
-                sb.append(this.parametersToBundle(params))
+            params?.let {
+                if (params.isNotEmpty()) {
+                    sb.append(this.parametersToBundle(params))
+                }
             }
 
             sb.append("  intent.putExtras(bundle)\n")
@@ -145,13 +149,8 @@ class RouteProcessor : AbstractProcessor() {
                     "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need a view parent or is not a ViewGroup\")\n" +
                     "  }\n")
 
-            if (params.isNotEmpty()) {
-                sb.append("  val next: android.view.View = ${typeElement.simpleName}.newInstance(context as android.content.Context, uuid${this.parametersToString(params)})\n")
-            } else {
-                sb.append("  val next: android.view.View = ${typeElement.simpleName}.newInstance(context as android.content.Context, uuid)\n")
-            }
-
             sb.append("" +
+                    "  val next: android.view.View = ${typeElement.simpleName}(context as android.content.Context)\n" +
                     "  val prev: android.view.View? = viewParent.getChildAt(viewParent.childCount - 1)\n\n" +
                     "  animation?.let {\n" +
                     "    prev?.let {\n" +
@@ -294,16 +293,6 @@ class RouteProcessor : AbstractProcessor() {
     }
 
     private fun getParameters(annotation: RoutableActivity): List<TypeMirror>? {
-        try {
-            annotation.params // TODO get forResult
-        } catch (e: MirroredTypesException) {
-            return e.typeMirrors as List<TypeMirror>
-        }
-
-        return null
-    }
-
-    private fun getParameters(annotation: RoutableView): List<TypeMirror>? {
         try {
             annotation.params // TODO get forResult
         } catch (e: MirroredTypesException) {

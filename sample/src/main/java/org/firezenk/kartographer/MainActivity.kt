@@ -10,9 +10,9 @@ import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.Path
 import org.firezenk.kartographer.library.Route
 import org.firezenk.kartographer.library.dsl.route
-import org.firezenk.kartographer.pages.Page1Route
-import org.firezenk.kartographer.pages.Page3Route
+import org.firezenk.kartographer.pages.page1.Page1Route
 import org.firezenk.kartographer.pages.page2.Page2Route
+import org.firezenk.kartographer.pages.page3.Page3Route
 import javax.inject.Inject
 
 /**
@@ -76,19 +76,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private fun defineRoutes() {
         page1Route = route<Any> {
             target = Page1Route::class
-            params = arrayOf("", 0)
+            params = mapOf("part" to "", "counter" to 0)
             anchor = viewHolder
         }
 
         page2Route = route<Any> {
             target = Page2Route::class
-            params = arrayOf(10)
+            params = mapOf("counter" to 10)
             anchor = viewHolder
         }
 
         page3Route = route<Any> {
             target = Page3Route::class
-            params = arrayOf(100)
+            params = mapOf("counter" to 100)
             anchor = viewHolder
         }
     }
