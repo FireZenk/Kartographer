@@ -18,7 +18,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
 
     init {
         path = getPath(clazz)
-        getExtras(params)
+        saveParams(params)
     }
 
     private fun getPath(clazz: Class<*>): Path? {
@@ -33,7 +33,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getExtras(params: Any) {
+    private fun saveParams(params: Any) {
         try {
             internalParams = params as Array<Any>
         } catch (ex: ClassCastException) {

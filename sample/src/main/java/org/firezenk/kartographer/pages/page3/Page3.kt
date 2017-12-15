@@ -47,7 +47,7 @@ class Page3(context: Context?) : FrameLayout(context) {
             val route = route<Any> {
                 target = Page3Route::class
                 anchor = parent
-                animation = PushLeft()
+                animation = PushLeft(100)
             }
             router.next<Any>(route, arrayOf(counter+100))
         }

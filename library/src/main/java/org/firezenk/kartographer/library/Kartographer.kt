@@ -252,6 +252,24 @@ class Kartographer(val context: Any) : IKartographer {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
+    override fun <B> current(): Route<B>? = history.last().run {
+        return if (this.path != null) {
+            this.viewHistory.last as Route<B>?
+        } else {
+            this.route as Route<B>?
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <B> payload(): B? = current<B>()?.let {
+        return if (it.internalParams != null) {
+            it.internalParams as B?
+        } else {
+            it.bundle
+        }
+    }
+
     override fun clearHistory() = history.clear()
 
     override fun hasHistory() = !history.isEmpty()
