@@ -145,13 +145,8 @@ class RouteProcessor : AbstractProcessor() {
                     "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need a view parent or is not a ViewGroup\")\n" +
                     "  }\n")
 
-            if (params.isNotEmpty()) {
-                sb.append("  val next: android.view.View = ${typeElement.simpleName}.newInstance(context as android.content.Context, uuid${this.parametersToString(params)})\n")
-            } else {
-                sb.append("  val next: android.view.View = ${typeElement.simpleName}.newInstance(context as android.content.Context, uuid)\n")
-            }
-
             sb.append("" +
+                    "  val next: android.view.View = ${typeElement.simpleName}(context as android.content.Context)\n" +
                     "  val prev: android.view.View? = viewParent.getChildAt(viewParent.childCount - 1)\n\n" +
                     "  animation?.let {\n" +
                     "    prev?.let {\n" +
