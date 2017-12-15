@@ -47,6 +47,13 @@ interface IKartographer {
     infix fun replay(path: Path): Boolean
 
     /**
+     * Combines replay and next: first tries to replay if don't calls next
+     *
+     * @param route The target route
+     */
+    infix fun <B> replayOrNext(route: Route<B>): Boolean
+
+    /**
      * Go back to the directly previous route
      *
      * @return true if go back is possible, false if is the end of navigation history
@@ -57,7 +64,7 @@ interface IKartographer {
      * Navigate back n times
      *
      * @param times The n times that we need to navigate backwards
-     * *
+     *
      * @return true if go back n times is possible, false if is the end of navigation history
      */
     fun back(times: Int): Boolean
@@ -66,7 +73,7 @@ interface IKartographer {
      * Navigate through the navigation history until find the route
      *
      * @param route The route (params not needed) that we want to navigate back to
-     * *
+     *
      * @return true if go back to this route is possible, false if it is not
      */
     fun <B> back(route: Route<B>): Boolean
@@ -75,10 +82,24 @@ interface IKartographer {
      * Navigate back to the last known route of the indicated Path
      *
      * @param path The target path
-     * *
+     *
      * @return true if go back to this route is possible, false if it is not
      */
     infix fun back(path: Path): Boolean
+
+    /**
+     * Obtains the current route
+     *
+     * @return A route with specified type
+     */
+    fun <B> current(): Route<B>?
+
+    /**
+     * Obtains the payload of the current route
+     *
+     * @return The payload with specified type
+     */
+    fun <B> payload(): B?
 
     /**
      * Clear navigation history
@@ -87,6 +108,7 @@ interface IKartographer {
 
     /**
      * Has history or not helper
+     *
      * @return true if the history is not empty
      */
     fun hasHistory(): Boolean

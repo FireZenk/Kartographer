@@ -38,14 +38,6 @@ class Kartographer(val context: Any) : IKartographer {
                     it.d(" Navigating to: ", route)
                 }
 
-                if (route.bundle != null) {
-                    (route.clazz.newInstance() as Routable<B>)
-                            .route(context, route.uuid, route.bundle as B, route.viewParent);
-                } else {
-                    (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
-                            .route(context, route.uuid, route.params as Array<Any>, route.viewParent, route.animation);
-                }
-
                 if (history.size == 0) {
                     createStartRoute();
                 }
@@ -62,6 +54,8 @@ class Kartographer(val context: Any) : IKartographer {
                         createViewRoute(route);
                     }
                 }
+
+                createView(route)
             }
         } catch (e: Exception) {
             when(e) {
@@ -76,6 +70,17 @@ class Kartographer(val context: Any) : IKartographer {
                 }
                 else -> throw e
             }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <B> createView(route: Route<B>) {
+        if (route.bundle != null) {
+            (route.clazz.newInstance() as Routable<B>)
+                    .route(context, route.uuid, route.bundle as B, route.viewParent);
+        } else {
+            (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
+                    .route(context, route.uuid, route.params as Array<Any>, route.viewParent, route.animation);
         }
     }
 
@@ -147,6 +152,15 @@ class Kartographer(val context: Any) : IKartographer {
             false
         } else {
             false
+        }
+    }
+
+    override fun <B> replayOrNext(route: Route<B>): Boolean {
+        val canMove = replay(route.path!!)
+        return if (!canMove) {
+            next(route)
+        } else {
+            canMove
         }
     }
 
@@ -240,6 +254,24 @@ class Kartographer(val context: Any) : IKartographer {
                 }
                 return false
             }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <B> current(): Route<B>? = history.last().run {
+        return if (this.path != null) {
+            this.viewHistory.first as Route<B>?
+        } else {
+            this.route as Route<B>?
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <B> payload(): B? = current<B>()?.let {
+        return if (it.internalParams != null) {
+            it.internalParams as B?
+        } else {
+            it.bundle
         }
     }
 

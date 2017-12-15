@@ -21,5 +21,5 @@ class ApplicationModule(private val application: SampleApplication) {
 
     @Provides
     @Singleton
-    fun provideKartographer(application: SampleApplication) = Kartographer(application)
+    fun provideKartographer(application: SampleApplication) = Kartographer(application).debug()
 }
