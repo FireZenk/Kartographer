@@ -10,7 +10,6 @@ import org.firezenk.kartographer.animations.CrossFade
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
-import org.firezenk.kartographer.pages.Page1Route
 import java.util.*
 import javax.inject.Inject
 
@@ -52,7 +51,7 @@ class Page1(context: Context?) : FrameLayout(context) {
                 anchor = parent
                 animation = CrossFade()
             }
-            router.next<Any>(route, arrayOf(part, counter))
+            router.next(route, mapOf("part" to part, "counter" to counter))
         }
     }
 }

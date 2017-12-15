@@ -11,7 +11,6 @@ import org.firezenk.kartographer.animations.PushLeft
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
-import org.firezenk.kartographer.pages.Page3Route
 import java.util.*
 import javax.inject.Inject
 
@@ -37,14 +36,14 @@ class Page3(context: Context?) : FrameLayout(context) {
 
         SampleApplication.component.injectTo(this)
 
-        val counter = router.payload<Array<Any>>()!![0] as Int
+        val counter: Int? = router.payload<Int>("counter")
 
         text2.text = "${Page3Route.PATH}: $counter"
 
         setOnClickListener {
             router next route<Any> {
                 target = Page3Route::class
-                params = arrayOf(counter + 100)
+                params = mapOf("counter" to counter!! + 100)
                 anchor = parent
                 animation = PushLeft(100)
             }

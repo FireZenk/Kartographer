@@ -52,7 +52,7 @@ class Page2 : Fragment() {
         text2.setOnClickListener {
             router next route<Any> {
                 target = Page2Route::class
-                params = arrayOf(counter+10)
+                params = mapOf("counter" to counter + 10)
                 anchor = getView()!!.parent
             }
         }
