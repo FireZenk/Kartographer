@@ -22,7 +22,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.6.2'
+  def NVersion = '0.7.0'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
@@ -57,7 +57,7 @@ Kartographer(context)
 ```kotlin
 kartographer next route<Any> {
     target = ViewRoute::class
-    params = arrayOf()
+    params = mapOf("key" to value, ...)
     anchor = parentViewGroup
     animation = CrossFade() //optional
 }
@@ -85,26 +85,25 @@ class SampleActivity : AppCompatActivity{...}
 
 // or
 
-@RoutableView(path = ..., params = {...}, requestCode = ...)
+@RoutableView(path = ..., requestCode = ...)
 class SomeView : FrameLayout{...}
 ```
 
 all parameters are totally optional, another way to create routes is create your own custom routes inheriting from `Routable.class`
 
 - `path` defines the context of the navigation flow (but if you've a lineal navigation then, you don't need it).
-- `params` an `arrayOf` parameters you need to pass to the next screen (like Android's Bundle type), ex: `arrayOf(Int::class, Float::class)`.
 - `requestCode` in case you need to receive a response into `onActivityResult` this will be your request code number.
 
-###### 3. View instance creation
+Activity only:
+- `params` an `arrayOf` parameters you need to pass to the next screen (like Android's Bundle type), ex: `arrayOf(Int::class, Float::class)`.
 
-Once the route is generated (at compile time), you'll be requested to create a new static function on your routable view:
+
+###### 3. Retrieve route params
+
+On every view you will have all the route params simply calling the `payload` method:
 
 ```kotlin
-companion object {
-        fun newInstance(context: Context, uuid: UUID): MyCustomView {
-            return MyCustomView(context)
-        }
-    }
+val myParam: Int? = kartographer.payload<Int>("myParam")
 ```
 
 ### CUSTOMISATION
@@ -113,7 +112,7 @@ Kartographer has 3 predefined transitions between screens (also the transition i
 
 ### ADDITIONAL NOTES
 
-- No, it is not contemplated the use of fragments, although it is possible (using `View` sample)
+- No, it is not contemplated the use of fragments, although it is possible (see `Page2Route.kt` sample)
 - I recommend to use auto-routes because is safe, saves coding time and you can avoid to use `Parcelables`
 - User `.clearHistory()` if you need to clear all the navigation history
 - There is some more self documented [functions here](https://github.com/FireZenk/Kartographer/blob/develop/library/src/main/java/org/firezenk/kartographer/library/IKartographer.kt)
