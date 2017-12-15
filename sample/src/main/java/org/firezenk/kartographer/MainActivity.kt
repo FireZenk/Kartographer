@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     @Inject lateinit var router: Kartographer
 
+    private var currentPath : String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -47,30 +49,27 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.bottom_action_page1 -> {
-                with(router) {
-                    replay(Path(Page1Route.PATH)) or next(route<Any> {
-                        target = Page1Route::class
-                        params = arrayOf("", 0)
-                        anchor = viewHolder
-                    })
+                currentPath = Page1Route.PATH
+                router replayOrNext route<Any> {
+                    target = Page1Route::class
+                    params = arrayOf("", 0)
+                    anchor = viewHolder
                 }
             }
             R.id.bottom_action_page2 -> {
-                with(router) {
-                    replay(Path(Page2Route.PATH)) or next(route<Any> {
-                        target = Page2Route::class
-                        params = arrayOf(10)
-                        anchor = viewHolder
-                    })
+                currentPath = Page2Route.PATH
+                router replayOrNext route<Any> {
+                    target = Page2Route::class
+                    params = arrayOf(10)
+                    anchor = viewHolder
                 }
             }
             R.id.bottom_action_page3 -> {
-                with(router) {
-                    replay(Path(Page3Route.PATH)) or next(route<Any> {
-                        target = Page3Route::class
-                        params = arrayOf(100)
-                        anchor = viewHolder
-                    })
+                currentPath = Page3Route.PATH
+                router replayOrNext route<Any> {
+                    target = Page3Route::class
+                    params = arrayOf(100)
+                    anchor = viewHolder
                 }
             }
         }
@@ -78,8 +77,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onBackPressed() {
-        router back {
-            super.onBackPressed()
+        if (currentPath == null) {
+            router back {super.onBackPressed()}
+        } else {
+            router back(Path(currentPath!!))
         }
     }
 }

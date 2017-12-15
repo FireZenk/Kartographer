@@ -47,6 +47,13 @@ interface IKartographer {
     infix fun replay(path: Path): Boolean
 
     /**
+     * Combines replay and next: first tries to replay if don't calls next
+     *
+     * @param route The target route
+     */
+    infix fun <B> replayOrNext(route: Route<B>): Boolean
+
+    /**
      * Go back to the directly previous route
      *
      * @return true if go back is possible, false if is the end of navigation history

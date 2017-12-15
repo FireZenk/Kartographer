@@ -150,6 +150,15 @@ class Kartographer(val context: Any) : IKartographer {
         }
     }
 
+    override fun <B> replayOrNext(route: Route<B>): Boolean {
+        val canMove = replay(route.path!!)
+        return if (!canMove) {
+            next(route)
+        } else {
+            canMove
+        }
+    }
+
     override infix fun back(block: () -> Unit): Boolean {
         log?.let {
             it.d(" <<--- Back")
