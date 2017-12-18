@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.extensions.disableShiftMode
 import org.firezenk.kartographer.library.Kartographer
-import org.firezenk.kartographer.library.Path
 import org.firezenk.kartographer.library.Route
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.pages.page1.Page1Route
@@ -31,8 +30,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private lateinit var page2Route : Route<Bundle>
     private lateinit var page3Route : Route<Any>
 
-    private var currentPath : String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,28 +48,17 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.bottom_action_page1 -> {
-                currentPath = Page1Route.PATH
-                router replayOrNext page1Route
-            }
-            R.id.bottom_action_page2 -> {
-                currentPath = Page2Route.PATH
-                router.replayOrNext<Bundle>(page2Route)
-            }
-            R.id.bottom_action_page3 -> {
-                currentPath = Page3Route.PATH
-                router replayOrNext page3Route
-            }
+            R.id.bottom_action_page1 -> router replayOrNext page1Route
+            R.id.bottom_action_page2 -> router.replayOrNext<Bundle>(page2Route)
+            R.id.bottom_action_page3 -> router replayOrNext page3Route
         }
         return true
     }
 
     override fun onBackPressed() {
-        if (currentPath == null) {
-            router back {super.onBackPressed()}
-        } else {
-            router back(Path(currentPath!!))
-        }
+        router.current<Any>()?.path?.let {
+            router back it
+        } ?: router back { super.onBackPressed() }
     }
 
     private fun defineRoutes() {
