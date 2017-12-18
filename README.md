@@ -22,7 +22,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.7.0'
+  def NVersion = '0.7.1'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
@@ -55,7 +55,7 @@ Kartographer(context)
 
 - Move to a new route:
 ```kotlin
-kartographer next route<Any> {
+kartographer next route {
     target = ViewRoute::class
     params = mapOf("key" to value, ...)
     anchor = parentViewGroup
@@ -80,7 +80,7 @@ kartographer replay(path)
 ###### 2. Mark the target view as Route
 
 ```kotlin
-@RoutableActivity(path = ..., params = {...}, requestCode = ...)
+@RoutableActivity(path = ..., requestCode = ...)
 class SampleActivity : AppCompatActivity{...}
 
 // or
@@ -93,9 +93,6 @@ all parameters are totally optional, another way to create routes is create your
 
 - `path` defines the context of the navigation flow (but if you've a lineal navigation then, you don't need it).
 - `requestCode` in case you need to receive a response into `onActivityResult` this will be your request code number.
-
-Activity only:
-- `params` an `arrayOf` parameters you need to pass to the next screen (like Android's Bundle type), ex: `arrayOf(Int::class, Float::class)`.
 
 
 ###### 3. Retrieve route params
