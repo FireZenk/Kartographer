@@ -166,7 +166,7 @@ class Kartographer(private val context: Any) : IKartographer {
     }
 
     override fun <B> replayOrNext(route: Route<B>): Boolean {
-        val canMove = replay(route.path!!)
+        val canMove = route.path?.let { replay(route.path!!) } ?: false
         return if (!canMove) {
             next<B>(route)
         } else {
