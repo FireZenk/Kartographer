@@ -36,12 +36,12 @@ class Page1(context: Context?) : FrameLayout(context) {
         text2.text = context.getString(R.string.route, Page1Route.PATH, part)
 
         setOnClickListener {
-            val route = route {
+            router next route {
                 target = Page1Route::class
+                params = mapOf("part" to part, "counter" to counter)
                 anchor = parent
                 animation = CrossFade()
             }
-            router.next(route, mapOf("part" to part, "counter" to counter))
         }
     }
 }

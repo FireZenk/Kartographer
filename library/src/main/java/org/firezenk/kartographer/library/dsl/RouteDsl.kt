@@ -17,4 +17,14 @@ class RouteDsl {
 
         fun build(): Route<Any> = Route(target!!.java, params!!, anchor, animation, forResult)
     }
+
+    class RouteActivityBuilder<B> {
+
+        var target: KClass<*>? = null
+        var params: B? = null
+        var animation: RouteAnimation? = null
+        var forResult: Int = -1
+
+        fun build(): Route<B> = Route<B>(target!!.java, params!!, null, animation, forResult)
+    }
 }
