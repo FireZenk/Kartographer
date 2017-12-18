@@ -76,8 +76,13 @@ class Kartographer(private val context: Any) : IKartographer {
     @Suppress("UNCHECKED_CAST")
     private fun <B> createView(route: Route<B>) {
         if (route.bundle != null) {
-            (route.clazz.newInstance() as Routable<B>)
-                    .route(context, route.uuid, route.bundle as B, route.viewParent, route.animation);
+            try {
+                (route.clazz.newInstance() as Routable<B>)
+                        .route(context, route.uuid, route.bundle as B, route.viewParent, route.animation);
+            } catch (e: ClassCastException) {
+                (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
+                        .route(context, route.uuid, route.bundle!!, route.viewParent, route.animation);
+            }
         } else {
             (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
                     .route(context, route.uuid, (route.params as Map<String, Any>).values.toTypedArray(), route.viewParent, route.animation);
