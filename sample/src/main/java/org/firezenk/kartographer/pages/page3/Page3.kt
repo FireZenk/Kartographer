@@ -34,7 +34,7 @@ class Page3(context: Context?) : FrameLayout(context) {
         text2.text = "${Page3Route.PATH}: $counter"
 
         setOnClickListener {
-            router next route<Any> {
+            router next route {
                 target = Page3Route::class
                 params = mapOf("counter" to counter!! + 100)
                 anchor = parent

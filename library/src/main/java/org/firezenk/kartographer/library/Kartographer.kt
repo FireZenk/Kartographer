@@ -57,7 +57,7 @@ class Kartographer(private val context: Any) : IKartographer {
 
                 createView(route)
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             when(e) {
                 is ClassCastException -> log?.d(" Params has to be instance of Object[] or Android's Bundle ", e)
                 is ParameterNotFoundException,

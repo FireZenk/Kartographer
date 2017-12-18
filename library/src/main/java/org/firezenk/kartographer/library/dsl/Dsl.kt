@@ -5,4 +5,4 @@ import org.firezenk.kartographer.library.Route
 @DslMarker
 annotation class KartographerDsl
 
-fun <B> route(block: RouteDsl.RouteBuilder<B>.() -> Unit): Route<B> = RouteDsl.RouteBuilder<B>().apply(block).build()
+fun route(block: RouteDsl.RouteBuilder.() -> Unit): Route<Any> = RouteDsl.RouteBuilder().apply(block).build()
