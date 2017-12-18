@@ -113,6 +113,7 @@ class RouteProcessor : AbstractProcessor() {
                     "  if (context is android.app.Activity) {\n" +
                     "      context.startActivityForResult(intent, " + requestCode + ")\n" +
                     "  } else {\n" +
+                    "      intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);\n" +
                     "      context.startActivity(intent)\n" +
                     "  }\n")
         } else {
