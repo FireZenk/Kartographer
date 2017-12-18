@@ -36,7 +36,7 @@ class Page1(context: Context?) : FrameLayout(context) {
         text2.text = context.getString(R.string.route, Page1Route.PATH, part)
 
         setOnClickListener {
-            val route = route<Any> {
+            val route = route {
                 target = Page1Route::class
                 anchor = parent
                 animation = CrossFade()

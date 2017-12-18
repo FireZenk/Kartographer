@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.page_view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
 import org.firezenk.kartographer.library.Kartographer
-import org.firezenk.kartographer.library.dsl.route
+import org.firezenk.kartographer.library.Route
 import javax.inject.Inject
 
 /**
@@ -36,11 +36,17 @@ class Page2 : Fragment() {
         text2.text = "${Page2Route.PATH}: $counter"
 
         text2.setOnClickListener {
-            router next route<Any> {
-                target = Page2Route::class
-                params = mapOf("counter" to counter + 10)
-                anchor = getView()!!.parent
-            }
+            val bundle = Bundle()
+            bundle.putInt("counter", counter + 10)
+
+            val route = Route<Bundle>(
+                    Page2Route::class.java,
+                    bundle,
+                    getView()!!.parent,
+                    null
+            )
+
+            router next route
         }
     }
 }

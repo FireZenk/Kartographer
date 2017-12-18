@@ -5,9 +5,9 @@ import org.firezenk.kartographer.library.Route
 import kotlin.reflect.KClass
 
 @KartographerDsl
-class RouteDsl<B> {
+class RouteDsl {
 
-    class RouteBuilder<B> {
+    class RouteBuilder {
 
         var target: KClass<*>? = null
         var params: Map<String, Any>? = mapOf<String, Any>()
@@ -15,6 +15,6 @@ class RouteDsl<B> {
         var animation: RouteAnimation? = null
         var forResult: Int = -1
 
-        fun build(): Route<B> = Route(target!!.java, params!!, anchor, animation, forResult)
+        fun build(): Route<Any> = Route(target!!.java, params!!, anchor, animation, forResult)
     }
 }
