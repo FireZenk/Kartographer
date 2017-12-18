@@ -77,7 +77,7 @@ class Kartographer(private val context: Any) : IKartographer {
     private fun <B> createView(route: Route<B>) {
         if (route.bundle != null) {
             (route.clazz.newInstance() as Routable<B>)
-                    .route(context, route.uuid, route.bundle as B, route.viewParent);
+                    .route(context, route.uuid, route.bundle as B, route.viewParent, route.animation);
         } else {
             (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
                     .route(context, route.uuid, (route.params as Map<String, Any>).values.toTypedArray(), route.viewParent, route.animation);
@@ -132,7 +132,7 @@ class Kartographer(private val context: Any) : IKartographer {
     }
 
     override infix fun <B> next(route: Route<B>): Boolean {
-        routeTo(route)
+        routeTo<B>(route)
         return true
     }
 
@@ -163,7 +163,7 @@ class Kartographer(private val context: Any) : IKartographer {
     override fun <B> replayOrNext(route: Route<B>): Boolean {
         val canMove = replay(route.path!!)
         return if (!canMove) {
-            next(route)
+            next<B>(route)
         } else {
             canMove
         }

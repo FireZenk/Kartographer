@@ -14,7 +14,7 @@ import java.util.*
 interface Routable {
 
     @Throws(ParameterNotFoundException::class, NotEnoughParametersException::class)
-    fun route(context: Any, uuid: UUID, parameters: Array<Any>, viewParent: Any?, animation: RouteAnimation?)
+    fun route(context: Any, uuid: UUID, parameters: Any, viewParent: Any?, animation: RouteAnimation?)
 
     fun path(): String
 }

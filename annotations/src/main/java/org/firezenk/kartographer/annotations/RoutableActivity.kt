@@ -1,7 +1,5 @@
 package org.firezenk.kartographer.annotations
 
-import kotlin.reflect.KClass
-
 /**
  * Project: Kartographer
  *
@@ -16,11 +14,6 @@ annotation class RoutableActivity(
          * @return the path string
          */
         val path: String = "",
-        /**
-         * Possible "bundle" extras
-         * @return array class types for the params
-         */
-        val params: Array<KClass<*>> = arrayOf(),
         /**
          * Define the request code for the activity
          * @return the request code, -1 if not needed

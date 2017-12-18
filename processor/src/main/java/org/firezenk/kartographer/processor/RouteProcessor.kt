@@ -11,8 +11,6 @@ import javax.annotation.Generated
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.MirroredTypesException
-import javax.lang.model.type.TypeMirror
 import javax.tools.Diagnostic
 
 /**
@@ -75,7 +73,11 @@ class RouteProcessor : AbstractProcessor() {
     private fun generateRoute(typeElement: TypeElement): FileSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Creating route...")
 
-        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement), addPathGetter(typeElement), addReplaceFun())
+        val methods = arrayListOf<FunSpec>(addRouteMethod(typeElement), addPathGetter(typeElement))
+
+        if (!isActivity(typeElement)) {
+            methods.add(addReplaceFun())
+        }
 
         val myClass = createRoute(typeElement, methods)
 
@@ -94,54 +96,24 @@ class RouteProcessor : AbstractProcessor() {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Generating route method")
 
         val isActivity = isActivity(typeElement)
-        val requestCode: Int
-        val params: List<TypeMirror>?
 
-        if (isActivity) {
-            requestCode = getForResult(typeElement.getAnnotation(RoutableActivity::class.java))
-            params = getParameters(typeElement.getAnnotation(RoutableActivity::class.java))
+        val requestCode = if (isActivity) {
+            getForResult(typeElement.getAnnotation(RoutableActivity::class.java))
         } else {
-            requestCode = getForResult(typeElement.getAnnotation(RoutableView::class.java))
-            params = null
+            getForResult(typeElement.getAnnotation(RoutableView::class.java))
         }
 
         val sb = StringBuilder()
 
-        params?.let {
-            sb.append("" +
-                    "  if (parameters.size < ${params.size}) {\n" +
-                    "      throw org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException(\"Need ${params.size} params\")\n" +
-                    "  }\n")
-
-            for ((i, tm) in params.withIndex()) {
-                sb.append("" +
-                        "  if (!(parameters[$i] is ${typeMirrorToString(tm)})) {\n" +
-                        "      throw org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException(\"Need $tm\")\n" +
-                        "  }\n")
-            }
-
-            sb.append("\n")
-        }
-
         if (isActivity) {
-            sb.append("  val intent: android.content.Intent = android.content.Intent(context as android.content.Context, " + typeElement.simpleName + "::class.java)\n")
-
-            sb.append("  val bundle: android.os.Bundle = android.os.Bundle()\n\n")
-            sb.append("  bundle.putString(\"uuid\", uuid.toString())\n")
-
-            params?.let {
-                if (params.isNotEmpty()) {
-                    sb.append(this.parametersToBundle(params))
-                }
-            }
-
-            sb.append("  intent.putExtras(bundle)\n")
+            sb.append("  val intent = android.content.Intent(context as android.content.Context, " + typeElement.simpleName + "::class.java)\n")
+            sb.append("  intent.putExtras(parameters as android.os.Bundle)\n")
 
             sb.append("" +
                     "  if (context is android.app.Activity) {\n" +
-                    "      (context as android.app.Activity).startActivityForResult(intent, " + requestCode + ")\n" +
-                    "  } else if (context is android.content.Context) {\n" +
-                    "      (context as android.content.Context).startActivity(intent)\n" +
+                    "      context.startActivityForResult(intent, " + requestCode + ")\n" +
+                    "  } else {\n" +
+                    "      context.startActivity(intent)\n" +
                     "  }\n")
         } else {
             sb.append("" +
@@ -168,8 +140,8 @@ class RouteProcessor : AbstractProcessor() {
                 .addModifiers(KModifier.OVERRIDE)
                 .addParameter("context", ANY)
                 .addParameter("uuid", UUID::class)
-                .addParameter(ParameterSpec.builder("parameters", ParameterizedTypeName.get(ARRAY, ANY)).build())
-                .addParameter(ParameterSpec.builder("viewParent", ANY.asNullable()).build())
+                .addParameter("parameters", ANY)
+                .addParameter("viewParent", ANY.asNullable())
                 .addParameter("animation", RouteAnimation::class.asClassName().asNullable())
                 .addCode(sb.toString())
                 .returns(Void.TYPE)
@@ -196,76 +168,6 @@ class RouteProcessor : AbstractProcessor() {
                 .build()
     }
 
-    private fun typeMirrorToString(typeMirror: TypeMirror): String {
-        return when (typeMirror.toString()) {
-            "java.lang.Boolean" -> "kotlin.Boolean"
-            "java.lang.Integer" -> "kotlin.Int"
-            "java.lang.Character" -> "kotlin.Char"
-            "java.lang.Float" -> "kotlin.Float"
-            "java.lang.Double" -> "kotlin.Double"
-            "java.lang.String" -> "kotlin.String"
-            else -> typeMirror.asTypeName().toString()
-        }
-    }
-
-    private fun parametersToString(params: List<TypeMirror>): String {
-        val sb = StringBuilder()
-
-        for ((i, tm) in params.withIndex()) {
-            sb.append(", parameters[$i] as ${typeMirrorToString(tm)}")
-        }
-
-        return sb.toString()
-    }
-
-    private fun parametersToBundle(params: List<TypeMirror>): String {
-        val sb = StringBuilder()
-
-        for ((i, tm) in params.withIndex()) {
-
-            val extra = "parameters[$i] as"
-            val casting = "$tm)\n"
-
-            when (tm.toString()) {
-                "java.lang.Boolean" -> {
-                    sb.append("  bundle.putBoolean(\"bool$i\", ")
-                    sb.append(extra)
-                    sb.append(casting)
-                }
-                "java.lang.Integer" -> {
-                    sb.append("  bundle.putInt(\"int$i\", ")
-                    sb.append(extra)
-                    sb.append(casting)
-                }
-                "java.lang.Character" -> {
-                    sb.append("  bundle.putChar(\"char$i\", ")
-                    sb.append(extra)
-                    sb.append(casting)
-                }
-                "java.lang.Float" -> {
-                    sb.append("  bundle.putFloat(\"float$i\", ")
-                    sb.append(extra)
-                    sb.append(casting)
-                }
-                "java.lang.Double" -> {
-                    sb.append("  bundle.putDouble(\"double$i\", ")
-                    sb.append(extra)
-                    sb.append(casting)
-                }
-                "java.lang.String" -> {
-                    sb.append("  bundle.putString(\"string$i\", ")
-                    sb.append(extra)
-                    sb.append(casting)
-                }
-                else -> sb.append("  bundle.putParcelable(\"parcelable$i\", $extra as android.os.Parcelable")
-            }
-
-            sb.append("\n")
-        }
-
-        return sb.toString()
-    }
-
     private fun createRoute(typeElement: TypeElement, methods: ArrayList<FunSpec>): TypeSpec {
         messager?.printMessage(Diagnostic.Kind.NOTE, "Saving route file...")
 
@@ -290,16 +192,6 @@ class RouteProcessor : AbstractProcessor() {
                                         .build())
                         .build())
                 .build()
-    }
-
-    private fun getParameters(annotation: RoutableActivity): List<TypeMirror>? {
-        try {
-            annotation.params // TODO get forResult
-        } catch (e: MirroredTypesException) {
-            return e.typeMirrors as List<TypeMirror>
-        }
-
-        return null
     }
 
     private fun getForResult(annotation: RoutableActivity) = annotation.requestCode
