@@ -1,7 +1,6 @@
 package org.firezenk.kartographer.library.types
 
 import org.firezenk.kartographer.annotations.RouteAnimation
-import org.firezenk.kartographer.library.Routable
 import java.util.*
 
 /**
@@ -10,7 +9,8 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Route<B> (val clazz: Class<*>, val params: Any, var path: Path, var viewParent: Any?, val animation: RouteAnimation?, val forResult: Int = -1) {
+class Route<B> (val clazz: Class<*>, val params: Any, var path: Path,
+                var viewParent: Any?, val animation: RouteAnimation?, val forResult: Int = -1) {
 
     val uuid: UUID = UUID.randomUUID()
     var bundle: B? = null
@@ -23,21 +23,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var path: Path, var viewPa
                         prev.internalParams!!.values.toTypedArray(), next.internalParams!!.values.toTypedArray()))
     }
 
-    init {
-        path = getPath(clazz)
-        saveParams(params)
-    }
-
-    private fun getPath(clazz: Class<*>): Path {
-        val instance = clazz.newInstance()
-        return if (instance is Routable<*>) {
-            Path(instance.path())
-        } else if (instance is org.firezenk.kartographer.processor.interfaces.Routable) {
-            if (instance.path().isEmpty()) null else Path(instance.path())
-        } else {
-            null
-        }
-    }
+    init { saveParams(params) }
 
     @Suppress("UNCHECKED_CAST")
     private fun saveParams(params: Any) {
