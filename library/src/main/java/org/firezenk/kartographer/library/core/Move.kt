@@ -1,15 +1,11 @@
 package org.firezenk.kartographer.library.core
 
 import org.firezenk.kartographer.library.Routable
+import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.library.exceptions.NotEnoughParametersException
 import org.firezenk.kartographer.library.exceptions.ParameterNotFoundException
-import org.firezenk.kartographer.library.types.ComplexRoute
-import org.firezenk.kartographer.library.types.Path
-import org.firezenk.kartographer.library.types.Path.Companion.pathExists
-import org.firezenk.kartographer.library.types.Path.Companion.pathIsValid
 import org.firezenk.kartographer.library.types.Route
 import org.firezenk.kartographer.library.types.Route.Companion.areRoutesEqual
-import java.util.*
 
 /**
  * Project: Kartographer
@@ -21,7 +17,8 @@ class Move(private val core: Core) {
 
     @Suppress("UNCHECKED_CAST")
     fun <B> routeTo(route: Route<B>) {
-        val prev: Route<B>? = if (core.history.isEmpty()) null else core.history[core.history.size - 1].viewHistory.peek() as Route<B>?
+        val prev: Route<B>? = core.current()
+
         try {
             if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
                 core.log?.let {
@@ -31,18 +28,14 @@ class Move(private val core: Core) {
 
                 core.lastKnownPath = route.path
 
-                if (core.history.size == 0) {
-                    createStartRoute()
-                }
-
                 if (route.viewParent == null) {
-                    createIntermediateRoute(route)
+                    createPathRoute(route)
                 } else {
-                    if (pathIsValid(route, prev) && !pathExists(core.history, route.path)) {
-                        createStartRoute(route.path)
+                    if (core.pathIsValid(route, prev) && !core.pathExists(core.history, route)) {
+                        createPath(route)
                         createViewRoute(route)
-                    } else if (pathExists(core.history, route.path)) {
-                        createViewRouteOnPath(route)
+                    } else if (core.pathExists(core.history, route)) {
+                        createPath(route)
                     } else {
                         createViewRoute(route)
                     }
@@ -82,21 +75,20 @@ class Move(private val core: Core) {
         }
     }
 
-    private fun createStartRoute(path: Path? = null) = core.history.add(ComplexRoute(path, null, ArrayDeque<Route<*>>()))
-
-    private fun createIntermediateRoute(route: Route<*>) = core.history.add(ComplexRoute(route.path, route, ArrayDeque<Route<*>>()))
+    private fun createPathRoute(route: Route<*>) = core.history.put(route, mutableListOf())
 
     private fun createViewRoute(route: Route<*>) {
-        val complexRoute = core.history.last()
-        complexRoute.viewHistory.addFirst(route)
+        val leaf: Route<*> = core.history.keys.first { it.path == core.lastKnownPath }
+        val branch: MutableList<Route<*>>? = core.history[leaf]
+        branch?.add(route)
     }
 
-    private fun createViewRouteOnPath(route: Route<*>) {
-        for (i in 0 until core.history.size) {
-            if (core.history[i].path == route.path) {
-                core.history[i].viewHistory.addFirst(route)
-                return
-            }
-        }
+    private fun createPath(routeToAdd: Route<*>) {
+        val leaf: Route<*> = core.history.keys.first { it.path == routeToAdd.path }
+        val branch: MutableList<Route<*>>? = core.history[leaf]
+        branch?.add(route {
+            target = Any::class
+            path = routeToAdd.path
+        })
     }
 }
