@@ -10,12 +10,11 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val animation: RouteAnimation?, val forResult: Int = -1) {
+class Route<B> (val clazz: Class<*>, val params: Any, var path: Path, var viewParent: Any?, val animation: RouteAnimation?, val forResult: Int = -1) {
 
     val uuid: UUID = UUID.randomUUID()
     var bundle: B? = null
     var internalParams: Map<String, Any>? = null
-    var path: Path?
 
     companion object {
         fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>) =
@@ -29,7 +28,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
         saveParams(params)
     }
 
-    private fun getPath(clazz: Class<*>): Path? {
+    private fun getPath(clazz: Class<*>): Path {
         val instance = clazz.newInstance()
         return if (instance is Routable<*>) {
             Path(instance.path())
@@ -65,7 +64,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
         return result
     }
 
-    fun <B> copy(replacementParams: B) = Route<B>(clazz, replacementParams as Any, viewParent, animation, forResult)
+    fun <B> copy(replacementParams: B) = Route<B>(clazz, replacementParams as Any, path, viewParent, animation, forResult)
 
-    fun copy(replacementParams: Map<String, Any>) = Route<Any>(clazz, replacementParams, viewParent, animation, forResult)
+    fun copy(replacementParams: Map<String, Any>) = Route<Any>(clazz, replacementParams, path, viewParent, animation, forResult)
 }
