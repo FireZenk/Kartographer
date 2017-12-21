@@ -22,7 +22,7 @@ class Logger {
             println(TAG + actionDesc + "last: " + history[getHistoryLast()])
             if (history[getHistoryLast()] != null && history[getHistoryLast()].viewHistory.size > 0) {
                 println(TAG + actionDesc + "internal history size: " + history[getHistoryLast()].viewHistory.size)
-                println(TAG + actionDesc + "internal history last: " + history[getHistoryLast()].viewHistory.peek())
+                println(TAG + actionDesc + "internal history last: " + history[getHistoryLast()].viewHistory.last())
             }
         }
     }
