@@ -9,38 +9,42 @@ import org.firezenk.kartographer.library.types.Route
  * Created by Jorge Garrido Oval, aka firezenk on 21/12/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Replay(val core: Core, val move: Move, val forward: Forward) {
+class Replay(private val core: Core, private val move: Move, private val forward: Forward) {
 
     infix fun last(viewParent: Any?): Boolean {
-        return if (core.hasHistory()) {
-            if (viewParent != null) {
-                for (route in core.history[core.getHistoryLast()].viewHistory) {
-                    route.viewParent = viewParent
-                }
-            }
-            val route = core.history.firstOrNull()?.viewHistory?.firstOrNull()
+        val leaf: Route<*> = core.history.keys.first { it.path == core.lastKnownPath }
+        val branch: MutableList<Route<*>>? = core.history[leaf]
 
-            return if (route != null) {
+        return viewParent?.let {
+            val route: Route<*>? = branch?.map {
+                it.viewParent = viewParent
+                it
+            }?.firstOrNull()
+
+            if (route == null) {
+                return@let false
+            } else {
                 move.routeTo(route)
-                return true
-            } else false
-        } else false
+                return@let true
+            }
+
+        } == true
     }
 
     infix fun replay(path: Path): Boolean {
-        return if (core.hasHistory()) {
-            for (i in 0 until core.history.size) {
-                if (core.history[i].path == path && core.history[i].viewHistory.isNotEmpty()) {
-                    move.routeTo(core.history[i].viewHistory.pop())
-                    return true
-                }
-            }
-            return false
-        } else false
+        val leaf: Route<*> = core.history.keys.first { it.path == path }
+        val branch: MutableList<Route<*>>? = core.history[leaf]
+        val route: Route<*>? = branch?.firstOrNull { it.path == path }
+
+        return route?.let {
+            branch.remove(it)
+            move.routeTo(it)
+            return@let true
+        } == true
     }
 
     fun <B> replayOrNext(route: Route<B>): Boolean {
-        val canMove = route.path?.let { replay(route.path!!) } ?: false
+        val canMove = replay(route.path)
         return if (!canMove) {
             forward.next<B>(route)
         } else canMove
