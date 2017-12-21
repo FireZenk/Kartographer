@@ -192,7 +192,7 @@ class Kartographer(private val context: Any) : IKartographer {
         return result
     }
 
-    override fun back(times: Int): Boolean {
+    override infix fun back(times: Int): Boolean {
         try {
             for (i in 0 until times) {
                 if (!back({})) {
@@ -208,7 +208,7 @@ class Kartographer(private val context: Any) : IKartographer {
         }
     }
 
-    override fun <B> back(route: Route<B>): Boolean {
+    override infix fun <B> back(route: Route<B>): Boolean {
         when {
             history.isEmpty() -> {
                 log?.d("Is not possible to go back, history is empty")
@@ -244,7 +244,16 @@ class Kartographer(private val context: Any) : IKartographer {
         }
     }
 
-    override infix fun back(path: Path): Boolean {
+    override infix fun backOnPath(block: () -> Unit) = current<Any>()?.path?.let {
+        if (!internalBackOnPath(it)) {
+            block()
+            return@let true
+        } else {
+            return@let back(block)
+        }
+    } ?: false
+
+    private fun internalBackOnPath(path: Path): Boolean {
         log?.let {
             it.d(" <<--- Back")
             it.d(" History: ", history, this::getHistoryLast)

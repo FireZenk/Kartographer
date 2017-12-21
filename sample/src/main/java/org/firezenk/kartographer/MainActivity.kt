@@ -56,11 +56,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onBackPressed() {
-        router.current<Any>()?.path?.let {
-            if (!(router back it)) {
-                super.onBackPressed()
-            }
-        }
+        router.backOnPath({ super.onBackPressed() })
     }
 
     private fun defineRoutes() {

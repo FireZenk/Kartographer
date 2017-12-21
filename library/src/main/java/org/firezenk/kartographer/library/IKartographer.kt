@@ -75,7 +75,7 @@ interface IKartographer {
      *
      * @return true if go back n times is possible, false if is the end of navigation history
      */
-    fun back(times: Int): Boolean
+    infix fun back(times: Int): Boolean
 
     /**
      * Navigate through the navigation history until find the route
@@ -84,16 +84,14 @@ interface IKartographer {
      *
      * @return true if go back to this route is possible, false if it is not
      */
-    fun <B> back(route: Route<B>): Boolean
+    infix fun <B> back(route: Route<B>): Boolean
 
     /**
-     * Navigate back to the last known route of the indicated Path
-     *
-     * @param path The target path
+     * Navigate back to the last known route within paths
      *
      * @return true if go back to this route is possible, false if it is not
      */
-    infix fun back(path: Path): Boolean
+    infix fun backOnPath(block: () -> Unit): Boolean
 
     /**
      * Obtains the current route
