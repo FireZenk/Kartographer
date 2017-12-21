@@ -16,6 +16,7 @@ class Kartographer(private val context: Any) : IKartographer {
 
     private val history: ArrayList<ComplexRoute> = ArrayList()
     private var log: Logger? = null
+    private var lastKnownPath: Path? = null
 
     internal class ComplexRoute internal
     constructor(internal val path: Path?, internal val route: Route<*>?, internal val viewHistory: ArrayDeque<Route<*>>) {
@@ -25,7 +26,7 @@ class Kartographer(private val context: Any) : IKartographer {
 
     override fun debug(): Kartographer {
         log = Logger()
-        return this;
+        return this
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -38,20 +39,22 @@ class Kartographer(private val context: Any) : IKartographer {
                     it.d(" Navigating to: ", route)
                 }
 
+                lastKnownPath = route.path
+
                 if (history.size == 0) {
-                    createStartRoute();
+                    createStartRoute()
                 }
 
                 if (route.viewParent == null) {
-                    createIntermediateRoute(route);
+                    createIntermediateRoute(route)
                 } else {
                     if (pathIsValid(route, prev) && !pathExists(route.path)) {
-                        createStartRoute(route.path);
-                        createViewRoute(route);
+                        createStartRoute(route.path)
+                        createViewRoute(route)
                     } else if (pathExists(route.path)) {
-                        createViewRouteOnPath(route);
+                        createViewRouteOnPath(route)
                     } else {
-                        createViewRoute(route);
+                        createViewRoute(route)
                     }
                 }
 
@@ -66,7 +69,7 @@ class Kartographer(private val context: Any) : IKartographer {
                 is IllegalAccessException,
                 is org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException,
                 is org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException -> {
-                    log?.d(" Navigation error; ", e.fillInStackTrace());
+                    log?.d(" Navigation error: ", e.fillInStackTrace())
                 }
                 else -> throw e
             }
@@ -78,28 +81,25 @@ class Kartographer(private val context: Any) : IKartographer {
         if (route.bundle != null) {
             try {
                 (route.clazz.newInstance() as Routable<B>)
-                        .route(context, route.uuid, route.bundle as B, route.viewParent, route.animation);
+                        .route(context, route.uuid, route.bundle as B, route.viewParent, route.animation)
             } catch (e: ClassCastException) {
                 (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
-                        .route(context, route.uuid, route.bundle!!, route.viewParent, route.animation);
+                        .route(context, route.uuid, route.bundle!!, route.viewParent, route.animation)
             }
         } else {
             (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
-                    .route(context, route.uuid, (route.params as Map<String, Any>).values.toTypedArray(), route.viewParent, route.animation);
+                    .route(context, route.uuid, (route.params as Map<String, Any>).values.toTypedArray(), route.viewParent, route.animation)
         }
     }
 
     private fun internalBack(complexRoute: ComplexRoute): Boolean {
         val prevRoute = complexRoute.viewHistory.pop()
-        log?.d(" Removing last: ", prevRoute);
+        log?.d(" Removing last: ", prevRoute)
 
         return if (complexRoute.viewHistory.isNotEmpty()) {
-            routeTo(complexRoute.viewHistory.pop());
-            true;
-        } else {
-            routeTo(prevRoute);
-            false;
-        }
+            routeTo(complexRoute.viewHistory.pop())
+            return true
+        } else false
     }
 
     private fun pathIsValid(route: Route<*>, prev: Route<*>?): Boolean {
@@ -129,11 +129,13 @@ class Kartographer(private val context: Any) : IKartographer {
                     route.viewParent = viewParent
                 }
             }
-            routeTo(history[getHistoryLast()].viewHistory.pop());
-            true
-        } else {
-            false
-        }
+            val route = history.firstOrNull()?.viewHistory?.firstOrNull()
+
+            return if (route != null) {
+                routeTo(route)
+                return true
+            } else false
+        } else false
     }
 
     override infix fun <B> next(route: Route<B>): Boolean {
@@ -154,24 +156,20 @@ class Kartographer(private val context: Any) : IKartographer {
     override infix fun replay(path: Path): Boolean {
         return if (hasHistory()) {
             for (i in 0 until history.size) {
-                if (history[i].path == path) {
-                    routeTo(history[i].viewHistory.removeFirst())
+                if (history[i].path == path && history[i].viewHistory.isNotEmpty()) {
+                    routeTo(history[i].viewHistory.pop())
                     return true
                 }
             }
-            false
-        } else {
-            false
-        }
+            return false
+        } else false
     }
 
     override fun <B> replayOrNext(route: Route<B>): Boolean {
         val canMove = route.path?.let { replay(route.path!!) } ?: false
         return if (!canMove) {
             next<B>(route)
-        } else {
-            canMove
-        }
+        } else canMove
     }
 
     override infix fun back(block: () -> Unit): Boolean {
@@ -181,14 +179,12 @@ class Kartographer(private val context: Any) : IKartographer {
         }
 
         val result = when {
-            history.isEmpty() -> {
-                false
-            }
+            history.isEmpty() -> false
             history[getHistoryLastWithoutPath()].viewHistory.isNotEmpty() ->
                 internalBack(history[getHistoryLastWithoutPath()])
             else -> {
-                history.removeAt(getHistoryLast());
-                false;
+                history.removeAt(getHistoryLast())
+                false
             }
         }
 
@@ -255,24 +251,27 @@ class Kartographer(private val context: Any) : IKartographer {
         }
 
         return when {
-            history.isEmpty() -> false;
+            history.isEmpty() -> false
             else -> {
                 for (i in 0 until history.size) {
                     if (history[i].path == path) {
                         return internalBack(history[i])
                     }
                 }
-                return false
+                false
             }
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <B> current(): Route<B>? = history.first().run {
-        return if (this.path != null) {
-            this.viewHistory.first as Route<B>?
-        } else {
-            this.route as Route<B>?
+    override fun <B> current(): Route<B>? {
+        val route: ComplexRoute? = history.firstOrNull { it.path == lastKnownPath }
+        return route?.let {
+            if (it.viewHistory.isNotEmpty()) {
+                it.viewHistory.first as Route<B>?
+            } else {
+                it.route as Route<B>?
+            }
         }
     }
 
@@ -290,22 +289,15 @@ class Kartographer(private val context: Any) : IKartographer {
     private fun createViewRoute(route: Route<*>) {
         val complexRoute = history[getHistoryLast()]
         complexRoute.viewHistory.addFirst(route)
-        moveToFront(complexRoute)
     }
 
     private fun createViewRouteOnPath(route: Route<*>) {
         for (i in 0 until history.size) {
             if (history[i].path == route.path) {
                 history[i].viewHistory.addFirst(route)
-                moveToFront(history[i])
+                return
             }
         }
-    }
-
-    private fun moveToFront(complexRoute: ComplexRoute) {
-        val index = history.indexOf(complexRoute)
-        history.removeAt(index)
-        history.add(0, complexRoute)
     }
 
     private fun getHistoryLast() = history.size - 1
