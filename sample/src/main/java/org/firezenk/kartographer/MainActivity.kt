@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.extensions.disableShiftMode
 import org.firezenk.kartographer.library.Kartographer
-import org.firezenk.kartographer.library.Route
+import org.firezenk.kartographer.library.types.Route
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.pages.page1.Page1Route
 import org.firezenk.kartographer.pages.page2.Page2Route

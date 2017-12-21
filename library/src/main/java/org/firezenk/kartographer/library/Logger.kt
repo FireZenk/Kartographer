@@ -1,5 +1,8 @@
 package org.firezenk.kartographer.library
 
+import org.firezenk.kartographer.library.types.ComplexRoute
+import org.firezenk.kartographer.library.types.Route
+
 class Logger {
 
     private val TAG = "Kartographer::"
@@ -13,7 +16,7 @@ class Logger {
         return route
     }
 
-    internal fun d(actionDesc: String, history: List<Kartographer.ComplexRoute>, getHistoryLast: () -> Int) {
+    internal fun d(actionDesc: String, history: List<ComplexRoute>, getHistoryLast: () -> Int) {
         if (history.isNotEmpty() && history[getHistoryLast()] != null) {
             println(TAG + actionDesc + "size: " + history.size)
             println(TAG + actionDesc + "last: " + history[getHistoryLast()])

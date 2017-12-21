@@ -1,6 +1,7 @@
-package org.firezenk.kartographer.library
+package org.firezenk.kartographer.library.types
 
 import org.firezenk.kartographer.annotations.RouteAnimation
+import org.firezenk.kartographer.library.Routable
 import java.util.*
 
 /**
@@ -15,6 +16,13 @@ class Route<B> (val clazz: Class<*>, val params: Any, var viewParent: Any?, val 
     var bundle: B? = null
     var internalParams: Map<String, Any>? = null
     var path: Path?
+
+    companion object {
+        fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>) =
+                prev == next && (prev.bundle != null && (prev.bundle as B?)!! == next.bundle
+                        || prev.internalParams != null && Arrays.equals(
+                        prev.internalParams!!.values.toTypedArray(), next.internalParams!!.values.toTypedArray()))
+    }
 
     init {
         path = getPath(clazz)

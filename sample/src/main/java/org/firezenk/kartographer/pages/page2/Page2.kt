@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.page_view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
 import org.firezenk.kartographer.library.Kartographer
-import org.firezenk.kartographer.library.Route
+import org.firezenk.kartographer.library.types.Route
 import javax.inject.Inject
 
 /**

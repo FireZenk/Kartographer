@@ -1,7 +1,7 @@
 package org.firezenk.kartographer.library.dsl
 
 import org.firezenk.kartographer.annotations.RouteAnimation
-import org.firezenk.kartographer.library.Route
+import org.firezenk.kartographer.library.types.Route
 import kotlin.reflect.KClass
 
 @KartographerDsl
