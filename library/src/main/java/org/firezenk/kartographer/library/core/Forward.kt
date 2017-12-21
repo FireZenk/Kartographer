@@ -8,7 +8,7 @@ import org.firezenk.kartographer.library.types.Route
  * Created by Jorge Garrido Oval, aka firezenk on 21/12/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Forward(val move: Move) {
+class Forward(private val move: Move) {
 
     infix fun <B> next(route: Route<B>): Boolean {
         move.routeTo<B>(route)
