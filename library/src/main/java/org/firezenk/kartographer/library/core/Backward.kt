@@ -1,6 +1,5 @@
 package org.firezenk.kartographer.library.core
 
-import org.firezenk.kartographer.library.types.ComplexRoute
 import org.firezenk.kartographer.library.types.Path
 import org.firezenk.kartographer.library.types.Route
 
@@ -12,18 +11,18 @@ import org.firezenk.kartographer.library.types.Route
  */
 class Backward(val core: Core, val move: Move) {
 
-    infix fun back(block: () -> Unit): Boolean {
+    fun back(block: () -> Unit): Boolean {
         core.log?.let {
             it.d(" <<--- Back")
-            it.d(" History: ", core.history, core::getHistoryLast)
+            it.d(" History: ", core.history)
         }
 
         val result = when {
             core.history.isEmpty() -> false
-            core.history[core.getHistoryLastWithoutPath()].viewHistory.isNotEmpty() ->
-                internalBack(core.history[core.getHistoryLastWithoutPath()])
+            core.history.keys.isNotEmpty() ->
+                internalBack(core.history[core.history.keys.last()]!!)
             else -> {
-                core.history.removeAt(core.getHistoryLast())
+                core.history.remove(core.history.keys.last())
                 false
             }
         }
@@ -32,7 +31,7 @@ class Backward(val core: Core, val move: Move) {
         return result
     }
 
-    infix fun back(times: Int): Boolean {
+    fun back(times: Int): Boolean {
         try {
             for (i in 0 until times) {
                 if (!back({})) {
@@ -48,53 +47,62 @@ class Backward(val core: Core, val move: Move) {
         }
     }
 
-    infix fun <B> back(route: Route<B>): Boolean {
+    fun <B> back(route: Route<B>): Boolean {
         when {
             core.history.isEmpty() -> {
                 core.log?.d("Is not possible to go back, history is empty")
                 return false
             }
-            core.history[core.getHistoryLast()].viewHistory.isEmpty() -> {
-                core.history.removeAt(core.getHistoryLast())
+            core.history[core.history.keys.last()]!!.isEmpty() -> {
+                val leaf = core.history[core.history.keys.last()]
+                leaf?.removeAt(leaf.lastIndex)
                 return back(route)
             }
             else -> {
-                val complexRoute = core.history[core.getHistoryLast()]
+                val branch = core.history[core.history.keys.last()]!!
 
-                if (!complexRoute.viewHistory.isEmpty()) {
-                    val size = complexRoute.viewHistory.size
+                if (!branch.isEmpty()) {
+                    val size = branch.size
                     for (i in size downTo 1) {
-                        val prevRoute = complexRoute.viewHistory.pop()
+                        val prevRoute = branch.last()
+                        branch.remove(prevRoute)
+
                         if (route.clazz == prevRoute.clazz) {
                             move.routeTo(prevRoute)
                             return true
                         }
                     }
-                } else if (complexRoute.route!!.clazz == route.clazz) {
-                    core.history.removeAt(core.getHistoryLast())
-                    move.routeTo(complexRoute.route)
+                } else if (core.history.keys.last().clazz == route.clazz) {
+                    val prevRoute = branch.last()
+                    branch.remove(prevRoute)
+
+                    move.routeTo(branch[branch.lastIndex])
                     return true
                 } else {
                     core.log?.d("Is not possible to go back, there is no route like: " + route.clazz.name)
                     return false
                 }
-                core.history.removeAt(core.getHistoryLast())
+
+                core.history.remove(core.history.keys.last())
                 return back(route)
             }
         }
     }
 
-    private fun internalBack(complexRoute: ComplexRoute): Boolean {
-        val prevRoute = complexRoute.viewHistory.pop()
+    private fun internalBack(branch: MutableList<Route<*>>): Boolean {
+        val prevRoute = branch.last()
+        branch.remove(prevRoute)
         core.log?.d(" Removing last: ", prevRoute)
 
-        return if (complexRoute.viewHistory.isNotEmpty()) {
-            move.routeTo(complexRoute.viewHistory.pop())
+        return if (branch.isNotEmpty()) {
+            val nextRoute = branch.last()
+            branch.remove(nextRoute)
+            move.routeTo(nextRoute)
             return true
         } else false
     }
 
-    infix fun backOnPath(block: () -> Unit) = core.current<Any>()?.path?.let {
+    fun backOnPath(block: () -> Unit) = core.current<Any>()?.path?.let {
         if (!internalBackOnPath(it)) {
             block()
             return@let true
@@ -106,15 +114,15 @@ class Backward(val core: Core, val move: Move) {
     private fun internalBackOnPath(path: Path): Boolean {
         core.log?.let {
             it.d(" <<--- Back")
-            it.d(" History: ", core.history, core::getHistoryLast)
+            it.d(" History: ", core.history)
         }
 
         return when {
             core.history.isEmpty() -> false
             else -> {
-                for (i in 0 until core.history.size) {
-                    if (core.history[i].path == path) {
-                        return internalBack(core.history[i])
+                for (leaf in core.history.keys) {
+                    if (leaf.path == path) {
+                        return internalBack(core.history[leaf]!!)
                     }
                 }
                 false

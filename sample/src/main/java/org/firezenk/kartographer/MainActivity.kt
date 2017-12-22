@@ -8,8 +8,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.extensions.disableShiftMode
 import org.firezenk.kartographer.library.Kartographer
-import org.firezenk.kartographer.library.types.Route
 import org.firezenk.kartographer.library.dsl.route
+import org.firezenk.kartographer.library.dsl.routeActivity
+import org.firezenk.kartographer.library.types.Route
 import org.firezenk.kartographer.pages.page1.Page1Route
 import org.firezenk.kartographer.pages.page2.Page2Route
 import org.firezenk.kartographer.pages.page3.Page3Route
@@ -69,12 +70,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         val bundle = Bundle()
         bundle.putInt("counter", 10)
 
-        page2Route = Route<Bundle>(
-                Page2Route::class.java,
-                bundle,
-                viewHolder,
-                null
-        )
+        page2Route = routeActivity<Bundle> {
+            target = Page2Route::class
+            params = bundle
+        }
 
         page3Route = route {
             target = Page3Route::class

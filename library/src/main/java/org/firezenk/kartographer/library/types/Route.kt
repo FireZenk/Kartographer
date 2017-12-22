@@ -23,10 +23,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var path: Path,
                         prev.internalParams!!.values.toTypedArray(), next.internalParams!!.values.toTypedArray()))
     }
 
-    init { saveParams(params) }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun saveParams(params: Any) {
+    init {
         try {
             internalParams = params as Map<String, Any>
             internalParams?.plus("uuid" to uuid)
