@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -27,51 +28,88 @@ import static org.hamcrest.Matchers.is;
 /**
  * Project: Kartographer
  *
- * Created by Jorge Garrido Oval, aka firezenk on 04/12/17.
+ * Created by Jorge Garrido Oval, aka firezenk on 08/01/18.
  * Copyright © Jorge Garrido Oval 2017
  */
 @LargeTest @RunWith(AndroidJUnit4.class) public class MainActivityTest {
 
+    private ViewInteraction tab1;
+    private ViewInteraction tab2;
+
     @Rule public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-    @Test public void mainActivityTest() {
-        ViewInteraction leftView = onView(allOf(childAtPosition(allOf(withId(R.id.leftPlaceholder), childAtPosition(
-                withClassName(is("android.widget.LinearLayout")), 0)), 0), isDisplayed()));
+    @Test
+    public void mainActivityTest2() {
+        prepareTabs();
 
-        ViewInteraction rightView = onView(allOf(childAtPosition(allOf(withId(R.id.rightPlaceholder), childAtPosition(
-                withClassName(is("android.widget.LinearLayout")), 1)), 0), isDisplayed()));
+        ViewInteraction target1 = onView(allOf(childAtPosition(
+                allOf(withId(R.id.viewHolder), childAtPosition(withClassName(is("android.widget.RelativeLayout")), 0)),
+                0), isDisplayed()));
 
-        ViewInteraction leftBack = onView(allOf(withId(R.id.backLeft), withText("Back on LEFT"), childAtPosition(
-                allOf(withId(R.id.buttons), childAtPosition(withClassName(is("android.widget.RelativeLayout")), 1)), 0),
-                                                isDisplayed()));
+        onView(allOf(withText("PAGE1 -> 1"), isDisplayed()));
 
-        ViewInteraction rightBack = onView(allOf(withId(R.id.backRight), withText("Back on RIGHT"), childAtPosition(
-                allOf(withId(R.id.buttons), childAtPosition(withClassName(is("android.widget.RelativeLayout")), 1)), 1),
-                                                 isDisplayed()));
+        target1.perform(click());
 
-        onView(allOf(withText("100"), isDisplayed()));
-        onView(allOf(withText("200"), isDisplayed()));
+        onView(allOf(withText("PAGE1 -> 1 -> 2"), isDisplayed()));
 
-        leftView.perform(click());
+        target1.perform(click());
 
-        onView(allOf(withText("101"), isDisplayed()));
+        onView(allOf(withText("PAGE1 -> 1 -> 2 -> 3"), isDisplayed()));
 
-        rightView.perform(click());
-        rightView.perform(click());
+        target1.perform(click());
 
-        onView(allOf(withText("202"), isDisplayed()));
+        onView(allOf(withText("PAGE1 -> 1 -> 2 -> 3 -> 4"), isDisplayed()));
 
-        rightBack.perform(click());
+        tab2.perform(click());
 
-        onView(allOf(withText("201"), isDisplayed()));
+        onView(allOf(withText("PAGE2: 10"), isDisplayed()));
 
-        leftBack.perform(click());
+        ViewInteraction target2 = onView(allOf(withId(R.id.text2), childAtPosition(
+                allOf(withId(R.id.viewHolder), childAtPosition(withClassName(is("android.widget.RelativeLayout")), 0)),
+                0), isDisplayed()));
 
-        onView(allOf(withText("100"), isDisplayed()));
+        onView(allOf(withText("PAGE2: 10"), isDisplayed()));
 
-        rightBack.perform(click());
+        target2.perform(click());
 
-        onView(allOf(withText("200"), isDisplayed()));
+        onView(allOf(withText("PAGE2: 20"), isDisplayed()));
+
+        target2.perform(click());
+
+        onView(allOf(withText("PAGE2: 30"), isDisplayed()));
+
+        pressBack();
+
+        onView(allOf(withText("PAGE2: 20"), isDisplayed()));
+
+        tab1.perform(click());
+
+        onView(allOf(withText("PAGE1 -> 1 -> 2 -> 3 -> 4"), isDisplayed()));
+
+        pressBack();
+
+        onView(allOf(withText("PAGE1 -> 1 -> 2 -> 3"), isDisplayed()));
+
+        pressBack();
+
+        onView(allOf(withText("PAGE1 -> 1 -> 2"), isDisplayed()));
+
+        tab2.perform(click());
+
+        onView(allOf(withText("PAGE2: 20"), isDisplayed()));
+
+        pressBack();
+
+        onView(allOf(withText("PAGE2: 10"), isDisplayed()));
+    }
+
+    private void prepareTabs() {
+        tab1 = onView(
+                allOf(withId(R.id.bottom_action_page1), childAtPosition(childAtPosition(withId(R.id.navigation), 0), 0),
+                      isDisplayed()));
+        tab2 = onView(
+                allOf(withId(R.id.bottom_action_page2), childAtPosition(childAtPosition(withId(R.id.navigation), 0), 1),
+                      isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(final Matcher<View> parentMatcher, final int position) {

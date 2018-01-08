@@ -18,10 +18,10 @@ class Logger {
     internal fun d(actionDesc: String, history: MutableMap<Route<*>, MutableList<Route<*>>>) {
         if (history.isNotEmpty() && history[history.keys.last()] != null) {
             println(TAG + actionDesc + "size: " + history.size)
-            println(TAG + actionDesc + "last: " + history[history.keys.last()]?.last())
+            println(TAG + actionDesc + "last: " + history[history.keys.last()]?.lastOrNull())
             if (history[history.keys.last()] != null && history[history.keys.last()]!!.size > 0) {
-                println(TAG + actionDesc + "internal history size: " + history[history.keys.last()]!!.size)
-                println(TAG + actionDesc + "internal history last: " + history[history.keys.last()]!!.last())
+                println(TAG + actionDesc + "internal history size: " + history[history.keys.lastOrNull()]?.size)
+                println(TAG + actionDesc + "internal history last: " + history[history.keys.lastOrNull()]?.lastOrNull())
             }
         }
     }

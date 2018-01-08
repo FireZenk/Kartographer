@@ -44,10 +44,7 @@ class Kartographer(context: Any) : IKartographer {
 
     override fun back(block: () -> Unit) = backward.back(block)
 
-    override fun back(times: Int): Boolean {
-        //TODO backward.back(times)
-        return true
-    }
+    override fun back(times: Int) = backward.back(times)
 
     override fun <B> back(route: Route<B>) = TODO("backward.back(route)")
 

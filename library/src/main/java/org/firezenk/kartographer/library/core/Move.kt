@@ -19,29 +19,27 @@ class Move(private val core: Core) {
         val prev: Route<B>? = core.current()
 
         try {
-            //if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
-                core.log?.let {
-                    it.d(" --->> Next")
-                    it.d(" Navigating to: ", route)
-                }
+            core.log?.let {
+                it.d(" --->> Next")
+                it.d(" Navigating to: ", route)
+            }
 
-                core.lastKnownPath = route.path
+            core.lastKnownPath = route.path
 
-                if (route.viewParent == null) {
-                    createPathRoute(route)
+            if (route.viewParent == null) {
+                createPathRoute(route)
+            } else {
+                if (core.pathIsValid(route, prev) && !core.pathExists(core.history, route)) {
+                    createPath(route)
+                    createViewRoute(route)
+                } else if (!core.pathExists(core.history, route)) {
+                    createPath(route)
                 } else {
-                    if (core.pathIsValid(route, prev) && !core.pathExists(core.history, route)) {
-                        createPath(route)
-                        createViewRoute(route)
-                    } else if (!core.pathExists(core.history, route)) {
-                        createPath(route)
-                    } else {
-                        createViewRoute(route)
-                    }
+                    createViewRoute(route)
                 }
+            }
 
-                createView(route)
-            //}
+            createView(route)
         } catch (e: Throwable) {
             when(e) {
                 is ClassCastException -> core.log?.d(" Params has to be instance of Object[] or Android's Bundle ", e)
