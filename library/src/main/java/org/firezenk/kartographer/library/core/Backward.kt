@@ -45,7 +45,12 @@ class Backward(private val core: Core, private val move: Move) {
         val leaf: Route<*> = core.history.keys.first { it.path == core.lastKnownPath }
         val branch: MutableList<Route<*>> = core.history[leaf]!!
 
-        branch.removeAt(branch.lastIndex)
+        if (branch.lastIndex > -1) {
+            branch.removeAt(branch.lastIndex)
+        } else {
+            block()
+            return false
+        }
 
         return if (branch.lastIndex > -1) {
             move.routeTo(branch.removeAt(branch.lastIndex))
