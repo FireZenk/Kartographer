@@ -36,7 +36,7 @@ class Replay(private val core: Core, private val move: Move, private val forward
 
         return leaf?.let {
             val branch: MutableList<Route<*>>? = core.history[leaf]
-            val route: Route<*>? = branch?.firstOrNull { it.path == path }
+            val route: Route<*>? = branch?.lastOrNull { it.path == path }
 
             return route?.let {
                 branch.remove(it)

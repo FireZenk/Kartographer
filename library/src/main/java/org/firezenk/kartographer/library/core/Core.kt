@@ -42,7 +42,7 @@ class Core(val context: Any, var log: Logger? = null) {
 
     fun hasHistory() = history.isNotEmpty()
 
-    fun pathExists(history: MutableMap<Route<*>, MutableList<Route<*>>>, route: Route<*>) = history.containsKey(route)
+    fun pathExists(history: MutableMap<Route<*>, MutableList<Route<*>>>, route: Route<*>) = history.keys.map { it.path }.contains(route.path)
 
     fun pathIsValid(route: Route<*>, prev: Route<*>?) = route.path != prev?.path
 }

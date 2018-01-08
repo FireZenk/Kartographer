@@ -33,7 +33,7 @@ class Move(private val core: Core) {
                     if (core.pathIsValid(route, prev) && !core.pathExists(core.history, route)) {
                         createPath(route)
                         createViewRoute(route)
-                    } else if (core.pathExists(core.history, route)) {
+                    } else if (!core.pathExists(core.history, route)) {
                         createPath(route)
                     } else {
                         createViewRoute(route)
