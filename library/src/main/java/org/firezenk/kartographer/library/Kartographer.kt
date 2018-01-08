@@ -21,8 +21,8 @@ class Kartographer(context: Any) : IKartographer {
     init {
         move = Move(core)
         forward = Forward(move)
-        backward = Backward(core, move)
         replay = Replay(core, move, forward)
+        backward = Backward(core, move)
     }
 
     override fun debug(): Kartographer {
@@ -44,9 +44,12 @@ class Kartographer(context: Any) : IKartographer {
 
     override fun back(block: () -> Unit) = backward.back(block)
 
-    override fun back(times: Int) = backward.back(times)
+    override fun back(times: Int): Boolean {
+        //TODO backward.back(times)
+        return true
+    }
 
-    override fun <B> back(route: Route<B>) = backward.back(route)
+    override fun <B> back(route: Route<B>) = TODO("backward.back(route)")
 
     override fun backOnPath(block: () -> Unit) = backward.backOnPath(block)
 

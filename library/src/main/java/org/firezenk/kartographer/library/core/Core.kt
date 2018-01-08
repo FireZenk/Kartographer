@@ -15,7 +15,7 @@ class Core(val context: Any, var log: Logger? = null) {
 
     companion object {
         val ROOT_NODE: Path = Path("ROOT")
-        val DEFAULT_HISTORY: MutableMap<Route<*>, MutableList<Route<*>>> = mutableMapOf(
+        val DEFAULT_HISTORY: MutableMap<Route<*>, MutableList<Route<*>>> = linkedMapOf(
                 route {
                     target = Any::class
                     path = ROOT_NODE
@@ -41,12 +41,6 @@ class Core(val context: Any, var log: Logger? = null) {
     }
 
     fun hasHistory() = history.isNotEmpty()
-
-    fun getHistoryLast() = history.size - 1
-
-    fun getHistoryLastWithoutPath() {
-        //history.indexOfLast { it.path == null }
-    }
 
     fun pathExists(history: MutableMap<Route<*>, MutableList<Route<*>>>, route: Route<*>) = history.containsKey(route)
 

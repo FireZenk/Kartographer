@@ -26,9 +26,10 @@ class RouteDsl {
         var target: KClass<*>? = null
         var params: B? = null
         var path: Path = ROOT_NODE
+        var anchor: Any? = null
         var animation: RouteAnimation? = null
         var forResult: Int = -1
 
-        fun build(): Route<B> = Route<B>(target!!.java, params!!, path,null, animation, forResult)
+        fun build(): Route<B> = Route<B>(target!!.java, params!!, path, anchor, animation, forResult)
     }
 }

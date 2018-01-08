@@ -5,7 +5,6 @@ import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.library.exceptions.NotEnoughParametersException
 import org.firezenk.kartographer.library.exceptions.ParameterNotFoundException
 import org.firezenk.kartographer.library.types.Route
-import org.firezenk.kartographer.library.types.Route.Companion.areRoutesEqual
 
 /**
  * Project: Kartographer
@@ -20,7 +19,7 @@ class Move(private val core: Core) {
         val prev: Route<B>? = core.current()
 
         try {
-            if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
+            //if (prev == null || route.viewParent == null || !areRoutesEqual(prev, route)) {
                 core.log?.let {
                     it.d(" --->> Next")
                     it.d(" Navigating to: ", route)
@@ -42,7 +41,7 @@ class Move(private val core: Core) {
                 }
 
                 createView(route)
-            }
+            //}
         } catch (e: Throwable) {
             when(e) {
                 is ClassCastException -> core.log?.d(" Params has to be instance of Object[] or Android's Bundle ", e)
@@ -84,11 +83,16 @@ class Move(private val core: Core) {
     }
 
     private fun createPath(routeToAdd: Route<*>) {
-        val leaf: Route<*> = core.history.keys.first { it.path == routeToAdd.path }
-        val branch: MutableList<Route<*>>? = core.history[leaf]
-        branch?.add(route {
+        val newBranch = route {
             target = Any::class
             path = routeToAdd.path
-        })
+        }
+
+        val leaf: Route<*>? = core.history.keys.firstOrNull { it.path == routeToAdd.path }
+
+        leaf?.let {
+            val branch: MutableList<Route<*>>? = core.history[leaf]
+            branch?.add(newBranch)
+        } ?: core.history.put(newBranch, mutableListOf())
     }
 }

@@ -42,6 +42,7 @@ class Page2 : Fragment() {
             val route = routeActivity<Bundle> {
                 target = Page2Route::class
                 params = bundle
+                anchor = view.parent
             }
 
             router next route

@@ -1,6 +1,5 @@
 package org.firezenk.kartographer.library.core
 
-import org.firezenk.kartographer.library.types.Path
 import org.firezenk.kartographer.library.types.Route
 
 /**
@@ -12,6 +11,37 @@ import org.firezenk.kartographer.library.types.Route
 class Backward(val core: Core, val move: Move) {
 
     fun back(block: () -> Unit): Boolean {
+        if (core.history.size <= 1) {
+            block()
+            return false
+        }
+
+        var leaf: Route<*> = core.history.keys.last()
+        core.history.remove(leaf)
+
+        leaf  = core.history.keys.last()
+        val branch: MutableList<Route<*>> = core.history[leaf]!!
+
+        move.routeTo(branch.last())
+        return true
+    }
+
+    fun backOnPath(block: () -> Unit): Boolean {
+        if (core.history.size <= 1 && core.history[core.history.keys.last()]!!.size <=1) {
+            block()
+            return false
+        }
+
+        val leaf: Route<*> = core.history.keys.first { it.path == core.lastKnownPath }
+        val branch: MutableList<Route<*>> = core.history[leaf]!!
+
+        branch.removeAt(branch.lastIndex)
+
+        move.routeTo(branch.last())
+        return true
+    }
+
+    /*fun back(block: () -> Unit): Boolean {
         core.log?.let {
             it.d(" <<--- Back")
             it.d(" History: ", core.history)
@@ -120,13 +150,11 @@ class Backward(val core: Core, val move: Move) {
         return when {
             core.history.isEmpty() -> false
             else -> {
-                for (leaf in core.history.keys) {
-                    if (leaf.path == path) {
-                        return internalBack(core.history[leaf]!!)
-                    }
-                }
+                core.history.keys
+                        .filter { it.path == path }
+                        .first { return internalBack(core.history[it]!!) }
                 false
             }
         }
-    }
+    }*/
 }
