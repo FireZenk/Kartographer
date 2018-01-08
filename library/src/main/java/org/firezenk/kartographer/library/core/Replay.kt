@@ -35,15 +35,12 @@ class Replay(private val core: Core, private val move: Move, private val forward
         val leaf: Route<*>? = core.history.keys.firstOrNull { it.path == path }
 
         return leaf?.let {
-            val branch: MutableList<Route<*>>? = core.history[leaf]
-            val route: Route<*>? = branch?.lastOrNull { it.path == path }
-
-            return route?.let {
-                branch.remove(it)
-                move.routeTo(it)
-                return@let true
-            } == true
-        } ?: false
+            val branch: MutableList<Route<*>> = core.history[leaf]!!
+            return if (branch.lastIndex > -1) {
+                move.routeTo(branch.removeAt(branch.lastIndex))
+                true
+            } else false
+        } == true
     }
 
     fun <B> replayOrNext(route: Route<B>): Boolean {
