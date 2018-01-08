@@ -21,8 +21,8 @@ class Page2Route<B> : Routable<B> {
 
         val fm = (viewParent.context as AppCompatActivity).supportFragmentManager
         val ft = fm.beginTransaction()
-        ft.add(viewParent.id, fragment, PATH)
-        ft.commit()
+        ft.replace(viewParent.id, fragment, PATH)
+        ft.commitAllowingStateLoss()
     }
 
     override fun path(): String = Page2Route.PATH

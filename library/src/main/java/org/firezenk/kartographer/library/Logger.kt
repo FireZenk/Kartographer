@@ -1,5 +1,7 @@
 package org.firezenk.kartographer.library
 
+import org.firezenk.kartographer.library.types.Route
+
 class Logger {
 
     private val TAG = "Kartographer::"
@@ -13,13 +15,13 @@ class Logger {
         return route
     }
 
-    internal fun d(actionDesc: String, history: List<Kartographer.ComplexRoute>, getHistoryLast: () -> Int) {
-        if (history.isNotEmpty() && history[getHistoryLast()] != null) {
+    internal fun d(actionDesc: String, history: MutableMap<Route<*>, MutableList<Route<*>>>) {
+        if (history.isNotEmpty() && history[history.keys.last()] != null) {
             println(TAG + actionDesc + "size: " + history.size)
-            println(TAG + actionDesc + "last: " + history[getHistoryLast()])
-            if (history[getHistoryLast()] != null && history[getHistoryLast()].viewHistory.size > 0) {
-                println(TAG + actionDesc + "internal history size: " + history[getHistoryLast()].viewHistory.size)
-                println(TAG + actionDesc + "internal history last: " + history[getHistoryLast()].viewHistory.peek())
+            println(TAG + actionDesc + "last: " + history[history.keys.last()]?.lastOrNull())
+            if (history[history.keys.last()] != null && history[history.keys.last()]!!.size > 0) {
+                println(TAG + actionDesc + "internal history size: " + history[history.keys.lastOrNull()]?.size)
+                println(TAG + actionDesc + "internal history last: " + history[history.keys.lastOrNull()]?.lastOrNull())
             }
         }
     }

@@ -1,5 +1,8 @@
 package org.firezenk.kartographer.library
 
+import org.firezenk.kartographer.library.types.Path
+import org.firezenk.kartographer.library.types.Route
+
 /**
  * Project: Kartographer
  *

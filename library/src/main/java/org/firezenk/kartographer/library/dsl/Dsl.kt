@@ -1,6 +1,6 @@
 package org.firezenk.kartographer.library.dsl
 
-import org.firezenk.kartographer.library.Route
+import org.firezenk.kartographer.library.types.Route
 
 @DslMarker
 annotation class KartographerDsl
