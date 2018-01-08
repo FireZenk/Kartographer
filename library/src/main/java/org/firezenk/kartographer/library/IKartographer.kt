@@ -15,10 +15,17 @@ interface IKartographer {
      * Enables debug mode for all the navigation session
      *
      * @param debugMode true or false for all the session
-     * *
+     *
      * @return the instance
      */
     fun debug(): Kartographer
+
+    /**
+     * Returns the current context in order to do some action inside a View
+     *
+     * @return the Context
+     */
+    fun <C> context(): C
 
     /**
      * Navigate to the last known route

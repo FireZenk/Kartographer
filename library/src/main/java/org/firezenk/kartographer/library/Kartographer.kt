@@ -32,6 +32,9 @@ class Kartographer(context: Any, monitor: Monitor) : IKartographer {
         return this
     }
 
+    @Suppress("UNCHECKED_CAST")
+    override fun <C> context(): C = core.context as C
+
     override fun last(viewParent: Any?) = replay.last(viewParent)
 
     override fun <B> next(route: Route<B>) = forward.next(route)
