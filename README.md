@@ -22,7 +22,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.7.5'
+  def NVersion = '0.7.6'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
@@ -46,9 +46,11 @@ Additionally, two custom exceptions are provided for make the debugging easier:
 
 ###### 0. Inject
 
-*Kartographer* needs a `Context`, so make sure to inject it with the initilization Context.
+*Kartographer* needs keep track of the `Context`, so make sure to inject it with the initialisation like:
 ```kotlin
-Kartographer(context)
+val monitor = ContextMonitor()
+application.registerActivityLifecycleCallbacks(monitor)
+Kartographer(application, monitor).debug()
 ```
 
 ###### 1. Route between targets
@@ -64,7 +66,7 @@ kartographer next route {
 ```
 - Back to the prev route, by overriding your Activity's onBackPressed method:
 ```kotlin
-kartographer back {
+kartographer backOnPath {
     super.onBackPressed()
 }
 ```
@@ -112,7 +114,7 @@ Kartographer has 3 predefined transitions between screens (also the transition i
 - No, it is not contemplated the use of fragments, although it is possible (see `Page2Route.kt` sample)
 - I recommend to use auto-routes because is safe, saves coding time and you can avoid to use `Parcelables`
 - User `.clearHistory()` if you need to clear all the navigation history
-- There is some more self documented [functions here](https://github.com/FireZenk/Kartographer/blob/develop/library/src/main/java/org/firezenk/kartographer/library/IKartographer.kt)
+- You can find all the available functions documented  [here](https://github.com/FireZenk/Kartographer/blob/develop/library/src/main/java/org/firezenk/kartographer/library/IKartographer.kt)
 - For more info an samples, see `sample` module
 
 ### CHANGES
