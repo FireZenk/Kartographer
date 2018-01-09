@@ -5,9 +5,9 @@ android:
   components:
     - platform-tools
     - tools
-    - build-tools-26.0.3
-    - android-26
-    - sys-img-x86-android-26
+    - build-tools-27.0.2
+    - android-27
+    - sys-img-x86-android-27
     - extra-google-m2repository
     - extra-android-m2repository
 
@@ -24,3 +24,6 @@ before_script:
     - GRADLE_OPTS="-Xms40m -Xmx3g -XX:MaxPermSize=3g"
 
 script: "./gradlew clean build test -Dpre-dex=false"
+
+before_install:
+  - yes | sdkmanager "platforms;android-27"
