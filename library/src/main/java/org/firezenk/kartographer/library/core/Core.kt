@@ -11,7 +11,7 @@ import org.firezenk.kartographer.library.types.Route
  * Created by Jorge Garrido Oval, aka firezenk on 21/12/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Core(val context: Any, var log: Logger? = null) {
+class Core(var context: Any, var log: Logger? = null) {
 
     companion object {
         val ROOT_NODE: Path = Path("ROOT")

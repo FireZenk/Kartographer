@@ -1,5 +1,6 @@
 package org.firezenk.kartographer.library
 
+import org.firezenk.kartographer.annotations.Monitor
 import org.firezenk.kartographer.library.core.*
 import org.firezenk.kartographer.library.types.Path
 import org.firezenk.kartographer.library.types.Route
@@ -10,7 +11,7 @@ import org.firezenk.kartographer.library.types.Route
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Kartographer(context: Any) : IKartographer {
+class Kartographer(context: Any, monitor: Monitor) : IKartographer {
 
     private val core: Core = Core(context)
     private var move: Move
@@ -19,6 +20,7 @@ class Kartographer(context: Any) : IKartographer {
     private var replay: Replay
 
     init {
+        monitor.onContextChanged { core.context = it }
         move = Move(core)
         forward = Forward(move)
         replay = Replay(core, move, forward)
@@ -29,6 +31,9 @@ class Kartographer(context: Any) : IKartographer {
         core.log = Logger()
         return this
     }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <C> context(): C = core.context as C
 
     override fun last(viewParent: Any?) = replay.last(viewParent)
 
