@@ -5,9 +5,7 @@ import org.firezenk.kartographer.library.Logger
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.library.types.Path
 import org.firezenk.kartographer.processor.interfaces.Routable
-import org.junit.After
-import org.junit.Assert.*
-import org.junit.Before
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
 
@@ -28,13 +26,14 @@ class ForwardTest {
                            viewParent: Any?, animation: RouteAnimation?) {}
     }
 
-    @Before fun setup() {
+    fun setup() {
         core = Core(Any(), Logger())
         move = Move(core)
         forward = Forward(move)
     }
 
     @Test fun givenEmptyHistoryMoveNextOneTimeToDefaultPath() {
+        setup()
         val route = route {
             target = TargetRoute::class
             path = Core.ROOT_NODE
@@ -51,6 +50,7 @@ class ForwardTest {
     }
 
     @Test fun givenEmptyHistoryMoveNextOneTimeToANewPath() {
+        setup()
         val route = route {
             target = TargetRoute::class
             path = Path("CUSTOM_PATH")

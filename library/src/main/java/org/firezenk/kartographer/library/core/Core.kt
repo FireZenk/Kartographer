@@ -15,12 +15,13 @@ class Core(var context: Any, var log: Logger? = null) {
 
     companion object {
         val ROOT_NODE: Path = Path("ROOT")
-        val DEFAULT_HISTORY: MutableMap<Route<*>, MutableList<Route<*>>> = linkedMapOf(
-                route {
-                    target = Any::class
-                    path = ROOT_NODE
-                } to mutableListOf())
     }
+
+    private val DEFAULT_HISTORY: MutableMap<Route<*>, MutableList<Route<*>>> = linkedMapOf(
+            route {
+                target = Any::class
+                path = ROOT_NODE
+            } to mutableListOf())
 
     var history: MutableMap<Route<*>, MutableList<Route<*>>> = DEFAULT_HISTORY
 
