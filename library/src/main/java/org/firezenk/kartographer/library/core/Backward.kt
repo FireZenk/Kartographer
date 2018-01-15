@@ -64,7 +64,7 @@ class Backward(private val core: Core, private val move: Move) {
     fun back(times: Int): Boolean {
         try {
             for (i in 0 until times) {
-                if (!back({})) {
+                if (!backOnPath({})) {
                     return false
                 }
             }
