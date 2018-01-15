@@ -3,7 +3,8 @@ package org.firezenk.kartographer.library.core
 import org.firezenk.kartographer.library.Logger
 import org.firezenk.kartographer.library.core.util.TargetRoute
 import org.firezenk.kartographer.library.dsl.route
-import org.junit.Assert.assertEquals
+import org.firezenk.kartographer.library.types.Path
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
@@ -48,5 +49,39 @@ class CoreTest {
 
         assertEquals(currentParam1, 1)
         assertEquals(currentParam2, "hi!")
+    }
+
+    @Test fun `given a history with some route in a custom path, check if exist will return valid`() {
+        val validRoute = route {
+            target = TargetRoute::class
+            path = Path("NOTE")
+            anchor = Any()
+        }
+        val invalidRoute = route {
+            target = TargetRoute::class
+            path = Path("NONE")
+            anchor = Any()
+        }
+
+        move.routeTo(validRoute)
+
+        assertTrue(core.pathExists(core.history, validRoute))
+        assertFalse(core.pathExists(core.history, invalidRoute))
+    }
+
+    @Test fun `given two routes, the second is valid if don't have the same path than the previous one`() {
+        val validRoute = route {
+            target = TargetRoute::class
+            path = Path("ONE")
+            anchor = Any()
+        }
+        val invalidRoute = route {
+            target = TargetRoute::class
+            path = Path("TWO")
+            anchor = Any()
+        }
+
+        assertTrue(core.pathIsValid(validRoute, invalidRoute))
+        assertFalse(core.pathIsValid(validRoute, validRoute))
     }
 }
