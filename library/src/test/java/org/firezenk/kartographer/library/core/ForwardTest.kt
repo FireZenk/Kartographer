@@ -1,13 +1,12 @@
 package org.firezenk.kartographer.library.core
 
-import org.firezenk.kartographer.annotations.RouteAnimation
 import org.firezenk.kartographer.library.Logger
+import org.firezenk.kartographer.library.core.util.TargetRoute
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.library.types.Path
-import org.firezenk.kartographer.processor.interfaces.Routable
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by Jorge Garrido Oval, aka firezenk on 14/01/18.
@@ -19,21 +18,13 @@ class ForwardTest {
     lateinit var move: Move
     lateinit var forward: Forward
 
-    class TargetRoute: Routable {
-        override fun path() = Core.ROOT_NODE.toString()
-
-        override fun route(context: Any, uuid: UUID, parameters: Any,
-                           viewParent: Any?, animation: RouteAnimation?) {}
-    }
-
-    fun setup() {
+    @Before fun setup() {
         core = Core(Any(), Logger())
         move = Move(core)
         forward = Forward(move)
     }
 
     @Test fun givenEmptyHistoryMoveNextOneTimeToDefaultPath() {
-        setup()
         val route = route {
             target = TargetRoute::class
             path = Core.ROOT_NODE
@@ -50,7 +41,6 @@ class ForwardTest {
     }
 
     @Test fun givenEmptyHistoryMoveNextOneTimeToANewPath() {
-        setup()
         val route = route {
             target = TargetRoute::class
             path = Path("CUSTOM_PATH")
