@@ -24,7 +24,7 @@ class MoveTest {
         move = Move(core)
     }
 
-    @Test fun givenEmptyHistoryAddANewRouteOnDefaultPath() {
+    @Test fun `given an empty history, add a new route on default path`() {
         val route = route {
             target = TargetRoute::class
             path = Core.ROOT_NODE
@@ -40,7 +40,7 @@ class MoveTest {
         assertEquals(1, core.history[core.history.keys.first()]!!.size)
     }
 
-    @Test fun givenEmptyHistoryAddANewRouteOnANoDefaultPath() {
+    @Test fun `given an empty history, add a new route on a custom path`() {
         val route = route {
             target = TargetRoute::class
             path = Path("CUSTOM_PATH")
@@ -57,7 +57,7 @@ class MoveTest {
         assertEquals(1, core.history[core.history.keys.last()]!!.size)
     }
 
-    @Test fun givenEmptyHistoryAddANewPath() {
+    @Test fun `given an empty history, add a new path`() {
         val route = route {
             target = TargetRoute::class
             path = Path("CUSTOM_PATH")
@@ -73,7 +73,7 @@ class MoveTest {
         assertEquals(0, core.history[core.history.keys.last()]!!.size)
     }
 
-    @Test fun givenEmptyHistoryAddANewBundledRouteOnANoDefaultPath() {
+    @Test fun `given an empty history, add a new bundled route on a custom path`() {
         val route = routeActivity<Any> {
             target = TargetBundleRoute::class
             params = Any()

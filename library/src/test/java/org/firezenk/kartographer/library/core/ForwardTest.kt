@@ -24,7 +24,7 @@ class ForwardTest {
         forward = Forward(move)
     }
 
-    @Test fun givenEmptyHistoryMoveNextOneTimeToDefaultPath() {
+    @Test fun `given an empty history, move to next route one time on the default path`() {
         val route = route {
             target = TargetRoute::class
             path = Core.ROOT_NODE
@@ -40,7 +40,7 @@ class ForwardTest {
         assertEquals(1, core.history[core.history.keys.first()]!!.size)
     }
 
-    @Test fun givenEmptyHistoryMoveNextOneTimeToANewPath() {
+    @Test fun `given an empty history, move to next route one time on a new path`() {
         val route = route {
             target = TargetRoute::class
             path = Path("CUSTOM_PATH")
