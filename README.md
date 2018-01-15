@@ -4,7 +4,7 @@ An Android routing library for Kotlin based on Naviganto and heavily inspired in
 
 [![Build Status](https://travis-ci.org/FireZenk/Kartographer.svg?branch=develop)](https://travis-ci.org/FireZenk/Kartographer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/FireZenk/Kartographer/issues)
 
 ### GRADLE:
 
