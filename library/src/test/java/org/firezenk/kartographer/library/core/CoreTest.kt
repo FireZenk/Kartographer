@@ -65,8 +65,8 @@ class CoreTest {
 
         move.routeTo(validRoute)
 
-        assertTrue(core.pathExists(core.history, validRoute))
-        assertFalse(core.pathExists(core.history, invalidRoute))
+        assertTrue(core.pathExists(validRoute))
+        assertFalse(core.pathExists(invalidRoute))
     }
 
     @Test fun `given two routes, the second is valid if don't have the same path than the previous one`() {

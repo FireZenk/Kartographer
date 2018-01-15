@@ -29,10 +29,10 @@ class Move(private val core: Core) {
             if (route.viewParent == null) {
                 createPathRoute(route)
             } else {
-                if (core.pathIsValid(route, prev) && !core.pathExists(core.history, route)) {
+                if (core.pathIsValid(route, prev) && !core.pathExists(route)) {
                     createPath(route)
                     createViewRoute(route)
-                } else if (!core.pathExists(core.history, route)) {
+                } else if (!core.pathExists(route)) {
                     createPath(route)
                 } else {
                     createViewRoute(route)

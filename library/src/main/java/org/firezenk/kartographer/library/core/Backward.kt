@@ -27,8 +27,13 @@ class Backward(private val core: Core, private val move: Move) {
         leaf = core.history.keys.last()
         val branch: MutableList<Route<*>> = core.history[leaf]!!
 
-        move.routeTo(branch.last())
-        return true
+        return if (branch.lastIndex > -1) {
+            move.routeTo(branch.removeAt(branch.lastIndex))
+            true
+        } else {
+            block()
+            false
+        }
     }
 
     fun backOnPath(block: () -> Unit): Boolean {

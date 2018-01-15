@@ -29,7 +29,7 @@ class Core(var context: Any, var log: Logger? = null) {
 
     @Suppress("UNCHECKED_CAST")
     fun <B> current(): Route<B>? {
-        val leaf: Route<*>? = history.keys.first { it.path == lastKnownPath }
+        val leaf: Route<*>? = history.keys.firstOrNull { it.path == lastKnownPath }
         val branch: MutableList<Route<*>>? = history[leaf]
         return branch?.lastOrNull() as Route<B>?
     }
@@ -43,7 +43,7 @@ class Core(var context: Any, var log: Logger? = null) {
 
     fun hasHistory() = history.isNotEmpty()
 
-    fun pathExists(history: MutableMap<Route<*>, MutableList<Route<*>>>, route: Route<*>) = history.keys.map { it.path }.contains(route.path)
+    fun pathExists(route: Route<*>) = history.keys.map { it.path }.contains(route.path)
 
     fun pathIsValid(route: Route<*>, prev: Route<*>?) = route.path != prev?.path
 }
