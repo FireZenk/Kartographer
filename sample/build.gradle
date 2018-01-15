@@ -22,7 +22,9 @@ android {
 
         /* Kartographer requirement */
         sourceSets {
-            main.java.srcDirs += "$buildDir/generated/source/kaptKotlin"
+            main.java.srcDirs += 'src/main/kotlin'
+            debug.java.srcDirs += 'build/generated/source/kaptKotlin/debug'
+            release.java.srcDirs += 'build/generated/source/kaptKotlin/release'
         }
     }
     buildTypes {

@@ -27,7 +27,6 @@ class Replay(private val core: Core, private val move: Move, private val forward
                 move.routeTo(route)
                 return@let true
             }
-
         } == true
     }
 
