@@ -58,7 +58,7 @@ Kartographer(application, monitor).debug()
 - Move to a new route:
 ```kotlin
 kartographer next route {
-    target = ViewRoute::class
+    target = ViewRoute()
     params = mapOf("key" to value, ...)
     anchor = parentViewGroup
     animation = CrossFade() //optional
