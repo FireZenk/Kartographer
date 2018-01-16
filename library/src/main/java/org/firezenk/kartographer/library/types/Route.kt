@@ -34,7 +34,7 @@ class Route<B> (val clazz: Any, val params: Any, var path: Path,
 
     override fun equals(other: Any?) = other is Route<*> && clazz == other.clazz
 
-    override fun toString() = "Route class name: ${clazz.javaClass.simpleName} Has bundle? ${(bundle != null)} Has params? ${(internalParams != null)}"
+    override fun toString() = "Route name: ${clazz.javaClass.simpleName}, on path: $path, has bundle? ${(bundle != null)}, has params? ${(internalParams != null)} (${internalParams?.keys})"
 
     override fun hashCode(): Int {
         var result = clazz.hashCode()
