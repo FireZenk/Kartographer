@@ -25,7 +25,6 @@ class CoreTest {
     @Test fun `given a history with one route on default path, the current route is correct`() {
         val route = route {
             target = TargetRoute::class
-            path = Core.ROOT_NODE
             anchor = Any()
         }
         move.routeTo(route)
@@ -38,7 +37,6 @@ class CoreTest {
     @Test fun `given a history with one route on default path, the current route payload is correct`() {
         val route = route {
             target = TargetRoute::class
-            path = Core.ROOT_NODE
             params = mapOf("param1" to 1, "param2" to "hi!")
             anchor = Any()
         }

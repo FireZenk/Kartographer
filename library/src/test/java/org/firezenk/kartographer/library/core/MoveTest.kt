@@ -27,7 +27,6 @@ class MoveTest {
     @Test fun `given an empty history, add a new route on default path`() {
         val route = route {
             target = TargetRoute::class
-            path = Core.ROOT_NODE
             anchor = Any()
         }
 

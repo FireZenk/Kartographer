@@ -10,7 +10,6 @@ import org.firezenk.kartographer.extensions.disableShiftMode
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.library.dsl.routeActivity
-import org.firezenk.kartographer.library.types.Path
 import org.firezenk.kartographer.library.types.Route
 import org.firezenk.kartographer.pages.page1.Page1Route
 import org.firezenk.kartographer.pages.page2.Page2Route
@@ -64,21 +63,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private fun defineRoutes() {
         page1Route = route {
             target = Page1Route::class
-            path = Path(Page1Route.PATH)
             params = mapOf("part" to "", "counter" to 0)
             anchor = viewHolder
         }
 
         page2Route = routeActivity<Bundle> {
             target = Page2Route::class
-            path = Path(Page2Route.PATH)
             params = Bundle().apply { putInt("counter", 10) }
             anchor = viewHolder
         }
 
         page3Route = route {
             target = Page3Route::class
-            path = Path(Page3Route.PATH)
             params = mapOf("counter" to 100)
             anchor = viewHolder
         }
