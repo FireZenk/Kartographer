@@ -5,6 +5,7 @@ import dagger.Provides
 import org.firezenk.kartographer.SampleApplication
 import org.firezenk.kartographer.animations.ContextMonitor
 import org.firezenk.kartographer.library.Kartographer
+import timber.log.Timber
 import javax.inject.Singleton
 
 /**
@@ -25,6 +26,6 @@ class ApplicationModule(private val application: SampleApplication) {
     fun provideKartographer(application: SampleApplication): Kartographer {
         val monitor = ContextMonitor()
         application.registerActivityLifecycleCallbacks(monitor)
-        return Kartographer(application, monitor).debug()
+        return Kartographer(application, monitor).debug({Timber.d(it)})
     }
 }

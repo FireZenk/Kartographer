@@ -14,11 +14,18 @@ interface IKartographer {
     /**
      * Enables debug mode for all the navigation session
      *
-     * @param debugMode true or false for all the session
-     *
      * @return the instance
      */
     fun debug(): Kartographer
+
+    /**
+     * Enables debug mode for all the navigation session using a custom log reader
+     *
+     * @param logReader to add a custom log consumer
+     *
+     * @return the instance
+     */
+    fun debug(logReader: (String) -> Unit): Kartographer
 
     /**
      * Returns the current context in order to do some action inside a View

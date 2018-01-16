@@ -11,7 +11,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
-        versionName "0.7.7"
+        versionName "0.7.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -50,6 +50,8 @@ dependencies {
 
     implementation 'com.google.dagger:dagger:2.13'
     kapt 'com.google.dagger:dagger-compiler:2.13'
+
+    implementation 'com.jakewharton.timber:timber:4.6.0'
 
     // region Kartographer
     provided 'javax.annotation:javax.annotation-api:1.2'
