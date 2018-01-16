@@ -27,7 +27,6 @@ class ForwardTest {
     @Test fun `given an empty history, move to next route one time on the default path`() {
         val route = route {
             target = TargetRoute::class
-            path = Core.ROOT_NODE
             anchor = Any()
         }
 

@@ -10,7 +10,6 @@ import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.routeActivity
-import org.firezenk.kartographer.library.types.Path
 import javax.inject.Inject
 
 /**
@@ -42,7 +41,6 @@ class Page2 : Fragment() {
 
             val route = routeActivity<Bundle> {
                 target = Page2Route::class
-                path = Path(Page2Route.PATH)
                 params = bundle
                 anchor = view.parent
             }

@@ -20,7 +20,6 @@ class Core(var context: Any, var log: Logger? = null) {
     private val DEFAULT_HISTORY: MutableMap<Route<*>, MutableList<Route<*>>> = linkedMapOf(
             route {
                 target = Any::class
-                path = ROOT_NODE
             } to mutableListOf())
 
     var history: MutableMap<Route<*>, MutableList<Route<*>>> = DEFAULT_HISTORY
