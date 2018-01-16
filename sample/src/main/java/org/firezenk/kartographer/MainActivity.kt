@@ -62,19 +62,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private fun defineRoutes() {
         page1Route = route {
-            target = Page1Route::class
+            target = Page1Route()
             params = mapOf("part" to "", "counter" to 0)
             anchor = viewHolder
         }
 
         page2Route = routeActivity<Bundle> {
-            target = Page2Route::class
+            target = Page2Route<Bundle>()
             params = Bundle().apply { putInt("counter", 10) }
             anchor = viewHolder
         }
 
         page3Route = route {
-            target = Page3Route::class
+            target = Page3Route()
             params = mapOf("counter" to 100)
             anchor = viewHolder
         }

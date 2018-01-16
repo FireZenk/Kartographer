@@ -31,11 +31,11 @@ class BackwardTest {
 
     @Test fun `given a history with two route on default path, can go back to the previous one`() {
         val routeOne = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             anchor = Any()
         }
         val routeTwo = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             anchor = Any()
         }
         forward.next(routeOne)
@@ -53,15 +53,15 @@ class BackwardTest {
 
     @Test fun `given a history with N routes on default path, can go back N - 1 times`() {
         val routeOne = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             anchor = Any()
         }
         val routeTwo = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             anchor = Any()
         }
         val routeThree = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             anchor = Any()
         }
         forward.next(routeOne)
@@ -81,22 +81,22 @@ class BackwardTest {
 
     @Test fun `given a history with some paths, can go back to the previous path`() {
         val pathRouteOne = routeActivity<Any> {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("PATH1")
             params = Any()
         }
         val routeOne = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("PATH1")
             anchor = Any()
         }
         val pathRouteTwo = routeActivity<Any> {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("PATH2")
             params = Any()
         }
         val routeTwo = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("PATH2")
             anchor = Any()
         }

@@ -40,7 +40,7 @@ class Page2 : Fragment() {
             bundle.putInt("counter", counter + 10)
 
             val route = routeActivity<Bundle> {
-                target = Page2Route::class
+                target = Page2Route<Bundle>()
                 params = bundle
                 anchor = view.parent
             }

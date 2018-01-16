@@ -37,7 +37,7 @@ class Page1(context: Context?) : FrameLayout(context) {
 
         setOnClickListener {
             router next route {
-                target = Page1Route::class
+                target = Page1Route()
                 params = mapOf("part" to part, "counter" to counter)
                 anchor = parent
                 animation = CrossFade()

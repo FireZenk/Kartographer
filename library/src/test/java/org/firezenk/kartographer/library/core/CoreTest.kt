@@ -24,7 +24,7 @@ class CoreTest {
 
     @Test fun `given a history with one route on default path, the current route is correct`() {
         val route = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             anchor = Any()
         }
         move.routeTo(route)
@@ -36,7 +36,7 @@ class CoreTest {
 
     @Test fun `given a history with one route on default path, the current route payload is correct`() {
         val route = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             params = mapOf("param1" to 1, "param2" to "hi!")
             anchor = Any()
         }
@@ -51,12 +51,12 @@ class CoreTest {
 
     @Test fun `given a history with some route in a custom path, check if exist will return valid`() {
         val validRoute = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("NOTE")
             anchor = Any()
         }
         val invalidRoute = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("NONE")
             anchor = Any()
         }
@@ -69,12 +69,12 @@ class CoreTest {
 
     @Test fun `given two routes, the second is valid if don't have the same path than the previous one`() {
         val validRoute = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("ONE")
             anchor = Any()
         }
         val invalidRoute = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("TWO")
             anchor = Any()
         }

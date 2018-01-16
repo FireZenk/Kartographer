@@ -29,7 +29,7 @@ class ReplayTest {
 
     @Test fun `given a history with one route on default path, the last one on path is repeated`() {
         val route = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Core.ROOT_NODE
             anchor = Any()
         }
@@ -47,7 +47,7 @@ class ReplayTest {
 
     @Test fun `given a history with one route on default path, the last one on path is replayed`() {
         val route = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Core.ROOT_NODE
             anchor = Any()
         }
@@ -65,7 +65,7 @@ class ReplayTest {
 
     @Test fun `given a history with one route on a custom path, return valid if can be replayed`() {
         val route = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("NOTE")
             anchor = Any()
         }
@@ -85,12 +85,12 @@ class ReplayTest {
 
     @Test fun `given a history with one route on a custom path, return valid if can be move to a new route`() {
         val route = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("NOTE")
             anchor = Any()
         }
         val customRoute = route {
-            target = TargetRoute::class
+            target = TargetRoute()
             path = Path("OTHER")
             anchor = Any()
         }

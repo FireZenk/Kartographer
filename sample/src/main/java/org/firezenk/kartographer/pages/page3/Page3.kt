@@ -34,7 +34,7 @@ class Page3(context: Context?) : FrameLayout(context) {
 
         setOnClickListener {
             router next routeActivity<Bundle> {
-                target = Page4ActivityRoute::class
+                target = Page4ActivityRoute()
                 params = Bundle()
             }
         }
