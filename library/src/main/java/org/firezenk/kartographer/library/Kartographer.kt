@@ -32,6 +32,11 @@ class Kartographer(context: Any, monitor: Monitor) : IKartographer {
         return this
     }
 
+    override fun debug(logReader: (String) -> Unit): Kartographer {
+        core.log = Logger(logReader)
+        return this
+    }
+
     @Suppress("UNCHECKED_CAST")
     override fun <C> context(): C = core.context as C
 

@@ -3,6 +3,7 @@ package org.firezenk.kartographer.library.core
 import org.firezenk.kartographer.library.Logger
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.library.types.Path
+import org.firezenk.kartographer.library.types.RootRoute
 import org.firezenk.kartographer.library.types.Route
 
 /**
@@ -19,7 +20,7 @@ class Core(var context: Any, var log: Logger? = null) {
 
     private val DEFAULT_HISTORY: MutableMap<Route<*>, MutableList<Route<*>>> = linkedMapOf(
             route {
-                target = Any::class
+                target = RootRoute()
             } to mutableListOf())
 
     var history: MutableMap<Route<*>, MutableList<Route<*>>> = DEFAULT_HISTORY

@@ -8,4 +8,6 @@ data class Path(private val namespace: String) {
     } else false
 
     override fun hashCode() = namespace.hashCode()
+
+    override fun toString() = namespace
 }

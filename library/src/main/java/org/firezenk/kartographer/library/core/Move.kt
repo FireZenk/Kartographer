@@ -4,6 +4,7 @@ import org.firezenk.kartographer.library.Routable
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.library.exceptions.NotEnoughParametersException
 import org.firezenk.kartographer.library.exceptions.ParameterNotFoundException
+import org.firezenk.kartographer.library.types.RootRoute
 import org.firezenk.kartographer.library.types.Route
 
 /**
@@ -60,14 +61,14 @@ class Move(private val core: Core) {
     private fun <B> createView(route: Route<B>) {
         if (route.bundle != null) {
             try {
-                (route.clazz.newInstance() as Routable<B>)
+                (route.clazz as Routable<B>)
                         .route(core.context, route.uuid, route.bundle as B, route.viewParent, route.animation)
             } catch (e: ClassCastException) {
-                (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
+                (route.clazz as org.firezenk.kartographer.processor.interfaces.Routable)
                         .route(core.context, route.uuid, route.bundle!!, route.viewParent, route.animation)
             }
         } else {
-            (route.clazz.newInstance() as org.firezenk.kartographer.processor.interfaces.Routable)
+            (route.clazz as org.firezenk.kartographer.processor.interfaces.Routable)
                     .route(core.context, route.uuid, (route.params as Map<String, Any>).values.toTypedArray(), route.viewParent, route.animation)
         }
     }
@@ -82,7 +83,7 @@ class Move(private val core: Core) {
 
     private fun createPath(routeToAdd: Route<*>) {
         val newBranch = route {
-            target = Any::class
+            target = RootRoute()
             path = routeToAdd.path
         }
 

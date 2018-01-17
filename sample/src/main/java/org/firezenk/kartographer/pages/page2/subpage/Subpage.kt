@@ -1,4 +1,4 @@
-package org.firezenk.kartographer.pages.page1
+package org.firezenk.kartographer.pages.page2.subpage
 
 import android.content.Context
 import android.view.View
@@ -6,10 +6,8 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.page_view.view.*
 import org.firezenk.kartographer.R
 import org.firezenk.kartographer.SampleApplication
-import org.firezenk.kartographer.animations.CrossFade
 import org.firezenk.kartographer.annotations.RoutableView
 import org.firezenk.kartographer.library.Kartographer
-import org.firezenk.kartographer.library.dsl.route
 import javax.inject.Inject
 
 /**
@@ -18,8 +16,8 @@ import javax.inject.Inject
  * Created by Jorge Garrido Oval, aka firezenk on 14/12/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-@RoutableView(path = "PAGE1")
-class Page1(context: Context?) : FrameLayout(context) {
+@RoutableView(path = "PAGE2")
+class Subpage(context: Context?) : FrameLayout(context) {
 
     @Inject lateinit var router: Kartographer
 
@@ -29,19 +27,6 @@ class Page1(context: Context?) : FrameLayout(context) {
 
         SampleApplication.component.injectTo(this)
 
-        var part: String = router.payload<String>("part")!!
-        var counter: Int = router.payload<Int>("counter")!!
-
-        part += " -> " + ++counter
-        text2.text = context.getString(R.string.route, Page1Route.PATH, part)
-
-        setOnClickListener {
-            router next route {
-                target = Page1Route()
-                params = mapOf("part" to part, "counter" to counter)
-                anchor = parent
-                animation = CrossFade()
-            }
-        }
+        text2.text = "SUBPAGE"
     }
 }

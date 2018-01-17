@@ -2,32 +2,32 @@ package org.firezenk.kartographer.library
 
 import org.firezenk.kartographer.library.types.Route
 
-class Logger {
+class Logger(val logReader: (String) -> Unit = ::println) {
 
     private val TAG = "Kartographer::"
 
     internal fun d(actionDesc: String) {
-        println(TAG + actionDesc)
+        logReader(TAG + actionDesc)
     }
 
     internal fun d(actionDesc: String, route: Route<*>): Route<*> {
-        println(TAG + actionDesc + route)
+        logReader(TAG + actionDesc + route)
         return route
     }
 
     internal fun d(actionDesc: String, history: MutableMap<Route<*>, MutableList<Route<*>>>) {
         if (history.isNotEmpty() && history[history.keys.last()] != null) {
-            println(TAG + actionDesc + "size: " + history.size)
-            println(TAG + actionDesc + "last: " + history[history.keys.last()]?.lastOrNull())
+            logReader(TAG + actionDesc + "size: " + history.size)
+            logReader(TAG + actionDesc + "last: " + history[history.keys.last()]?.lastOrNull())
             if (history[history.keys.last()] != null && history[history.keys.last()]!!.size > 0) {
-                println(TAG + actionDesc + "internal history size: " + history[history.keys.lastOrNull()]?.size)
-                println(TAG + actionDesc + "internal history last: " + history[history.keys.lastOrNull()]?.lastOrNull())
+                logReader(TAG + actionDesc + "internal history size: " + history[history.keys.lastOrNull()]?.size)
+                logReader(TAG + actionDesc + "internal history last: " + history[history.keys.lastOrNull()]?.lastOrNull())
             }
         }
     }
 
     internal fun d(actionDesc: String, throwable: Throwable) {
-        println(TAG + actionDesc)
+        logReader(TAG + actionDesc)
         throwable.printStackTrace()
     }
 }

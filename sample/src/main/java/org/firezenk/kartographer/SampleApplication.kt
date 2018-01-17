@@ -4,6 +4,10 @@ import android.app.Application
 import org.firezenk.kartographer.di.ApplicationComponent
 import org.firezenk.kartographer.di.ApplicationModule
 import org.firezenk.kartographer.di.DaggerApplicationComponent
+import timber.log.Timber
+import timber.log.Timber.DebugTree
+
+
 
 /**
  * Project: Kartographer
@@ -19,6 +23,8 @@ class SampleApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Timber.plant(DebugTree())
 
         component = DaggerApplicationComponent
                 .builder()

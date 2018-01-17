@@ -9,7 +9,7 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Route<B> (val clazz: Class<*>, val params: Any, var path: Path,
+class Route<B> (val clazz: Any, val params: Any, var path: Path,
                 var viewParent: Any?, val animation: RouteAnimation?, val forResult: Int = -1) {
 
     val uuid: UUID = UUID.randomUUID()
@@ -34,7 +34,7 @@ class Route<B> (val clazz: Class<*>, val params: Any, var path: Path,
 
     override fun equals(other: Any?) = other is Route<*> && clazz == other.clazz
 
-    override fun toString() = "Route class name: ${clazz.simpleName} Has bundle? ${(bundle != null)} Has params? ${(internalParams != null)}"
+    override fun toString() = "Route name: ${clazz.javaClass.simpleName}, on path: $path, has bundle? ${(bundle != null)}, has params? ${(internalParams != null)} (${internalParams?.keys})"
 
     override fun hashCode(): Int {
         var result = clazz.hashCode()
