@@ -4,8 +4,7 @@ import org.firezenk.kartographer.annotations.RouteAnimation
 import org.firezenk.kartographer.library.core.Core.Companion.ROOT_NODE
 import org.firezenk.kartographer.library.types.Path
 import org.firezenk.kartographer.library.types.Route
-import org.firezenk.kartographer.library.Routable as RoutableActivity
-import org.firezenk.kartographer.processor.interfaces.Routable as RoutableView
+import org.firezenk.kartographer.processor.interfaces.Routable
 
 @KartographerDsl
 class RouteDsl {
@@ -20,8 +19,8 @@ class RouteDsl {
         var forResult: Int = -1
 
         private val calculatedPath: Path by lazy {
-            if (target is RoutableView) {
-                val castedTarget = target as RoutableView
+            if (target is Routable) {
+                val castedTarget = target as Routable
                 if (castedTarget.path() != "") {
                     Path(castedTarget.path())
                 } else ROOT_NODE
@@ -41,8 +40,8 @@ class RouteDsl {
         var forResult: Int = -1
 
         private val calculatedPath: Path by lazy {
-            if (target is RoutableActivity<*>) {
-                val castedTarget = target as RoutableActivity<*>
+            if (target is Routable) {
+                val castedTarget = target as Routable
                 if (castedTarget.path() != "") {
                     Path(castedTarget.path())
                 } else ROOT_NODE

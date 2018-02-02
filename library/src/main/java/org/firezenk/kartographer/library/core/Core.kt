@@ -31,11 +31,20 @@ class Core(var context: Any, var log: Logger? = null) {
     fun <B> current(): Route<B>? {
         val leaf: Route<*>? = history.keys.firstOrNull { it.path == lastKnownPath }
         val branch: MutableList<Route<*>>? = history[leaf]
-        return branch?.lastOrNull() as Route<B>?
+
+        return branch?.let {
+            if (it.size < 1) {
+                leaf as Route<B>?
+            } else {
+                it.lastOrNull() as Route<B>?
+            }
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
     fun <T> payload(key: String): T? = current<Any>()?.internalParams?.get(key) as T?
+
+    fun <B> bundle(): B? = current<B>()?.bundle
 
     fun clearHistory() {
         history = DEFAULT_HISTORY

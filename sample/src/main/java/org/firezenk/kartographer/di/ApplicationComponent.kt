@@ -6,6 +6,7 @@ import org.firezenk.kartographer.pages.page1.Page1
 import org.firezenk.kartographer.pages.page2.Page2
 import org.firezenk.kartographer.pages.page2.subpage.Subpage
 import org.firezenk.kartographer.pages.page3.Page3
+import org.firezenk.kartographer.pages.page4.Page4Activity
 import javax.inject.Singleton
 
 /**
@@ -27,4 +28,6 @@ interface ApplicationComponent {
     fun injectTo(screen: Page3)
 
     fun injectTo(screen: MainActivity)
+
+    fun injectTo(screen: Page4Activity)
 }
