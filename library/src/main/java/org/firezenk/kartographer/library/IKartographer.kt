@@ -125,6 +125,13 @@ interface IKartographer {
     fun <T> payload(key: String): T?
 
     /**
+     * Obtains the bundle of the current route
+     *
+     * @return The bundle
+     */
+    fun <B> bundle(): B?
+
+    /**
      * Clear navigation history
      */
     fun clearHistory()

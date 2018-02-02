@@ -64,6 +64,8 @@ class Kartographer(context: Any, monitor: Monitor) : IKartographer {
 
     override fun <T> payload(key: String): T? = core.payload(key)
 
+    override fun <B> bundle(): B? = core.bundle()
+
     override fun clearHistory() = core.clearHistory()
 
     override fun hasHistory() = core.hasHistory()

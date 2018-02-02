@@ -22,7 +22,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.7.8'
+  def NVersion = '0.7.9'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
@@ -103,6 +103,12 @@ On every view you will have all the route params simply calling the `payload` me
 
 ```kotlin
 val myParam: Int? = kartographer.payload<Int>("myParam")
+```
+
+and `bundle` method for Android's activities:
+
+```kotlin
+val myParam: Int? = kartographer.bundle<Bundle>()?.getInt("myParam")
 ```
 
 ### CUSTOMISATION
