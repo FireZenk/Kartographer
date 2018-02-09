@@ -1,6 +1,9 @@
 package org.firezenk.kartographer.library.core
 
+import org.firezenk.kartographer.library.types.ContextRoute
+import org.firezenk.kartographer.library.types.ExternalRoute
 import org.firezenk.kartographer.library.types.Route
+import org.firezenk.kartographer.library.types.ViewRoute
 
 /**
  * Project: Kartographer
@@ -10,18 +13,19 @@ import org.firezenk.kartographer.library.types.Route
  */
 class Forward(private val move: Move) {
 
-    infix fun <B> next(route: Route<B>): Boolean {
-        move.routeTo<B>(route)
-        return true
+    fun next(route: Route) = when(route) {
+        is ViewRoute -> next(route)
+        is ContextRoute<*> -> next(route)
+        is ExternalRoute -> next(route)
     }
 
-    fun <B> next(route: Route<B>, replacementParams: B): Boolean {
-        move.routeTo(route.copy(replacementParams))
-        return true
-    }
+    private fun next(route: ViewRoute) = move.routeTo(route)
 
-    fun next(route: Route<Any>, replacementParams: Map<String, Any>): Boolean {
-        move.routeTo(route.copy(replacementParams))
-        return true
-    }
+    private fun next(route: ExternalRoute) = move.routeTo(route)
+
+    private fun <B> next(route: ContextRoute<B>) = move.routeTo<B>(route)
+
+    fun next(route: ViewRoute, replacementParams: Map<String, Any>) = move.routeTo(route.copy(replacementParams))
+
+    fun <B> next(route: ContextRoute<B>, replacementParams: B) = move.routeTo(route.copy(replacementParams))
 }
