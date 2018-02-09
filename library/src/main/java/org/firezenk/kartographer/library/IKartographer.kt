@@ -48,9 +48,9 @@ interface IKartographer {
      *
      * @param route The target route
      */
-    infix fun next(route: ViewRoute)
-    infix fun next(route: ExternalRoute)
-    infix fun <B> next(route: ContextRoute<B>)
+    infix fun next(route: ViewRoute): Boolean
+    infix fun next(route: ExternalRoute): Boolean
+    infix fun <B> next(route: ContextRoute<B>): Boolean
 
     /**
      * Navigate to the next route
@@ -58,8 +58,8 @@ interface IKartographer {
      * @param route The target route
      * @param params The parameters to replace the original ones
      */
-    fun next(route: ViewRoute, replacementParams: Map<String, Any>)
-    fun <B> next(route: ContextRoute<B>, replacementParams: B)
+    fun next(route: ViewRoute, replacementParams: Map<String, Any>): Boolean
+    fun <B> next(route: ContextRoute<B>, replacementParams: B): Boolean
 
     /**
      * Navigate to the last known route on the specified path
