@@ -1,7 +1,6 @@
 package org.firezenk.kartographer.library.core
 
-import org.firezenk.kartographer.library.types.Path
-import org.firezenk.kartographer.library.types.Route
+import org.firezenk.kartographer.library.types.*
 
 /**
  * Project: Kartographer
@@ -12,13 +11,15 @@ import org.firezenk.kartographer.library.types.Route
 class Replay(private val core: Core, private val move: Move, private val forward: Forward) {
 
     infix fun last(viewParent: Any?): Boolean {
-        val leaf: Route<*> = core.history.keys.first { it.path == core.lastKnownPath }
-        val branch: MutableList<Route<*>>? = core.history[leaf]
+        val leaf: Route = core.history.keys.first { it.path == core.lastKnownPath }
+        val branch: MutableList<Route>? = core.history[leaf]
 
         return viewParent?.let {
-            val route: Route<*>? = branch?.map {
-                it.viewParent = viewParent
-                it
+            val route: Route? = branch?.map {
+                if (it is ViewRoute) {
+                    it.viewParent = viewParent
+                    it
+                } else null
             }?.firstOrNull()
 
             if (route == null) {
@@ -31,10 +32,10 @@ class Replay(private val core: Core, private val move: Move, private val forward
     }
 
     infix fun replay(path: Path): Boolean {
-        val leaf: Route<*>? = core.history.keys.firstOrNull { it.path == path }
+        val leaf: Route? = core.history.keys.firstOrNull { it.path == path }
 
         return leaf?.let {
-            val branch: MutableList<Route<*>> = core.history[leaf]!!
+            val branch: MutableList<Route> = core.history[leaf]!!
             return if (branch.lastIndex > -1) {
                 move.routeTo(branch.removeAt(branch.lastIndex))
                 true
@@ -42,10 +43,11 @@ class Replay(private val core: Core, private val move: Move, private val forward
         } == true
     }
 
-    fun <B> replayOrNext(route: Route<B>): Boolean {
+    fun replayOrNext(route: Route): Boolean {
         val canMove = replay(route.path)
         return if (!canMove) {
-            forward.next<B>(route)
+            forward.next(route)
+            return true
         } else canMove
     }
 }
