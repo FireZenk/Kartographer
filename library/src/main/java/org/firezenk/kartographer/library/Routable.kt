@@ -11,10 +11,16 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-interface Routable<B> {
+interface ContextRoutable<B> {
 
     @Throws(ParameterNotFoundException::class, NotEnoughParametersException::class)
     fun route(context: Any, uuid: UUID, parameters: B, viewParent: Any?, animation: RouteAnimation?)
 
     fun path(): String
+}
+
+interface ExternalRoutable {
+
+    @Throws(ParameterNotFoundException::class, NotEnoughParametersException::class)
+    fun route(context: Any, uuid: UUID, parameters: Any? = null)
 }
