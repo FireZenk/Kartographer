@@ -2,7 +2,10 @@ package org.firezenk.kartographer.library
 
 import org.firezenk.kartographer.annotations.Monitor
 import org.firezenk.kartographer.library.core.*
-import org.firezenk.kartographer.library.types.*
+import org.firezenk.kartographer.library.types.ContextRoute
+import org.firezenk.kartographer.library.types.ExternalRoute
+import org.firezenk.kartographer.library.types.Path
+import org.firezenk.kartographer.library.types.ViewRoute
 
 /**
  * Project: Kartographer
@@ -62,7 +65,7 @@ class Kartographer(context: Any, monitor: Monitor) : IKartographer {
 
     override fun backOnPath(block: () -> Unit) = backward.backOnPath(block)
 
-    override fun current(): ViewRoute? = core.current()
+    override fun current(): ViewRoute? = core.current() as ViewRoute
     override fun <B> currentActivity():ContextRoute<B>? = core.current<B>()
 
     override fun <T> payload(key: String): T? = core.payload(key)
