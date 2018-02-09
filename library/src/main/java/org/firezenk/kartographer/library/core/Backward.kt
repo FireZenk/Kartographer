@@ -66,19 +66,19 @@ class Backward(private val core: Core, private val move: Move) {
         }
     }
 
-    fun back(times: Int): Boolean {
-        try {
-            for (i in 0 until times) {
-                if (!backOnPath({})) {
-                    return false
-                }
+    fun back(times: Int): Boolean = try {
+        for (i in 0 until times) {
+            if (!backOnPath({})) {
+                throw Exception()
             }
-            return true
-        } catch (e: Exception) {
-            core.log?.d("Is not possible to go back " + times +
-                    " times, the history length is " + core.history.size)
-            core.log?.d(e.message!!)
-            return false
         }
+        true
+    } catch (e: Exception) {
+        core.log?.apply {
+            d("Is not possible to go back " + times +
+                    " times, the history length is " + core.history.size)
+            e.message?.let { d(it) }
+        }
+        false
     }
 }

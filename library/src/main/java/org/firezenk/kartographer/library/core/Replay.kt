@@ -1,6 +1,8 @@
 package org.firezenk.kartographer.library.core
 
-import org.firezenk.kartographer.library.types.*
+import org.firezenk.kartographer.library.types.Path
+import org.firezenk.kartographer.library.types.Route
+import org.firezenk.kartographer.library.types.ViewRoute
 
 /**
  * Project: Kartographer
@@ -10,11 +12,9 @@ import org.firezenk.kartographer.library.types.*
  */
 class Replay(private val core: Core, private val move: Move, private val forward: Forward) {
 
-    infix fun last(viewParent: Any?): Boolean {
-        val leaf: Route = core.history.keys.first { it.path == core.lastKnownPath }
-        val branch: MutableList<Route>? = core.history[leaf]
-
-        return viewParent?.let {
+    infix fun last(viewParent: Any?): Boolean = core.lastLeaf()?.let {
+        val branch: MutableList<Route>? = core.history[it]
+        return@let viewParent?.let {
             val route: Route? = branch?.map {
                 if (it is ViewRoute) {
                     it.viewParent = viewParent
@@ -22,32 +22,18 @@ class Replay(private val core: Core, private val move: Move, private val forward
                 } else null
             }?.firstOrNull()
 
-            if (route == null) {
-                return@let false
-            } else {
-                move.routeTo(route)
-                return@let true
-            }
+            return if (route == null) false else move.routeTo(route)
         } == true
-    }
+    } == true
 
-    infix fun replay(path: Path): Boolean {
-        val leaf: Route? = core.history.keys.firstOrNull { it.path == path }
+    infix fun replay(path: Path): Boolean = core.lastLeaf(path)?.let {
+        val branch: MutableList<Route> = core.history[it]!!
+        return if (branch.lastIndex > -1) {
+            move.routeTo(branch.removeAt(branch.lastIndex))
+        } else false
+    } == true
 
-        return leaf?.let {
-            val branch: MutableList<Route> = core.history[leaf]!!
-            return if (branch.lastIndex > -1) {
-                move.routeTo(branch.removeAt(branch.lastIndex))
-                true
-            } else false
-        } == true
-    }
-
-    fun replayOrNext(route: Route): Boolean {
-        val canMove = replay(route.path)
-        return if (!canMove) {
-            forward.next(route)
-            return true
-        } else canMove
+    infix fun replayOrNext(route: Route): Boolean = with(replay(route.path)) {
+        if (!this) forward.next(route) else this
     }
 }

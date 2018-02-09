@@ -20,67 +20,55 @@ class Move(private val core: Core) {
         is ExternalRoute -> routeTo(route)
     }
 
-    private fun routeTo(route: ViewRoute): Boolean {
+    private fun routeTo(route: ViewRoute): Boolean = try {
+        logRoute(route)
+
+        core.lastKnownPath = route.path
+
         val prev: Route? = core.current()
 
-        try {
-            core.log?.let {
-                it.d(" --->> Next")
-                it.d(" Navigating to: ", route)
-            }
-
-            core.lastKnownPath = route.path
-
-            if (core.pathIsValid(route, prev) && !core.pathExists(route)) {
-                createPath(route)
-                createViewRoute(route)
-            } else if (!core.pathExists(route)) {
-                createPath(route)
-            } else {
-                createViewRoute(route)
-            }
-
-            createView(route)
-            return true
-        } catch (e: Throwable) {
-            handleError(e)
-            return false
+        if (core.pathIsValid(route, prev) && !core.pathExists(route)) {
+            createPath(route)
+            createViewRoute(route)
+        } else if (!core.pathExists(route)) {
+            createPath(route)
+        } else {
+            createViewRoute(route)
         }
+
+        createView(route)
+        true
+    } catch (e: Throwable) {
+        handleError(e)
+        false
     }
 
-    private fun routeTo(route: ExternalRoute): Boolean {
-        try {
-            core.log?.let {
-                it.d(" --->> Next")
-                it.d(" Navigating to: ", route)
-            }
+    private fun routeTo(route: ExternalRoute): Boolean = try {
+        logRoute(route)
 
-            //TODO
-            //(route.clazz as Routable<*>)
-            //        .route(core.context, route.uuid, Any(), null, null)
-            return true
-        } catch (e: Throwable) {
-            handleError(e)
-            return false
-        }
+        //TODO (route.clazz as Routable<*>).route(core.context, route.uuid, Any(), null, null)
+        true
+    } catch (e: Throwable) {
+        handleError(e)
+        false
     }
 
-    private fun <B> routeTo(route: ContextRoute<B>): Boolean {
-        try {
-            core.log?.let {
-                it.d(" --->> Next")
-                it.d(" Navigating to: ", route)
-            }
+    private fun <B> routeTo(route: ContextRoute<B>): Boolean = try {
+        logRoute(route)
 
-            core.lastKnownPath = route.path
+        core.lastKnownPath = route.path
 
-            createPathRoute(route)
-            createView(route)
-            return true
-        } catch (e: Throwable) {
-            handleError(e)
-            return false
-        }
+        createPathRoute(route)
+        createView(route)
+        true
+    } catch (e: Throwable) {
+        handleError(e)
+        false
+    }
+
+    private fun logRoute(route: Route) = core.log?.let {
+        it.d(" --->> Next")
+        it.d(" Navigating to: ", route)
     }
 
     private fun handleError(e: Throwable) = when(e) {
@@ -103,14 +91,12 @@ class Move(private val core: Core) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <B> createView(route: ContextRoute<B>) {
-        try {
-            (route.clazz as Routable<B>)
-                    .route(core.context, route.uuid, route.bundle as B, null, null)
-        } catch (e: ClassCastException) {
-            (route.clazz as org.firezenk.kartographer.processor.interfaces.Routable)
-                    .route(core.context, route.uuid, route.bundle!!, null, null)
-        }
+    private fun <B> createView(route: ContextRoute<B>) = try {
+        (route.clazz as Routable<B>)
+                .route(core.context, route.uuid, route.bundle as B, null, null)
+    } catch (e: ClassCastException) {
+        (route.clazz as org.firezenk.kartographer.processor.interfaces.Routable)
+                .route(core.context, route.uuid, route.bundle!!, null, null)
     }
 
     private fun createPathRoute(route: ContextRoute<*>) = core.history.put(route, mutableListOf())

@@ -27,7 +27,7 @@ class Core(var context: Any, var log: Logger? = null) {
     var lastKnownPath: Path = ROOT_NODE
 
     fun current(): Route? {
-        val leaf: Route? = history.keys.firstOrNull { it.path == lastKnownPath }
+        val leaf: Route? = lastLeaf()
         val branch: MutableList<Route>? = history[leaf]
 
         return branch?.let {
@@ -54,4 +54,8 @@ class Core(var context: Any, var log: Logger? = null) {
     fun pathExists(route: Route) = history.keys.map { it.path }.contains(route.path)
 
     fun pathIsValid(route: Route, prev: Route?) = route.path != prev?.path
+
+    internal fun lastLeaf() = history.keys.firstOrNull { it.path == lastKnownPath }
+
+    internal fun lastLeaf(path: Path) = history.keys.firstOrNull { it.path == path }
 }
