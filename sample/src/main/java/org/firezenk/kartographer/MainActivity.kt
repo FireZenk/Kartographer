@@ -9,8 +9,6 @@ import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.extensions.disableShiftMode
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
-import org.firezenk.kartographer.library.dsl.routeActivity
-import org.firezenk.kartographer.library.types.ContextRoute
 import org.firezenk.kartographer.library.types.ViewRoute
 import org.firezenk.kartographer.pages.page1.Page1Route
 import org.firezenk.kartographer.pages.page2.Page2Route
@@ -29,7 +27,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     @Inject lateinit var router: Kartographer
 
     private lateinit var page1Route : ViewRoute
-    private lateinit var page2Route : ContextRoute<Bundle>
+    private lateinit var page2Route : ViewRoute
     private lateinit var page3Route : ViewRoute
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.bottom_action_page1 -> router replayOrNext page1Route
-            R.id.bottom_action_page2 -> router.replayOrNext<Bundle>(page2Route)
+            R.id.bottom_action_page2 -> router replayOrNext page2Route
             R.id.bottom_action_page3 -> router replayOrNext page3Route
         }
         return true
@@ -68,9 +66,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             anchor = viewHolder
         }
 
-        page2Route = routeActivity<Bundle> {
-            target = Page2Route<Bundle>()
-            params = Bundle().apply { putInt("counter", 10) }
+        page2Route = route {
+            target = Page2Route()
+            params = mapOf("part" to "", "counter" to 0)
+            anchor = viewHolder
         }
 
         page3Route = route {

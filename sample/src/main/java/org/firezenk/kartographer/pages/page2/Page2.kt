@@ -30,9 +30,9 @@ class Page2 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val counter = arguments!!.getInt("counter")
-
         SampleApplication.component.injectTo(this)
+
+        val counter = router.payload<Int>("counter")
 
         text2.text = "${Page2Route.PATH}: $counter"
 
