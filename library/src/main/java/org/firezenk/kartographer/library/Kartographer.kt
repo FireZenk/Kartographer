@@ -63,7 +63,7 @@ class Kartographer(context: Any, monitor: Monitor) : IKartographer {
     override fun backOnPath(block: () -> Unit) = backward.backOnPath(block)
 
     override fun current(): ViewRoute? = core.current()
-    override fun <B> current():ContextRoute<B>? = core.current<B>()
+    override fun <B> currentActivity():ContextRoute<B>? = core.current<B>()
 
     override fun <T> payload(key: String): T? = core.payload(key)
 

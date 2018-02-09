@@ -115,7 +115,7 @@ interface IKartographer {
      * @return A route with specified type
      */
     fun current(): ViewRoute?
-    fun <B> current(): ContextRoute<B>?
+    fun <B> currentActivity(): ContextRoute<B>?
 
     /**
      * Obtains the value of the key inside payloads current route
