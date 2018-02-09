@@ -9,12 +9,12 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-sealed class Route
-
-class ViewRoute(private val clazz: Any, val params: Map<String, Any>, var path: Path, var viewParent: Any,
-                val animation: RouteAnimation?, val forResult: Int = -1) : Route() {
-
+sealed class Route(open val clazz: Any, open var path: Path) {
     val uuid: UUID = UUID.randomUUID()
+}
+
+class ViewRoute(override val clazz: Any, val params: Map<String, Any>, override var path: Path, var viewParent: Any,
+                val animation: RouteAnimation?, val forResult: Int = -1) : Route(clazz, path) {
 
     companion object {
         fun areRoutesEqual(prev: ViewRoute, next: ViewRoute) =
@@ -39,9 +39,8 @@ class ViewRoute(private val clazz: Any, val params: Map<String, Any>, var path: 
 
 }
 
-class ContextRoute<out B>(private val clazz: Any, val bundle: B, var path: Path, val forResult: Int = -1) : Route() {
-
-    val uuid: UUID = UUID.randomUUID()
+class ContextRoute<out B>(override val clazz: Any, val bundle: B, override var path: Path, val forResult: Int = -1)
+    : Route(clazz, path) {
 
     companion object {
         fun <B> areRoutesEqual(prev: ContextRoute<B>, next: ContextRoute<B>) =
@@ -63,4 +62,4 @@ class ContextRoute<out B>(private val clazz: Any, val bundle: B, var path: Path,
     fun <B> copy(replacementParams: B) = ContextRoute<B>(clazz, replacementParams, path, forResult)
 }
 
-class ExternalRoute(private val clazz: Any) : Route()
+class ExternalRoute(override val clazz: Any, override var path: Path = Path("")) : Route(clazz, path)
