@@ -14,13 +14,13 @@ import org.firezenk.kartographer.library.types.*
  */
 class Move(private val core: Core) {
 
-    fun routeTo(route: Route) = when(route) {
+    fun routeTo(route: Route): Boolean = when(route) {
         is ViewRoute -> routeTo(route)
         is ContextRoute<*> -> routeTo(route)
         is ExternalRoute -> routeTo(route)
     }
 
-    private fun routeTo(route: ViewRoute) {
+    private fun routeTo(route: ViewRoute): Boolean {
         val prev: Route? = core.current()
 
         try {
@@ -41,12 +41,14 @@ class Move(private val core: Core) {
             }
 
             createView(route)
+            return true
         } catch (e: Throwable) {
             handleError(e)
+            return false
         }
     }
 
-    private fun routeTo(route: ExternalRoute) {
+    private fun routeTo(route: ExternalRoute): Boolean {
         try {
             core.log?.let {
                 it.d(" --->> Next")
@@ -56,12 +58,14 @@ class Move(private val core: Core) {
             //TODO
             //(route.clazz as Routable<*>)
             //        .route(core.context, route.uuid, Any(), null, null)
+            return true
         } catch (e: Throwable) {
             handleError(e)
+            return false
         }
     }
 
-    private fun <B> routeTo(route: ContextRoute<B>) {
+    private fun <B> routeTo(route: ContextRoute<B>): Boolean {
         try {
             core.log?.let {
                 it.d(" --->> Next")
@@ -72,8 +76,10 @@ class Move(private val core: Core) {
 
             createPathRoute(route)
             createView(route)
+            return true
         } catch (e: Throwable) {
             handleError(e)
+            return false
         }
     }
 
@@ -119,9 +125,10 @@ class Move(private val core: Core) {
         val newBranch = route {
             target = RootRoute()
             path = routeToAdd.path
+            anchor = Any()
         }
 
-        val leaf: Route? = core.history.keys.firstOrNull { it?.path == routeToAdd.path }
+        val leaf: Route? = core.history.keys.firstOrNull { it.path == routeToAdd.path }
 
         leaf?.let {
             val branch: MutableList<Route>? = core.history[leaf]
