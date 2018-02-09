@@ -11,9 +11,9 @@ import org.firezenk.kartographer.library.types.Route
 class Backward(private val core: Core, private val move: Move) {
 
     fun back(block: () -> Unit): Boolean {
-        core.log?.let {
-            it.d(" <<--- Back")
-            it.d(" History: ", core.history)
+        core.log?.run {
+            d(" <<--- Back")
+            d(" History: ", core.history)
         }
 
         if (core.history.size <= 1) {
@@ -37,9 +37,9 @@ class Backward(private val core: Core, private val move: Move) {
     }
 
     fun backOnPath(block: () -> Unit): Boolean {
-        core.log?.let {
-            it.d(" <<--- Back on path")
-            it.d(" History: ", core.history)
+        core.log?.run {
+            d(" <<--- Back on path")
+            d(" History: ", core.history)
         }
 
         if (core.history.size <= 1 && core.history[core.history.keys.last()]!!.size <= 1) {
@@ -47,7 +47,7 @@ class Backward(private val core: Core, private val move: Move) {
             return false
         }
 
-        val leaf: Route = core.history.keys.first { it.path == core.lastKnownPath }
+        val leaf: Route? = core.lastLeaf()
         val branch: MutableList<Route> = core.history[leaf]!!
 
         if (branch.lastIndex > -1) {
@@ -74,7 +74,7 @@ class Backward(private val core: Core, private val move: Move) {
         }
         true
     } catch (e: Exception) {
-        core.log?.apply {
+        core.log?.run {
             d("Is not possible to go back " + times +
                     " times, the history length is " + core.history.size)
             e.message?.let { d(it) }

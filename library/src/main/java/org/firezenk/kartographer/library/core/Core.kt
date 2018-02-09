@@ -51,9 +51,9 @@ class Core(var context: Any, var log: Logger? = null) {
 
     fun hasHistory() = history.isNotEmpty()
 
-    fun pathExists(route: Route) = history.keys.map { it.path }.contains(route.path)
+    internal fun pathExists(route: Route) = history.keys.map { it.path }.contains(route.path)
 
-    fun pathIsValid(route: Route, prev: Route?) = route.path != prev?.path
+    internal fun pathIsValid(route: Route, prev: Route?) = route.path != prev?.path
 
     internal fun lastLeaf() = history.keys.firstOrNull { it.path == lastKnownPath }
 

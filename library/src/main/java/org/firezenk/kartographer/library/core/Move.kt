@@ -72,14 +72,14 @@ class Move(private val core: Core) {
     }
 
     private fun handleError(e: Throwable) = when(e) {
-        is ClassCastException -> core.log?.d(" Params has to be instance of Object[] or Android's Bundle ", e)
+        is ClassCastException -> core.log?.run{ d(" Params has to be instance of Object[] or Android's Bundle ", e) }
         is ParameterNotFoundException,
         is NotEnoughParametersException,
         is InstantiationException,
         is IllegalAccessException,
         is org.firezenk.kartographer.processor.exceptions.NotEnoughParametersException,
         is org.firezenk.kartographer.processor.exceptions.ParameterNotFoundException -> {
-            core.log?.d(" Navigation error: ", e.fillInStackTrace())
+            core.log?.run{ d(" Navigation error: ", e.fillInStackTrace())}
         }
         else -> throw e
     }
@@ -102,23 +102,20 @@ class Move(private val core: Core) {
     private fun createPathRoute(route: ContextRoute<*>) = core.history.put(route, mutableListOf())
 
     private fun createViewRoute(route: Route) {
-        val leaf: Route = core.history.keys.first { it.path == core.lastKnownPath }
+        val leaf: Route? = core.lastLeaf()
         val branch: MutableList<Route>? = core.history[leaf]
         branch?.add(route)
     }
 
-    private fun createPath(routeToAdd: ViewRoute) {
+    private fun createPath(route: ViewRoute) {
         val newBranch = route {
             target = RootRoute()
-            path = routeToAdd.path
+            path = route.path
             anchor = Any()
         }
 
-        val leaf: Route? = core.history.keys.firstOrNull { it.path == routeToAdd.path }
-
-        leaf?.let {
-            val branch: MutableList<Route>? = core.history[leaf]
-            branch?.add(newBranch)
-        } ?: core.history.put(newBranch, mutableListOf())
+        core.lastLeaf(route.path)
+                ?.let { core.history[it]?.add(newBranch) }
+                ?: core.history.put(newBranch, mutableListOf())
     }
 }
