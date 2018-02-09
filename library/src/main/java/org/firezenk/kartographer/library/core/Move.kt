@@ -2,8 +2,6 @@ package org.firezenk.kartographer.library.core
 
 import org.firezenk.kartographer.library.Routable
 import org.firezenk.kartographer.library.dsl.route
-import org.firezenk.kartographer.library.exceptions.NotEnoughParametersException
-import org.firezenk.kartographer.library.exceptions.ParameterNotFoundException
 import org.firezenk.kartographer.library.types.*
 
 /**

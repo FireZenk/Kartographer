@@ -2,7 +2,7 @@ package org.firezenk.kartographer.library
 
 import org.firezenk.kartographer.library.types.Route
 
-class Logger(val logReader: (String) -> Unit = ::println) {
+class Logger(private val logReader: (String) -> Unit = ::println) {
 
     private val TAG = "Kartographer::"
 

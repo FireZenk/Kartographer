@@ -39,7 +39,7 @@ import static org.hamcrest.Matchers.is;
     @Rule public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void mainActivityTest2() {
+    public void navigationFlowTest() {
         prepareTabs();
 
         ViewInteraction target1 = onView(allOf(childAtPosition(
