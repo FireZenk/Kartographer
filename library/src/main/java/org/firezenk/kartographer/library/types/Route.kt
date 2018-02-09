@@ -9,45 +9,58 @@ import java.util.*
  * Created by Jorge Garrido Oval, aka firezenk on 20/09/17.
  * Copyright © Jorge Garrido Oval 2017
  */
-class Route<B> (val clazz: Any, val params: Any, var path: Path,
-                var viewParent: Any?, val animation: RouteAnimation?, val forResult: Int = -1) {
+sealed class Route
+
+class ViewRoute(private val clazz: Any, val params: Map<String, Any>, var path: Path, var viewParent: Any,
+                val animation: RouteAnimation?, val forResult: Int = -1) : Route() {
 
     val uuid: UUID = UUID.randomUUID()
-    var bundle: B? = null
-    var internalParams: Map<String, Any>? = null
 
     companion object {
-        fun <B> areRoutesEqual(prev: Route<B>, next: Route<B>) =
-                prev == next && (prev.bundle != null && (prev.bundle as B?)!! == next.bundle
-                        || prev.internalParams != null && Arrays.equals(
-                        prev.internalParams!!.values.toTypedArray(), next.internalParams!!.values.toTypedArray()))
+        fun areRoutesEqual(prev: ViewRoute, next: ViewRoute) =
+                prev == next && Arrays.equals(prev.params.values.toTypedArray(), next.params.values.toTypedArray())
     }
 
-    init {
-        try {
-            internalParams = params as Map<String, Any>
-            internalParams?.plus("uuid" to uuid)
-        } catch (ex: ClassCastException) {
-            bundle = params as B
-        }
-    }
+    override fun equals(other: Any?) = other is ViewRoute && clazz == other.clazz
 
-    override fun equals(other: Any?) = other is Route<*> && clazz == other.clazz
-
-    override fun toString() = "Route name: ${clazz.javaClass.simpleName}, on path: $path, has bundle? ${(bundle != null)}, has params? ${(internalParams != null)} (${internalParams?.keys})"
+    override fun toString() = "Route name: ${clazz.javaClass.simpleName}, on path: $path, params: (${params.keys})"
 
     override fun hashCode(): Int {
         var result = clazz.hashCode()
         result = 31 * result + params.hashCode()
-        result = 31 * result + (viewParent?.hashCode() ?: 0)
+        result = 31 * result + viewParent.hashCode()
         result = 31 * result + forResult
         result = 31 * result + uuid.hashCode()
-        result = 31 * result + (bundle?.hashCode() ?: 0)
-        result = 31 * result + (internalParams?.let { Arrays.hashCode(it.values.toTypedArray()) } ?: 0)
         return result
     }
 
-    fun <B> copy(replacementParams: B) = Route<B>(clazz, replacementParams as Any, path, viewParent, animation, forResult)
+    fun copy(replacementParams: Map<String, Any>)
+            = ViewRoute(clazz, replacementParams, path, viewParent, animation, forResult)
 
-    fun copy(replacementParams: Map<String, Any>) = Route<Any>(clazz, replacementParams, path, viewParent, animation, forResult)
 }
+
+class ContextRoute<out B>(private val clazz: Any, val bundle: B, var path: Path, val forResult: Int = -1) : Route() {
+
+    val uuid: UUID = UUID.randomUUID()
+
+    companion object {
+        fun <B> areRoutesEqual(prev: ContextRoute<B>, next: ContextRoute<B>) =
+                prev == next && (prev.bundle != null && (prev.bundle as B?)!! == next.bundle)
+    }
+
+    override fun equals(other: Any?) = other is ContextRoute<*> && clazz == other.clazz
+
+    override fun toString() = "Route name: ${clazz.javaClass.simpleName}, on path: $path, has bundle? ${(bundle != null)}"
+
+    override fun hashCode(): Int {
+        var result = clazz.hashCode()
+        result = 31 * result + forResult
+        result = 31 * result + uuid.hashCode()
+        result = 31 * result + (bundle?.hashCode() ?: 0)
+        return result
+    }
+
+    fun <B> copy(replacementParams: B) = ContextRoute<B>(clazz, replacementParams, path, forResult)
+}
+
+class ExternalRoute(private val clazz: Any) : Route()
