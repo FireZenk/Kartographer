@@ -1,8 +1,10 @@
 package org.firezenk.kartographer.library.core
 
-import org.firezenk.kartographer.library.Routable
+import org.firezenk.kartographer.library.ContextRoutable
+import org.firezenk.kartographer.library.ExternalRoutable
 import org.firezenk.kartographer.library.dsl.route
 import org.firezenk.kartographer.library.types.*
+import org.firezenk.kartographer.processor.interfaces.Routable as GeneratedRoutable
 
 /**
  * Project: Kartographer
@@ -43,8 +45,7 @@ class Move(private val core: Core) {
 
     private fun routeTo(route: ExternalRoute): Boolean = try {
         logRoute(route)
-
-        //TODO (route.clazz as Routable<*>).route(core.context, route.uuid, Any(), null, null)
+        (route.clazz as ExternalRoutable).route(core.context, route.uuid)
         true
     } catch (e: Throwable) {
         handleError(e)
@@ -90,10 +91,10 @@ class Move(private val core: Core) {
 
     @Suppress("UNCHECKED_CAST")
     private fun <B> createView(route: ContextRoute<B>) = try {
-        (route.clazz as Routable<B>)
+        (route.clazz as ContextRoutable<B>)
                 .route(core.context, route.uuid, route.bundle as B, null, null)
     } catch (e: ClassCastException) {
-        (route.clazz as org.firezenk.kartographer.processor.interfaces.Routable)
+        (route.clazz as GeneratedRoutable)
                 .route(core.context, route.uuid, route.bundle!!, null, null)
     }
 
