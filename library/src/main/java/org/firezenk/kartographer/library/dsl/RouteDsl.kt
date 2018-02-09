@@ -19,7 +19,7 @@ class RouteDsl {
 
     class RouteBuilder {
 
-        var target: Any? = null
+        lateinit var target: Any
         var params: Map<String, Any>? = mapOf<String, Any>()
         var path: Path? = null
         var anchor: Any? = null
@@ -35,13 +35,13 @@ class RouteDsl {
             } else ROOT_NODE
         }
 
-        fun build(): ViewRoute = ViewRoute(target!!, params ?: mapOf(), path ?: calculatedPath, anchor!!,
+        fun build(): ViewRoute = ViewRoute(target, params ?: mapOf(), path ?: calculatedPath, anchor!!,
                 animation, forResult)
     }
 
     class RouteActivityBuilder<B> {
 
-        var target: Any? = null
+        lateinit var target: Any
         var params: B? = null
         var path: Path? = null
         var forResult: Int = -1
@@ -55,13 +55,13 @@ class RouteDsl {
             } else ROOT_NODE
         }
 
-        fun build(): ContextRoute<B> = ContextRoute<B>(target!!, params!!, path ?: calculatedPath, forResult)
+        fun build(): ContextRoute<B> = ContextRoute<B>(target, params!!, path ?: calculatedPath, forResult)
     }
 
     class RouteExternalBuilder {
 
-        var target: Any? = null
+        lateinit var target: Any
 
-        fun build(): ExternalRoute = ExternalRoute(target!!)
+        fun build(): ExternalRoute = ExternalRoute(target)
     }
 }
