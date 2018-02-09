@@ -57,8 +57,9 @@ class MoveTest {
     }
 
     @Test fun `given an empty history, add a new path`() {
-        val route = route {
-            target = TargetRoute()
+        val route = routeActivity<Any> {
+            target = TargetBundleRoute()
+            params = Any()
             path = Path("CUSTOM_PATH")
         }
 
@@ -73,9 +74,8 @@ class MoveTest {
     }
 
     @Test fun `given an empty history, add a new bundled route on a custom path`() {
-        val route = routeActivity<Any> {
-            target = TargetBundleRoute()
-            params = Any()
+        val route = route {
+            target = TargetRoute()
             path = Path("CUSTOM_PATH")
             anchor = Any()
         }

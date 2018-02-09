@@ -1,6 +1,8 @@
 package org.firezenk.kartographer.library.core
 
+import org.firezenk.kartographer.library.types.ContextRoute
 import org.firezenk.kartographer.library.types.Route
+import org.firezenk.kartographer.library.types.ViewRoute
 
 /**
  * Project: Kartographer
@@ -10,18 +12,9 @@ import org.firezenk.kartographer.library.types.Route
  */
 class Forward(private val move: Move) {
 
-    infix fun <B> next(route: Route<B>): Boolean {
-        move.routeTo<B>(route)
-        return true
-    }
+    fun next(route: Route) = move.routeTo(route)
 
-    fun <B> next(route: Route<B>, replacementParams: B): Boolean {
-        move.routeTo(route.copy(replacementParams))
-        return true
-    }
+    fun next(route: ViewRoute, replacementParams: Map<String, Any>) = move.routeTo(route.copy(replacementParams))
 
-    fun next(route: Route<Any>, replacementParams: Map<String, Any>): Boolean {
-        move.routeTo(route.copy(replacementParams))
-        return true
-    }
+    fun <B> next(route: ContextRoute<B>, replacementParams: B) = move.routeTo(route.copy(replacementParams))
 }

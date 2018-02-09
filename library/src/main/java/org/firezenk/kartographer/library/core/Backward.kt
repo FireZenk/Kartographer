@@ -11,9 +11,9 @@ import org.firezenk.kartographer.library.types.Route
 class Backward(private val core: Core, private val move: Move) {
 
     fun back(block: () -> Unit): Boolean {
-        core.log?.let {
-            it.d(" <<--- Back")
-            it.d(" History: ", core.history)
+        core.log?.run {
+            d(" <<--- Back")
+            d(" History: ", core.history)
         }
 
         if (core.history.size <= 1) {
@@ -21,11 +21,11 @@ class Backward(private val core: Core, private val move: Move) {
             return false
         }
 
-        var leaf: Route<*> = core.history.keys.last()
+        var leaf: Route = core.history.keys.last()
         core.history.remove(leaf)
 
         leaf = core.history.keys.last()
-        val branch: MutableList<Route<*>> = core.history[leaf]!!
+        val branch: MutableList<Route> = core.history[leaf]!!
 
         return if (branch.lastIndex > -1) {
             move.routeTo(branch.removeAt(branch.lastIndex))
@@ -37,9 +37,9 @@ class Backward(private val core: Core, private val move: Move) {
     }
 
     fun backOnPath(block: () -> Unit): Boolean {
-        core.log?.let {
-            it.d(" <<--- Back on path")
-            it.d(" History: ", core.history)
+        core.log?.run {
+            d(" <<--- Back on path")
+            d(" History: ", core.history)
         }
 
         if (core.history.size <= 1 && core.history[core.history.keys.last()]!!.size <= 1) {
@@ -47,8 +47,8 @@ class Backward(private val core: Core, private val move: Move) {
             return false
         }
 
-        val leaf: Route<*> = core.history.keys.first { it.path == core.lastKnownPath }
-        val branch: MutableList<Route<*>> = core.history[leaf]!!
+        val leaf: Route? = core.lastLeaf()
+        val branch: MutableList<Route> = core.history[leaf]!!
 
         if (branch.lastIndex > -1) {
             branch.removeAt(branch.lastIndex)
@@ -66,19 +66,19 @@ class Backward(private val core: Core, private val move: Move) {
         }
     }
 
-    fun back(times: Int): Boolean {
-        try {
-            for (i in 0 until times) {
-                if (!backOnPath({})) {
-                    return false
-                }
+    fun back(times: Int): Boolean = try {
+        for (i in 0 until times) {
+            if (!backOnPath({})) {
+                throw Exception()
             }
-            return true
-        } catch (e: Exception) {
-            core.log?.d("Is not possible to go back " + times +
-                    " times, the history length is " + core.history.size)
-            core.log?.d(e.message!!)
-            return false
         }
+        true
+    } catch (e: Exception) {
+        core.log?.run {
+            d("Is not possible to go back " + times +
+                    " times, the history length is " + core.history.size)
+            e.message?.let { d(it) }
+        }
+        false
     }
 }

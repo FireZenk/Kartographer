@@ -29,7 +29,7 @@ class CoreTest {
         }
         move.routeTo(route)
 
-        val currentRoute = core.current<Any>()
+        val currentRoute = core.current()
 
         assertEquals(route, currentRoute)
     }

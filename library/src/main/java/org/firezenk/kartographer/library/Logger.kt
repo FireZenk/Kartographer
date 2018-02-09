@@ -2,7 +2,7 @@ package org.firezenk.kartographer.library
 
 import org.firezenk.kartographer.library.types.Route
 
-class Logger(val logReader: (String) -> Unit = ::println) {
+class Logger(private val logReader: (String) -> Unit = ::println) {
 
     private val TAG = "Kartographer::"
 
@@ -10,12 +10,12 @@ class Logger(val logReader: (String) -> Unit = ::println) {
         logReader(TAG + actionDesc)
     }
 
-    internal fun d(actionDesc: String, route: Route<*>): Route<*> {
+    internal fun d(actionDesc: String, route: Route): Route {
         logReader(TAG + actionDesc + route)
         return route
     }
 
-    internal fun d(actionDesc: String, history: MutableMap<Route<*>, MutableList<Route<*>>>) {
+    internal fun d(actionDesc: String, history: MutableMap<Route, MutableList<Route>>) {
         if (history.isNotEmpty() && history[history.keys.last()] != null) {
             logReader(TAG + actionDesc + "size: " + history.size)
             logReader(TAG + actionDesc + "last: " + history[history.keys.last()]?.lastOrNull())
