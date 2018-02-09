@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         page2Route = route {
             target = Page2Route()
-            params = mapOf("part" to "", "counter" to 0)
+            params = mapOf("part" to "", "counter" to 10)
             anchor = viewHolder
         }
 

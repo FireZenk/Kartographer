@@ -72,15 +72,11 @@ import static org.hamcrest.Matchers.is;
 
         target2.perform(click());
 
-        onView(allOf(withText("PAGE2: 20"), isDisplayed()));
-
-        target2.perform(click());
-
-        onView(allOf(withText("PAGE2: 30"), isDisplayed()));
+        onView(allOf(withText("SUBPAGE"), isDisplayed()));
 
         pressBack();
 
-        onView(allOf(withText("PAGE2: 20"), isDisplayed()));
+        onView(allOf(withText("PAGE2: 10"), isDisplayed()));
 
         tab1.perform(click());
 
@@ -95,10 +91,6 @@ import static org.hamcrest.Matchers.is;
         onView(allOf(withText("PAGE1 -> 1 -> 2"), isDisplayed()));
 
         tab2.perform(click());
-
-        onView(allOf(withText("PAGE2: 20"), isDisplayed()));
-
-        pressBack();
 
         onView(allOf(withText("PAGE2: 10"), isDisplayed()));
     }
