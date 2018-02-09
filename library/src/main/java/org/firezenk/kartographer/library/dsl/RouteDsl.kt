@@ -35,7 +35,8 @@ class RouteDsl {
             } else ROOT_NODE
         }
 
-        fun build(): ViewRoute = ViewRoute(target!!, params!!, path ?: calculatedPath, anchor!!, animation, forResult)
+        fun build(): ViewRoute = ViewRoute(target!!, params ?: mapOf(), path ?: calculatedPath, anchor!!,
+                animation, forResult)
     }
 
     class RouteActivityBuilder<B> {
