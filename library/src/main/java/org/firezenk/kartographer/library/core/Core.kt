@@ -26,7 +26,6 @@ class Core(var context: Any, var log: Logger? = null) {
 
     var lastKnownPath: Path = ROOT_NODE
 
-
     fun current(): Route? {
         val leaf: Route? = history.keys.firstOrNull { it.path == lastKnownPath }
         val branch: MutableList<Route>? = history[leaf]
@@ -41,23 +40,10 @@ class Core(var context: Any, var log: Logger? = null) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <B> current(): ContextRoute<B>? {
-        val leaf: Route? = history.keys.firstOrNull { it.path == lastKnownPath }
-        val branch: MutableList<Route>? = history[leaf]
-
-        return branch?.let {
-            if (it.size < 1) {
-                leaf as ContextRoute<B>?
-            } else {
-                it.lastOrNull() as ContextRoute<B>?
-            }
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
     fun <T> payload(key: String): T? = current()?.let { (it as ViewRoute).params[key] as T? }
 
-    fun <B> bundle(): B? = current<B>()?.bundle
+    @Suppress("UNCHECKED_CAST")
+    fun <B> bundle(): B? = current()?.let { (it as ContextRoute<B>).bundle }
 
     fun clearHistory() {
         history = DEFAULT_HISTORY

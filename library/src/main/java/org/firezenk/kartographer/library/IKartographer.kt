@@ -1,8 +1,8 @@
 package org.firezenk.kartographer.library
 
 import org.firezenk.kartographer.library.types.ContextRoute
-import org.firezenk.kartographer.library.types.ExternalRoute
 import org.firezenk.kartographer.library.types.Path
+import org.firezenk.kartographer.library.types.Route
 import org.firezenk.kartographer.library.types.ViewRoute
 
 /**
@@ -48,9 +48,7 @@ interface IKartographer {
      *
      * @param route The target route
      */
-    infix fun next(route: ViewRoute): Boolean
-    infix fun next(route: ExternalRoute): Boolean
-    infix fun <B> next(route: ContextRoute<B>): Boolean
+    infix fun next(route: Route): Boolean
 
     /**
      * Navigate to the next route
@@ -73,8 +71,7 @@ interface IKartographer {
      *
      * @param route The target route
      */
-    infix fun replayOrNext(route: ViewRoute): Boolean
-    infix fun <B> replayOrNext(route: ContextRoute<B>): Boolean
+    infix fun replayOrNext(route: Route): Boolean
 
     /**
      * Go back to the directly previous route
@@ -99,8 +96,7 @@ interface IKartographer {
      *
      * @return true if go back to this route is possible, false if it is not
      */
-    infix fun back(route: ViewRoute): Boolean
-    infix fun <B> back(route: ContextRoute<B>): Boolean
+    infix fun back(route: Route): Boolean
 
     /**
      * Navigate back to the last known route within paths

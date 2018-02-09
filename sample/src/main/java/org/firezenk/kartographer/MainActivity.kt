@@ -9,7 +9,7 @@ import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.extensions.disableShiftMode
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.route
-import org.firezenk.kartographer.library.types.ViewRoute
+import org.firezenk.kartographer.library.types.Route
 import org.firezenk.kartographer.pages.page1.Page1Route
 import org.firezenk.kartographer.pages.page2.Page2Route
 import org.firezenk.kartographer.pages.page3.Page3Route
@@ -26,9 +26,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     @Inject lateinit var router: Kartographer
 
-    private lateinit var page1Route : ViewRoute
-    private lateinit var page2Route : ViewRoute
-    private lateinit var page3Route : ViewRoute
+    private lateinit var page1Route : Route
+    private lateinit var page2Route : Route
+    private lateinit var page3Route : Route
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
