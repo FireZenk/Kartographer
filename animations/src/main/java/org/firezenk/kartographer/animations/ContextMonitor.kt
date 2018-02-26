@@ -26,9 +26,9 @@ class ContextMonitor : Monitor(), Application.ActivityLifecycleCallbacks {
     
     override fun onActivityPaused(activity: Activity?) {}
 
-    override fun onActivityResumed(activity: Activity?) = onContextCaptured(activity as Context)
+    override fun onActivityResumed(activity: Activity?) = onActivityCaptured(activity)
 
-    override fun onActivityStarted(activity: Activity?) = onContextCaptured(activity as Context)
+    override fun onActivityStarted(activity: Activity?) = onActivityCaptured(activity)
 
     override fun onActivityDestroyed(activity: Activity?) {}
 
@@ -36,5 +36,11 @@ class ContextMonitor : Monitor(), Application.ActivityLifecycleCallbacks {
 
     override fun onActivityStopped(activity: Activity?) {}
 
-    override fun onActivityCreated(activity: Activity?, p1: Bundle?) = onContextCaptured(activity as Context)
+    override fun onActivityCreated(activity: Activity?, p1: Bundle?) = onActivityCaptured(activity)
+
+    private fun onActivityCaptured(activity: Activity?) {
+        if (activity?.callingActivity == null) {
+            onContextCaptured(activity as Context)
+        }
+    }
 }
