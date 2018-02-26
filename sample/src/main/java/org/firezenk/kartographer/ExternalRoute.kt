@@ -17,7 +17,7 @@ class ExternalRoute : ExternalRoutable {
         private val URL_HTTP_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id="
     }
 
-    override fun route(context: Any, uuid: UUID, parameters: Any?) {
+    override fun route(context: Any, uuid: UUID, parameters: Any) {
         if (context is Context) {
             val packageName = context.packageName
             try {

@@ -22,5 +22,5 @@ interface ContextRoutable<B> {
 interface ExternalRoutable {
 
     @Throws(ParameterNotFoundException::class, NotEnoughParametersException::class)
-    fun route(context: Any, uuid: UUID, parameters: Any? = null)
+    fun route(context: Any, uuid: UUID, parameters: Any = mapOf<String, Any>())
 }

@@ -45,7 +45,7 @@ class Move(private val core: Core) {
 
     private fun routeTo(route: ExternalRoute): Boolean = try {
         logRoute(route)
-        (route.clazz as ExternalRoutable).route(core.context, route.uuid)
+        (route.clazz as ExternalRoutable).route(core.context, route.uuid, route.params)
         true
     } catch (e: Throwable) {
         handleError(e)

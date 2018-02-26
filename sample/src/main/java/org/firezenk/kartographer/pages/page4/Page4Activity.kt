@@ -27,6 +27,7 @@ class Page4Activity : AppCompatActivity() {
         button.setOnClickListener {
             router next routeExternal {
                 target = ExternalRoute()
+                params = mapOf<String, Any>("test" to "HEY!")
             }
         }
     }

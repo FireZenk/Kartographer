@@ -61,7 +61,8 @@ class RouteDsl {
     class RouteExternalBuilder {
 
         lateinit var target: Any
+        var params: Map<String, Any> = mapOf<String, Any>()
 
-        fun build(): ExternalRoute = ExternalRoute(target)
+        fun build(): ExternalRoute = ExternalRoute(target, params)
     }
 }

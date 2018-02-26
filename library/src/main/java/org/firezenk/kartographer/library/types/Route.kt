@@ -62,4 +62,7 @@ class ContextRoute<out B>(override val clazz: Any, val bundle: B, override var p
     fun <B> copy(replacementParams: B) = ContextRoute<B>(clazz, replacementParams, path, forResult)
 }
 
-class ExternalRoute(override val clazz: Any, override var path: Path = Path("")) : Route(clazz, path)
+class ExternalRoute(override val clazz: Any, val params: Map<String, Any>, override var path: Path = Path("")) : Route(clazz, path) {
+
+    fun copy(replacementParams: Map<String, Any>) = ExternalRoute(clazz, replacementParams, path)
+}

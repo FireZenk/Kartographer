@@ -1,9 +1,6 @@
 package org.firezenk.kartographer.library
 
-import org.firezenk.kartographer.library.types.ContextRoute
-import org.firezenk.kartographer.library.types.Path
-import org.firezenk.kartographer.library.types.Route
-import org.firezenk.kartographer.library.types.ViewRoute
+import org.firezenk.kartographer.library.types.*
 
 /**
  * Project: Kartographer
@@ -57,6 +54,7 @@ interface IKartographer {
      * @param params The parameters to replace the original ones
      */
     fun next(route: ViewRoute, replacementParams: Map<String, Any>): Boolean
+    fun next(route: ExternalRoute, replacementParams: Map<String, Any>): Boolean
     fun <B> next(route: ContextRoute<B>, replacementParams: B): Boolean
 
     /**
