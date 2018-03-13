@@ -16,13 +16,7 @@ class Core(var context: Any, var log: Logger? = null) {
         val ROOT_NODE: Path = Path("ROOT")
     }
 
-    private val DEFAULT_HISTORY: MutableMap<Route, MutableList<Route>> = linkedMapOf(
-            route {
-                target = RootRoute()
-                anchor = Any()
-            } to mutableListOf())
-
-    var history: MutableMap<Route, MutableList<Route>> = DEFAULT_HISTORY
+    var history: MutableMap<Route, MutableList<Route>> = generateEmptyHistory()
 
     var lastKnownPath: Path = ROOT_NODE
 
@@ -46,7 +40,7 @@ class Core(var context: Any, var log: Logger? = null) {
     fun <B> bundle(): B? = current()?.let { (it as ContextRoute<B>).bundle }
 
     fun clearHistory() {
-        history = DEFAULT_HISTORY
+        history = generateEmptyHistory()
     }
 
     fun hasHistory() = history.isNotEmpty()
@@ -58,4 +52,10 @@ class Core(var context: Any, var log: Logger? = null) {
     internal fun lastLeaf() = history.keys.firstOrNull { it.path == lastKnownPath }
 
     internal fun lastLeaf(path: Path) = history.keys.firstOrNull { it.path == path }
+
+    private fun generateEmptyHistory(): MutableMap<Route, MutableList<Route>> = linkedMapOf(
+            route {
+                target = RootRoute()
+                anchor = Any()
+            } to mutableListOf())
 }
