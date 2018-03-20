@@ -22,7 +22,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.8.3'
+  def NVersion = '0.8.4'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
@@ -82,7 +82,7 @@ kartographer replay(path)
 ###### 2. Mark the target view as Route
 
 ```kotlin
-@RoutableActivity(path = ..., requestCode = ...)
+@RoutableActivity(path = ..., requestCode = ..., flags = ...)
 class SampleActivity : AppCompatActivity{...}
 
 // or
@@ -95,6 +95,7 @@ all parameters are totally optional, another way to create routes is create your
 
 - `path` defines the context of the navigation flow (but if you've a lineal navigation then, you don't need it).
 - `requestCode` in case you need to receive a response into `onActivityResult` this will be your request code number.
+- `flags` only for Android Activities, in order to add the launch flags to the Intent.
 
 
 ###### 3. Retrieve route params
