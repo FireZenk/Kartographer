@@ -1,5 +1,6 @@
 package org.firezenk.kartographer.pages.page4
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_page4.*
@@ -11,7 +12,7 @@ import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.routeExternal
 import javax.inject.Inject
 
-@RoutableActivity("PAGE4")
+@RoutableActivity(path = "PAGE4", flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 class Page4Activity : AppCompatActivity() {
 
     @Inject lateinit var router: Kartographer
@@ -32,4 +33,7 @@ class Page4Activity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        router.backOnPath({ super.onBackPressed() })
+    }
 }

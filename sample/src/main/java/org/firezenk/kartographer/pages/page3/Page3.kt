@@ -33,6 +33,7 @@ class Page3(context: Context?) : FrameLayout(context) {
         text2.text = "CLICK TO OPEN A NEW ACTIVITY"
 
         setOnClickListener {
+            router.clearHistory()
             router next routeActivity<Bundle> {
                 target = Page4ActivityRoute()
                 params = Bundle().apply { putInt("TESTINT", 1999) }

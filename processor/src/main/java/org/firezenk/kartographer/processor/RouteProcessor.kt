@@ -106,14 +106,17 @@ class RouteProcessor : AbstractProcessor() {
         val sb = StringBuilder()
 
         if (isActivity) {
+            val flags = getFlags(typeElement.getAnnotation(RoutableActivity::class.java))
+            val flagsString = if (flags != -1) flags.toString() else "android.content.Intent.FLAG_ACTIVITY_NEW_TASK"
+
             sb.append("  val intent = android.content.Intent(context as android.content.Context, " + typeElement.simpleName + "::class.java)\n")
             sb.append("  intent.putExtras(parameters as android.os.Bundle)\n")
+            sb.append("  intent.addFlags($flagsString)\n")
 
             sb.append("" +
                     "  if (context is android.app.Activity) {\n" +
                     "      context.startActivityForResult(intent, " + requestCode + ")\n" +
                     "  } else {\n" +
-                    "      intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)\n" +
                     "      context.startActivity(intent)\n" +
                     "  }\n")
         } else {
@@ -202,6 +205,8 @@ class RouteProcessor : AbstractProcessor() {
     private fun getRoutePath(annotation: RoutableActivity) = annotation.path
 
     private fun getRoutePath(annotation: RoutableView) = annotation.path
+
+    private fun getFlags(annotation: RoutableActivity) = annotation.flags
 
     private fun isActivity(typeElement: TypeElement) = typeElement.getAnnotation(RoutableActivity::class.java) != null
 }

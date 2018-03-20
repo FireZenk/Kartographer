@@ -18,4 +18,9 @@ annotation class RoutableActivity(
          * Define the request code for the activity
          * @return the request code, -1 if not needed
          */
-        val requestCode: Int = -1)
+        val requestCode: Int = -1,
+        /**
+         * Define the flags to launch with the activity
+         * @return flags composite, -1 if not needed
+         */
+        val flags: Int = -1)
