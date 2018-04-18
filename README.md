@@ -22,7 +22,7 @@ dependencies {
   compileOnly 'javax.annotation:javax.annotation-api:1.2'
   compileOnly 'com.squareup:kotlinpoet:0.5.0'
 
-  def NVersion = '0.8.4'
+  def NVersion = '0.8.5'
   implementation "org.firezenk.kartographer:annotations:$NVersion"
   implementation "org.firezenk.kartographer:animations:$NVersion@aar" //android only
   implementation "org.firezenk.kartographer:library:$NVersion"
@@ -111,6 +111,31 @@ and `bundle` method for Android's activities:
 ```kotlin
 val myParam: Int? = kartographer.bundle<Bundle>()?.getInt("myParam")
 ```
+
+
+###### 4. Forward and get results from a parent (onActivityResult*)
+
+1. At your activities: 
+
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (resultCode == RESULT_OK) {
+        kartographer.sendResult(requestCode, data)
+    }
+}
+```
+
+2. At your views:
+
+```kotlin
+kartographer.subscribeForResult {
+    // do something with the result (it)
+}
+```
+
+Also your `RoutableView` needs a `requestCode` specified
+
 
 ### CUSTOMISATION
 
