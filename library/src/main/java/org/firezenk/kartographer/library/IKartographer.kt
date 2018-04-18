@@ -136,4 +136,19 @@ interface IKartographer {
      * @return true if the history is not empty
      */
     fun hasHistory(): Boolean
+
+    /**
+     * Send data to an appropriate subscriber
+     *
+     * @param requestCode The code to decide if the route can receive the data
+     * @param data The payload to send
+     */
+    fun <T> sendResult(requestCode: Int, data: T?)
+
+    /**
+     * Subscribe to receive a result with a callback
+     *
+     * @param resultCallback A callback to receive the data as a result
+     */
+    fun subscribeForResult(resultCallback: (Any?) -> Unit)
 }
