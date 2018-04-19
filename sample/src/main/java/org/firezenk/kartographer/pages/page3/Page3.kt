@@ -22,6 +22,10 @@ import javax.inject.Inject
 @RoutableView(path = "PAGE3")
 class Page3(context: Context?) : FrameLayout(context) {
 
+    companion object {
+        const val REQUEST_CODE = 100
+    }
+
     @Inject lateinit var router: Kartographer
 
     override fun onAttachedToWindow() {
@@ -37,6 +41,10 @@ class Page3(context: Context?) : FrameLayout(context) {
             router next routeActivity<Bundle> {
                 target = Page4ActivityRoute()
                 params = Bundle().apply { putInt("TESTINT", 1999) }
+                forResult = REQUEST_CODE
+            }
+            router.subscribeForResult {
+                println(it.toString())
             }
         }
     }

@@ -17,6 +17,7 @@ class Kartographer(context: Any, monitor: Monitor) : IKartographer {
     private var forward: Forward
     private var backward: Backward
     private var replay: Replay
+    private var results: Results
 
     init {
         monitor.onContextChanged { core.context = it }
@@ -24,6 +25,7 @@ class Kartographer(context: Any, monitor: Monitor) : IKartographer {
         forward = Forward(move)
         replay = Replay(core, move, forward)
         backward = Backward(core, move)
+        results = Results(core)
     }
 
     override fun debug(): Kartographer {
@@ -73,4 +75,8 @@ class Kartographer(context: Any, monitor: Monitor) : IKartographer {
     override fun clearHistory() = core.clearHistory()
 
     override fun hasHistory() = core.hasHistory()
+
+    override fun <T> sendResult(requestCode: Int, data: T?) = results.sendResult(requestCode, data)
+
+    override fun subscribeForResult(resultCallback: (Any?) -> Unit) = results.subscribeForResult(resultCallback)
 }

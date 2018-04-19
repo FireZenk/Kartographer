@@ -10,6 +10,8 @@ import org.firezenk.kartographer.SampleApplication
 import org.firezenk.kartographer.annotations.RoutableActivity
 import org.firezenk.kartographer.library.Kartographer
 import org.firezenk.kartographer.library.dsl.routeExternal
+import org.firezenk.kartographer.pages.page3.Page3
+import java.util.*
 import javax.inject.Inject
 
 @RoutableActivity(path = "PAGE4", flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -35,5 +37,10 @@ class Page4Activity : AppCompatActivity() {
 
     override fun onBackPressed() {
         router.backOnPath({ super.onBackPressed() })
+    }
+
+    override fun finish() {
+        router.sendResult(Page3.REQUEST_CODE, "Result from activity " + Random().nextInt())
+        super.finish()
     }
 }

@@ -62,7 +62,8 @@ class RouteDsl {
 
         lateinit var target: Any
         var params: Map<String, Any> = mapOf<String, Any>()
+        var forResult: Int = -1
 
-        fun build(): ExternalRoute = ExternalRoute(target, params)
+        fun build(): ExternalRoute = ExternalRoute(target, params, forResult = forResult)
     }
 }
